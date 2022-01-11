@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.banner{
+    background: url('assets/background_rs.png') no-repeat;
+    background-color: #f5f8fc;
+    background-size: cover;
+    /* max-height: 550px; */
+}
+
+.title{
+    font-size: 1.75rem;
+    margin: 0;
+}
+
+.thumbnail{
+    font-size: 0.85rem;
+    line-height: 1rem;
+}
+
+.thumbnail img{
+    width: 70px;
+    margin-bottom: 10px;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link{ color: #00beff; }
+
+/* .p-datepicker-inline{ width: 410px !important; } */
