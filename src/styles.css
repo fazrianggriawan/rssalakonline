@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 body{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: white;
 }
 
 .banner{
@@ -27,4 +28,16 @@ body{
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link{ color: #00beff; }
 
-/* .p-datepicker-inline{ width: 410px !important; } */
+.button-group .thumbnail:hover{
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.3)!important;
+    cursor: pointer;
+    background-color: aliceblue !important;
+}
+
+.p-datepicker table th, .p-datepicker table td {
+    text-align: center;
+}
+
+.p-disabled {
+    color: red !important;
+}

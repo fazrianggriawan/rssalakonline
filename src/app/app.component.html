@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="row button-group">
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow border rounded thumbnail text-center">
+        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow border rounded thumbnail text-center" (click)="panelRegistrasi=true">
           <img src="assets/registrasi.png" alt="Registrasi Online">
           <p>Registrasi Online</p>
         </div>
@@ -41,145 +41,100 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col shadow p-3 m-3">
-      <h1 class="lead">Registrasi Online</h1>
-      <hr>
-      <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-0 text-center d-none d-md-block">
-          <img src="assets/registrasi.png" alt="Pasien" style="height: 250px;">
-        </div>
-        <div class="col-lg-5 col-md-5 col-sm-12">
-          <div>
-            <p-tabView>
-              <p-tabPanel header="Kartu Pasien">
-                <form>
-                  <div class="mb-3">
-                    <label for="No.RM" class="form-label">No. Rekam Medis</label>
-                    <input type="text" class="form-control">
-                    <div id="emailHelp" class="form-text">Nomor rekam medis tercantum pada kartu pasien anda.</div>
-                  </div>
-                  <div class="md-3 text-end">
-                    <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
-                  </div>
-                </form>
-              </p-tabPanel>
-              <p-tabPanel header="Kartu BPJS">
-                <form>
-                  <div class="mb-3">
-                    <label for="No.RM" class="form-label">No. Kartu BPJS</label>
-                    <input type="text" class="form-control">
-                    <div id="emailHelp" class="form-text">Nomor kartu bpjs tercantum pada kartu bpjs anda.</div>
-                  </div>
-                  <div class="md-3 text-end">
-                    <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
-                  </div>
-                </form>
-              </p-tabPanel>
-            </p-tabView>
-            <hr class="mt-1">
-            <p>Apakah anda pasien baru? <a href="#" class="link-info">Daftar Sekarang</a></p>
-          </div>
-          <div>
-            <div class="mb-3 border rounded p-3 shadow-sm" style="font-size: 0.85rem; background-color: #fffcf0;">
-              <h1 class="lead">FAZRI ANGGRIAWAN</h1>
-              <div>LAKI-LAKI, 33 thn.</div>
-              <div>18-09-1988</div>
-              <div>Taman Anyelir 3 Blok K6 No.1</div>
-            </div>
-            <div class="mb-4">
-              <div>Poliklinik :</div>
-              <div>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected></option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="mt-2">Dokter :</div>
-              <div>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected></option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="mt-3">Pilih Tanggal Kedatangan :</div>
-              <div class="mb-2" style="font-size: 0.85rem;">Silahkan pilih tanggal yang tersedia</div>
-              <p-calendar [inline]="true" [disabledDays]="[0,1,2,6]"></p-calendar>
 
-              <div class="mt-3">
-                <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
-              </div>
+<p-sidebar [(visible)]="panelRegistrasi" [fullScreen]="true">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col p-3">
+                <h1 class="lead">Registrasi Online</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-0 text-center d-none d-md-block">
+                        <img src="assets/registrasi.png" alt="Pasien" style="height: 250px;">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-12">
+                        <div>
+                            <p-tabView>
+                                <p-tabPanel header="Kartu Pasien">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="No.RM" class="form-label">No. Rekam Medis</label>
+                                            <input type="text" class="form-control">
+                                            <div id="emailHelp" class="form-text">Nomor rekam medis tercantum pada kartu
+                                                pasien anda.</div>
+                                        </div>
+                                        <div class="md-3 text-end">
+                                            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+                                        </div>
+                                    </form>
+                                </p-tabPanel>
+                                <p-tabPanel header="Kartu BPJS">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="No.RM" class="form-label">No. Kartu BPJS</label>
+                                            <input type="text" class="form-control">
+                                            <div id="emailHelp" class="form-text">Nomor kartu bpjs tercantum pada kartu bpjs
+                                                anda.</div>
+                                        </div>
+                                        <div class="md-3 text-end">
+                                            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+                                        </div>
+                                    </form>
+                                </p-tabPanel>
+                            </p-tabView>
+                            <hr class="mt-1">
+                            <p>Apakah anda pasien baru? <a href="#" class="link-info">Daftar Sekarang</a></p>
+                        </div>
+                        <div>
+                            <div>Pasien :</div>
+                            <div class="mb-3 border rounded p-3 shadow-sm"
+                                style="font-size: 0.9rem; background-color: #fffcf0;">
+                                <h1 class="lead">FAZRI ANGGRIAWAN</h1>
+                                <div>LAKI-LAKI, 33 thn.</div>
+                                <div>18-09-1988</div>
+                                <div>Taman Anyelir 3 Blok K6 No.1</div>
+                            </div>
+                            <form [formGroup]="formRegistrasi">
+                                <div class="mb-4">
+                                    <div>Poliklinik :</div>
+                                    <div>
+                                        <select class="form-select" formControlName="poli" (change)="selectPoli()">
+                                            <option selected></option>
+                                            <option *ngFor="let item of dataPoli" value="{{item.kode}}">{{item.nama}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-2">Dokter :</div>
+                                    <div>
+                                        <select class="form-select" formControlName="dokter">
+                                            <option selected></option>
+                                            <option *ngFor="let item of dataDokter" value="{{item.kode}}">{{ titleCaseWord(item.nama) }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-3">Pilih Tanggal Kedatangan :</div>
+                                    <div class="mb-2" style="font-size: 0.85rem;">Silahkan pilih tanggal yang tersedia</div>
+                                    <p-calendar
+                                        [style]="{'width':'100%'}"
+                                        [inputStyle]="{'width':'100%'}"
+                                        [inline]="true"
+                                        [showOtherMonths]="false"
+                                        [disabledDays]="[0,2,6]">
+                                    </p-calendar>
+                                    <div style="display: inline-flex;" class="mt-2">
+                                        <div class="rounded" style="height: 16px; width: 16px; background-color: red; opacity: 0.65; margin-right: 5px;"></div>
+                                        <div style="font-size: 0.85rem; color: red; opacity: 0.65; margin-right: 10px;">Tidak Ada Jadwal Praktek</div>
+                                        <div class="rounded" style="height: 16px; width: 16px; background-color: black; opacity: 0.65; margin-right: 5px;"></div>
+                                        <div style="font-size: 0.85rem;">Tersedia</div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Syaraf</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Jantung</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Penyakit Dalam / Internis</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Anak</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Bedah</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Bedah Tulang</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Kandungan</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Kulit dan Kelamin</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Mata</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Nyeri Intervensi</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Paru</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Psikiatri</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>THT</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Umum</p>
-        </div>
-        <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow-sm border rounded thumbnail text-center">
-          <img src="assets/bed.png" alt="BPJS Kesehatan">
-          <p>Urologi</p>
-        </div>
-      </div>
     </div>
-  </div>
-</div>
+</p-sidebar>
