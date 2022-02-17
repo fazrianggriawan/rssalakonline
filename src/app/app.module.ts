@@ -12,12 +12,21 @@ import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { SidebarModule } from "primeng/sidebar";
 import { DropdownModule } from 'primeng/dropdown';
+import {SelectButtonModule} from 'primeng/selectbutton';
+import {TableModule} from 'primeng/table';
+
+
 import { CdkScrollableModule } from "@angular/cdk/scrolling";
+import { CallerComponent } from './caller/caller.component';
+import { NgxHowlerService } from 'ngx-howler';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CallerComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -32,9 +41,17 @@ import { CdkScrollableModule } from "@angular/cdk/scrolling";
     BrowserAnimationsModule,
     SidebarModule,
     CdkScrollableModule,
-    DropdownModule
+    DropdownModule,
+    SelectButtonModule,
+    TableModule
   ],
-  providers: [],
+  providers: [NgxHowlerService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    ngxHowlerService: NgxHowlerService
+  ) {
+    ngxHowlerService.loadScript('assets/howler/dist/howler.min.js');
+  }
+}

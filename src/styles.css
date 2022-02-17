@@ -39,5 +39,31 @@ body{
 }
 
 .p-disabled {
-    color: red !important;
+    /* color: red !important; */
+}
+
+.p-datepicker table td.p-datepicker-today > span{
+    background: none;
+}
+
+.blink{
+    animation: blink 1s linear infinite;
+    margin-top: 75%;
+}
+
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+}
+
+.loading-panel{
+    top: 0;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    vertical-align: middle;
 }

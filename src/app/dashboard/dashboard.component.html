@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div class="row p-2">
+        <div class="col"></div>
+        <div class="col-8">
+            <p-calendar [(ngModel)]="tglKunjungan" dateFormat="dd-mm-yy" (onSelect)="getJadwalDokter()"></p-calendar>
+            &nbsp;
+            <p-dropdown [options]="dataPoli" [(ngModel)]="selectedPoli" optionLabel="ket" placeholder="Pilih Poli" (onChange)="getJadwalDokter()"></p-dropdown>
+            &nbsp;
+            <p-dropdown [options]="dataJadwalPraktek" [(ngModel)]="selectedJadwal" placeholder="Pilih Jadwal Dokter" (onChange)="getAntrian()">
+                <ng-template pTemplate="selectedItem">
+                    <div>({{selectedJadwal.jadwal}}) {{selectedJadwal.namadokter}} </div>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <div>({{item.jadwal}}) {{item.namadokter}} </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row p-2">
+        <div class="col"></div>
+        <div class="col m-2 shadow border rounded thumbnail text-center p-3">
+            <div>No. Antrian</div>
+            <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
+            <button class="btn btn-sm btn-secondary">Recall</button>
+        </div>
+        <div class="col m-2 shadow border rounded thumbnail text-center p-3" style="background-color: #ccdaff; color: #4e5d83; cursor: pointer;" (click)="callNext()">
+            <h5 class="pt-2">CALL NEXT</h5>
+            <div class="pt-1">No. Antrian :</div>
+            <div style="font-size: 1rem; padding-top: 5px;">{{nextCall}}</div>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row p-2">
+        <div class="col"></div>
+        <div class="col-8">
+            <p-table [value]="dataAntrian" dataKey="id" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Kode Booking</th>
+                        <th>No. Antrian</th>
+                        <th>Poliklinik</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td>{{item.booking_code}}</td>
+                        <td>{{item.prefix_antrian}}-{{item.no_antrian}}</td>
+                        <td>{{item.nama_poli}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div *ngIf="dataAntrian.length == 0" class="text-center alert">Tidak Ada Data Antrian Saat Ini.</div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>

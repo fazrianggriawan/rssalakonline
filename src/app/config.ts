@@ -1,4 +1,6 @@
-var host = 'http://182.253.22.220/vclaim/index.php';
+var host = 'http://localhost/simrsmandiri/api/index.php';
 export const config = {
-    api_url: function (url: string) { return host + '/' + url }
+    api_antrol: function (url: string) { return host + '/antrol/bpjs/' + url },
+    api_online: function (url: string) { return host + '/online/' + url },
+    api_vclaim: function (url: string) { return host + '/vclaim/' + url },
 }
