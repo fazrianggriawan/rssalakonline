@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api'
 import { RegistrasiService } from './services/registrasi.service';
 import { NgxHowlerService } from "ngx-howler";
+import { timeout } from 'rxjs';
 
 @Component({
     selector: 'app-root',

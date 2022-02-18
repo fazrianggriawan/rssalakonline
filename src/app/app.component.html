@@ -60,7 +60,7 @@
                                     <form>
                                         <div class="mb-3">
                                             <label for="No.RM" class="form-label">No. Rekam Medis</label>
-                                            <input type="text" class="form-control">
+                                            <input type="number" maxlength="8" class="form-control">
                                             <div id="emailHelp" class="form-text">Nomor rekam medis tercantum pada kartu
                                                 pasien anda.</div>
                                         </div>
@@ -73,7 +73,7 @@
                                     <form>
                                         <div class="mb-3">
                                             <label for="No.RM" class="form-label">No. Kartu BPJS</label>
-                                            <input type="text" class="form-control" [(ngModel)]="noKartuBPJS" name="noKartuBPJS">
+                                            <input type="number" maxlength="20" class="form-control" [(ngModel)]="noKartuBPJS" name="noKartuBPJS">
                                             <div id="emailHelp" class="form-text">Nomor kartu bpjs tercantum pada kartu bpjs anda.</div>
                                         </div>
                                         <div class="md-3 text-end">
