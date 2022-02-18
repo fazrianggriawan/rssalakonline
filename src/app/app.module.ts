@@ -21,13 +21,15 @@ import { CdkScrollableModule } from "@angular/cdk/scrolling";
 import { CallerComponent } from './caller/caller.component';
 import { NgxHowlerService } from 'ngx-howler';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CallerComponent,
-    DashboardComponent
+    DashboardComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

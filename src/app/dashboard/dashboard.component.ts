@@ -19,6 +19,28 @@ export class DashboardComponent implements OnInit {
   lastCall : any = {};
   dataCalled : any = [];
 
+  dataDashboard : any[] = [
+      { 'prefix': 'A1', 'nama': 'ANAK' },
+      { 'prefix': 'A2', 'nama': 'ANASTESI' },
+      { 'prefix': 'A3', 'nama': 'BEDAH' },
+      { 'prefix': 'A4', 'nama': 'BEDAH MULUT' },
+      { 'prefix': 'A5', 'nama': 'BEDAH PLASTIK' },
+      { 'prefix': 'A6', 'nama': 'GERIATRI' },
+      { 'prefix': 'A7', 'nama': 'PENYAKIT DALAM' },
+      { 'prefix': 'A8', 'nama': 'JANTUNG' },
+      { 'prefix': 'A9', 'nama': 'PENYAKIT JIWA' },
+      { 'prefix': 'B1', 'nama': 'KULIT KELAMIN' },
+      { 'prefix': 'B1', 'nama': 'MATA' },
+      { 'prefix': 'B3', 'nama': 'OBGYN' },
+      { 'prefix': 'B4', 'nama': 'ORTHOPEDI' },
+      { 'prefix': 'B5', 'nama': 'PARU' },
+      { 'prefix': 'B6', 'nama': 'REHABILITASI MEDIK' },
+      { 'prefix': 'B7', 'nama': 'SARAF' },
+      { 'prefix': 'B8', 'nama': 'THT' },
+      { 'prefix': 'B9', 'nama': 'UMUM' },
+      { 'prefix': 'C1', 'nama': 'UROLOGI' },
+  ];
+
   getDataPoli(){
     this.dashboardService.getPoliBpjs().subscribe(data => {
       this.dataPoli = data.data;
