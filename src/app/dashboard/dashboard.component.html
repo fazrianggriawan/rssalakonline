@@ -23,11 +23,11 @@
             <div>No. Antrian</div>
             <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
             <!-- <button class="btn btn-sm btn-secondary">Recall</button> -->
-            <div>
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(5)">Task 5</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(6)">Task 6</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(7)">Task 7</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(99)">Task 99</button>&nbsp;
+            <div *ngIf="lastCall.prefix_antrian">
+                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(5)" title="akhir waktu layan poli/mulai waktu tunggu farmasi">Task 5</button>&nbsp;
+                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(6)" title="akhir waktu tunggu farmasi/mulai waktu layan farmasi membuat obat">Task 6</button>&nbsp;
+                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(7)" title="akhir waktu obat selesai dibuat">Task 7</button>&nbsp;
+                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(99)" title="tidak hadir/batal">Task 99</button>&nbsp;
             </div>
         </div>
         <div class="col m-2 shadow border rounded thumbnail text-center p-3" style="background-color: #ccdaff; color: #4e5d83; cursor: pointer;" (click)="callNext()">
@@ -56,10 +56,9 @@
                         <td>{{item.prefix_antrian}}-{{item.no_antrian}}</td>
                         <td>{{item.nama_poli}}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(1)">Task 1</button>&nbsp;
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(2)">Task 2</button>&nbsp;
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(3)">Task 3</button>&nbsp;
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(5)">Task 5</button>&nbsp;
+                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(1)" title="mulai waktu tunggu admisi">Task 1</button>&nbsp;
+                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(2)" title="akhir waktu tunggu admisi/mulai waktu layan admisi">Task 2</button>&nbsp;
+                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(3)" title="akhir waktu layan admisi/mulai waktu tunggu poli">Task 3</button>&nbsp;
                         </td>
                     </tr>
                 </ng-template>
