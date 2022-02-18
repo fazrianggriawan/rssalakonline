@@ -1,4 +1,94 @@
-<div class="container-fluid">
+<style type="text/styelsheet">
+    body {
+        overflow: hidden !important; /* Hide scrollbars */
+    }
+
+    .table-dashboard{
+        background: black;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+    }
+
+    .table-dashboard tr th{
+        background: #457539 !important;
+        color: white;
+        border-bottom: 2px solid black;
+        border-top: 0;
+        padding: 10px;
+    }
+    .table-dashboard tr{
+        color: white;
+        background: #232323;
+    }
+
+    .table-dashboard tr td{
+        border: none;
+    }
+
+    .table-dashboard tr:nth-child(even){
+        background: black;
+    }
+
+    .text-orange{
+        color: orange;
+    }
+
+    .highlight{
+        background: rgba(255,255,255,0.1);
+    }
+
+    .header-antrian{
+        background: #60a94d;
+        color: white;
+        padding: 10px 30px;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .caller{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background: rgb(77 141 61);
+        text-align: center;
+        z-index: 999;
+        top: 0;
+        padding-top: 5%;
+        background: rgb(56,148,6);
+        background: linear-gradient(356deg, rgb(190 230 30) 6%, rgb(255 242 80) 98%);
+    }
+
+
+</style>
+<div class="container-fluid" style="background: black;">
+    <div class="row header-antrian">
+        ANTRIAN PELAYANAN RAWAT JALAN
+    </div>
+    <div class="row table-dashboard">
+        <p-table [value]="dataDashboard" dataKey="prefix" responsiveLayout="scroll" style="padding:0;">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-center">Kode</th>
+                    <th>Poliklinik</th>
+                    <th>Antrian<br/>Sekarang</th>
+                    <th>Antrian<br/>Selanjutnya</th>
+                    <th>Estimasi Waktu Dilayani</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td class="text-center">{{item.prefix}}</td>
+                    <td class="text-orange">{{item.nama}}</td>
+                    <td class="highlight">{{item.prefix}}-11</td>
+                    <td>{{item.prefix}}-12</td>
+                    <td>16:20 (20 menit)</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<div class="container-fluid" style="display: none;">
     <div class="row p-2">
         <div class="col"></div>
         <div class="col-8">
@@ -66,5 +156,24 @@
             <div *ngIf="dataAntrian.length == 0" class="text-center alert">Tidak Ada Data Antrian Saat Ini.</div>
         </div>
         <div class="col"></div>
+    </div>
+</div>
+
+
+<div class="container-fluid caller">
+    <div class="row">
+        <div class="col">
+            <div style="font-size: 3rem;
+    font-weight: bold;
+    margin: 3%;">NO. ANTRIAN</div>
+            <div style="padding: 0%;
+    font-size: 8rem;
+    background: #fefefe;
+    margin: 3% 23%;
+    font-weight: bold;
+    border-radius: 7rem;">A1-11</div>
+            <div style="font-size: 3rem;">POLIKLINIK ANAK</div>
+            <div style="font-size: 2rem;">dr. Ferry Hadinata, Sp.A</div>
+        </div>
     </div>
 </div>
