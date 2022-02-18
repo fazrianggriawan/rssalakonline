@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit {
         };
         this.dashboardService.callAntrian(data).subscribe(data => {
           if( data.code == '200' ){
-            this.updateWaktuAntrian();
+            this.updateWaktuAntrian(4);
             this.getAntrian();
           }
         })
@@ -90,15 +90,19 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  updateWaktuAntrian(){
+  updateWaktuAntrian(taskId:any){
+    let booking_code : string = '';
+    if( this.dataAntrian[0] ){
+      booking_code = this.dataAntrian[0].booking_code;
+    }else{
+      booking_code = this.lastCall.booking_code;
+    }
     let data = {
-      kodebooking : this.dataAntrian[0].booking_code
+      kodebooking : booking_code,
+      taskid: taskId
     };
     this.dashboardService.updateWaktuAntrian(data).subscribe(data => {
-      if( data.code == '200' ){
-        this.updateWaktuAntrian();
-        this.getAntrian();
-      }
+      alert(data.metadata.message);
     })
   }
 

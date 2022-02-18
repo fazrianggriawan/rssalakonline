@@ -1,0 +1,1 @@
+ng build --deploy-url=./ --base-href=./
