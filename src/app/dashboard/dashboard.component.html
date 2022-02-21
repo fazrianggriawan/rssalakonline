@@ -20,10 +20,13 @@
     .table-dashboard tr{
         color: white;
         background: #232323;
+        font-size: 1.8rem;
     }
 
     .table-dashboard tr td{
         border: none;
+        padding-top: 1.9%;
+        padding-bottom: 1.9%;
     }
 
     .table-dashboard tr:nth-child(even){
@@ -35,15 +38,17 @@
     }
 
     .highlight{
-        background: rgba(255,255,255,0.1);
+        background: rgb(3 145 245 / 16%);
     }
 
     .header-antrian{
         background: #60a94d;
         color: white;
-        padding: 10px 30px;
-        font-size: 1.25rem;
-        font-weight: 600;
+        padding: 20px 30px;
+    }
+
+    .header-antrian h1{
+        font-size: 2rem;
     }
 
     .caller{
@@ -54,7 +59,7 @@
         text-align: center;
         z-index: 999;
         top: 0;
-        padding-top: 5%;
+        padding-top: 40%;
         background: rgb(56,148,6);
         background: linear-gradient(356deg, rgb(190 230 30) 6%, rgb(255 242 80) 98%);
     }
@@ -63,7 +68,7 @@
 </style>
 <div class="container-fluid" style="background: black;">
     <div class="row header-antrian">
-        ANTRIAN PELAYANAN RAWAT JALAN
+        <h1 align="center">RS SALAK BOGOR - ANTRIAN RAWAT JALAN</h1>
     </div>
     <div class="row table-dashboard">
         <p-table [value]="dataDashboard" dataKey="prefix" responsiveLayout="scroll" style="padding:0;">
@@ -73,19 +78,22 @@
                     <th>Poliklinik</th>
                     <th>Antrian<br/>Sekarang</th>
                     <th>Antrian<br/>Selanjutnya</th>
-                    <th>Estimasi Waktu Dilayani</th>
+                    <th class="text-center">Estimasi <br> Waktu Dilayani</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-item>
                 <tr>
                     <td class="text-center">{{item.prefix}}</td>
                     <td class="text-orange">{{item.nama}}</td>
-                    <td class="highlight">{{item.prefix}}-11</td>
-                    <td>{{item.prefix}}-12</td>
-                    <td>16:20 (20 menit)</td>
+                    <td class="highlight text-center">{{item.prefix}}-11</td>
+                    <td class="text-center" style="color: silver;">{{item.prefix}}-12</td>
+                    <td class="text-center" style="color: silver;">16:20</td>
                 </tr>
             </ng-template>
         </p-table>
+        <div class="bg-white text-center" style="font-size: 2rem; padding: 20px; margin-bottom: 3rem;">
+            Informasi Selengkapnya : online.rssalakbogor.co.id
+        </div>
     </div>
 </div>
 <div class="container-fluid" style="display: none;">
@@ -154,20 +162,20 @@
 </div>
 
 
-<div class="container-fluid caller">
+<div class="container-fluid callera">
     <div class="row">
         <div class="col">
-            <div style="font-size: 3rem;
+            <div style="font-size: 5rem;
     font-weight: bold;
     margin: 3%;">NO. ANTRIAN</div>
             <div style="padding: 0%;
-    font-size: 8rem;
+    font-size: 12rem;
     background: #fefefe;
-    margin: 3% 23%;
+    margin: 3% 5%;
     font-weight: bold;
-    border-radius: 7rem;">A1-11</div>
-            <div style="font-size: 3rem;">POLIKLINIK ANAK</div>
-            <div style="font-size: 2rem;">dr. Ferry Hadinata, Sp.A</div>
+    border-radius: 9rem;">A1-11</div>
+            <div style="font-size: 4rem; font-weight: bold; margin-bottom: 4rem;">POLIKLINIK<br>REHABILITASI MEDIK</div>
+            <div style="font-size: 3rem;">dr. Ferry Hadinata, Sp.A</div>
         </div>
     </div>
 </div>
