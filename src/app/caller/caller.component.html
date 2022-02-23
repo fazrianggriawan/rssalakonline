@@ -1,1 +1,39 @@
-<button (click)="caller()">Call</button>
+<div class="container-fuild" style="position: fixed; height: 100%; width: 100%; background-color: black;">
+    <div class="row bg-white">
+        <div class="col-12 text-center" style="background:#f4f4f4;">
+            <div class="border rounded p-3 m-2 shadow-sm bg-white">
+                <h1>Antrian Sekarang</h1>
+                <h1>A1-11</h1>
+                <h3>Fazri Anggriawan</h3>
+                <h3>No. RM : 808080</h3>
+            </div>
+        </div>
+        <div class="col-6 text-center p-4 clickable" (click)="canceled()" style="background-color: silver; display: inline-flex;">
+            <div style="margin-left: 40px;"><i class="bi bi-x" style="font-size: 1.8rem;"></i></div>
+            <div style="padding: 10px;">Tidak Hadir</div>
+        </div>
+        <div class="col-6 text-center p-4 clickable" (click)="recall()" style="background-color: orange; display: inline-flex;">
+            <div style="margin-left: 40px;"><i class="bi bi-volume-up" style="font-size: 1.8rem;"></i></div>
+            <div style="padding: 10px;">Panggil Lagi</div>
+        </div>
+    </div>
+    <div class="row clickable" (click)="next()" style="background-color: #3d7daa; color: white;">
+        <div class="col-8 p-4" style="font-size: 1.2rem;">
+            No. Antrian :
+            A1-01 <br>
+            FAZRI ANGGRIAWAN <br>
+            No. RM : 629039
+        </div>
+        <div class="col" style="font-size: 1.5rem; padding-top: 45px;">
+            NEXT <i class="bi bi-chevron-right"></i>
+        </div>
+    </div>
+    <div class="row clickable" (click)="showDataAntrian()">
+        <div class="col-12 text-center border p-4" style="background-color: #a3ebac; color: black;">
+            POLI ANAK <br>
+            dr. Mugiyo Karto Utomo, Sp.A
+        </div>
+    </div>
+</div>
+
+<!-- <button (click)="caller()">Call</button> -->
