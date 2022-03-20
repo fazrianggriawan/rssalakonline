@@ -1,13 +1,12 @@
 <style type="text/styelsheet">
-    body {
-        overflow: hidden !important; /* Hide scrollbars */
-    }
 
-    .table-dashboard{
+    .panel-dashboard{
         background: black;
         height: 100%;
         width: 100%;
         position: fixed;
+        overflow-y: hidden;
+        overflow-x: hidden;
     }
 
     .table-dashboard tr th{
@@ -66,101 +65,52 @@
 
 
 </style>
-<div class="container-fluid" style="background: black;">
-    <div class="row header-antrian">
-        <h1 align="center">RS SALAK BOGOR - ANTRIAN RAWAT JALAN</h1>
+<div class="container-fluid panel-dashboard">
+    <div class="row header-antrian text-center">
+        <h1>
+            RS SALAK BOGOR - ANTRIAN RAWAT JALAN
+        </h1>
+        <h3><i class="bi bi-clock-history"></i> {{info_antrian.tanggal}} - {{info_antrian.jadwal}}</h3>
     </div>
     <div class="row table-dashboard">
-        <p-table [value]="dataDashboard" dataKey="prefix" responsiveLayout="scroll" style="padding:0;">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th class="text-center">Kode</th>
-                    <th>Poliklinik</th>
-                    <th>Antrian<br/>Sekarang</th>
-                    <th>Antrian<br/>Selanjutnya</th>
-                    <th class="text-center">Estimasi <br> Waktu Dilayani</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item>
-                <tr>
-                    <td class="text-center">{{item.prefix}}</td>
-                    <td class="text-orange">{{item.nama}}</td>
-                    <td class="highlight text-center">{{item.prefix}}-11</td>
-                    <td class="text-center" style="color: silver;">{{item.prefix}}-12</td>
-                    <td class="text-center" style="color: silver;">16:20</td>
-                </tr>
-            </ng-template>
-        </p-table>
-        <div class="bg-white text-center" style="font-size: 2rem; padding: 20px; margin-bottom: 3rem;">
-            Informasi Selengkapnya : online.rssalakbogor.co.id
-        </div>
-    </div>
-</div>
-<div class="container-fluid" style="display: none;">
-    <div class="row p-2">
-        <div class="col">
-            <p-calendar [(ngModel)]="tglKunjungan" dateFormat="dd-mm-yy" (onSelect)="getJadwalDokter()"></p-calendar>
-            &nbsp;
-            <p-dropdown [options]="dataPoli" [(ngModel)]="selectedPoli" optionLabel="ket" placeholder="Pilih Poli" (onChange)="getJadwalDokter()"></p-dropdown>
-            &nbsp;
-            <p-dropdown [options]="dataJadwalPraktek" [(ngModel)]="selectedJadwal" placeholder="Pilih Jadwal Dokter" (onChange)="getAntrian()">
-                <ng-template pTemplate="selectedItem">
-                    <div>({{selectedJadwal.jadwal}}) {{selectedJadwal.namadokter}} </div>
-                </ng-template>
-                <ng-template let-item pTemplate="item">
-                    <div>({{item.jadwal}}) {{item.namadokter}} </div>
-                </ng-template>
-            </p-dropdown>
-        </div>
-    </div>
-    <div class="row p-2">
-        <div class="col m-2 shadow border rounded thumbnail text-center p-3">
-            <div>No. Antrian</div>
-            <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
-            <!-- <button class="btn btn-sm btn-secondary">Recall</button> -->
-            <div *ngIf="lastCall.prefix_antrian">
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(5)" title="akhir waktu layan poli/mulai waktu tunggu farmasi">Task 5</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(6)" title="akhir waktu tunggu farmasi/mulai waktu layan farmasi membuat obat">Task 6</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(7)" title="akhir waktu obat selesai dibuat">Task 7</button>&nbsp;
-                <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(99)" title="tidak hadir/batal">Task 99</button>&nbsp;
-            </div>
-        </div>
-        <div class="col m-2 shadow border rounded thumbnail text-center p-3" style="background-color: #ccdaff; color: #4e5d83; cursor: pointer;" (click)="callNext()">
-            <h5 class="pt-2">CALL NEXT</h5>
-            <div class="pt-1">No. Antrian :</div>
-            <div style="font-size: 1rem; padding-top: 5px;">{{nextCall}}</div>
-            <div><i>Update Waktu : Task 4</i></div>
-        </div>
-    </div>
-    <div class="row p-2">
-        <div class="col">
-            <p-table [value]="dataAntrian" dataKey="id" responsiveLayout="scroll">
+        <div class="col p-0">
+            <p-table [value]="dataDashboard" dataKey="prefix" responsiveLayout="scroll" [style]="{'width':'100%'}">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Kode Booking</th>
-                        <th>No. Antrian</th>
+                        <th class="text-center">Kode</th>
                         <th>Poliklinik</th>
-                        <th>Update Waktu Antrian</th>
+                        <th>Antrian<br/>Sekarang</th>
+                        <th>Antrian<br/>Selanjutnya</th>
+                        <th>Estimasi <br> Jam Dilayani</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item>
                     <tr>
-                        <td>{{item.booking_code}}</td>
-                        <td>{{item.prefix_antrian}}-{{item.no_antrian}}</td>
-                        <td>{{item.nama_poli}}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(1)" title="mulai waktu tunggu admisi">Task 1</button>&nbsp;
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(2)" title="akhir waktu tunggu admisi/mulai waktu layan admisi">Task 2</button>&nbsp;
-                            <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(3)" title="akhir waktu layan admisi/mulai waktu tunggu poli">Task 3</button>&nbsp;
+                        <td class="text-center">
+                            {{item.poli.prefix_antrian}}
+                        </td>
+                        <td class="text-orange">
+                            {{item.poli.nama_poli}}
+                        </td>
+                        <td class="highlight text-center">
+                            <div *ngIf="item.called">{{item.called.prefix_antrian}}-{{item.called.no_antrian}}</div>
+                        </td>
+                        <td class="text-center" style="color: silver;">
+                            <div *ngIf="item.waiting">
+                                {{item.waiting.prefix_antrian}}-{{item.waiting.no_antrian}}
+                            </div>
+                        </td>
+                        <td class="text-center" style="color: silver;">
+                            <div *ngIf="item.waiting.estimasi && item.called.estimasi">{{ item.called.estimasi }}</div>
+                            <div *ngIf="!item.called.estimasi && item.waiting.estimasi">{{ item.waiting.estimasi }}</div>
+                            <div *ngIf="item.called.estimasi && !item.waiting.estimasi">-</div>
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
-            <div *ngIf="dataAntrian.length == 0" class="text-center alert">Tidak Ada Data Antrian Saat Ini.</div>
         </div>
     </div>
 </div>
-
 
 <div class="container-fluid callera">
     <div class="row">

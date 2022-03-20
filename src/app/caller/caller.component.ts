@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AntrianService } from '../services/antrian.service';
+import { RegistrasiService } from '../services/registrasi.service';
 
 @Component({
     selector: 'app-caller',
@@ -8,39 +9,162 @@ import { AntrianService } from '../services/antrian.service';
 })
 export class CallerComponent implements OnInit {
 
-    recall() {
+    dataAntrian: any[] = [];
+    dataPoli: any[] = [];
+    dataJadwalPraktek: any[] = [];
+    tglKunjungan: Date = new Date();
+    selectedPoli: any = {};
+    selectedJadwal: any = {};
+    nextCall: string = '';
+    lastCall: any = {};
+    dataCalled: any = [];
 
+    dataDashboard: any[] = [
+        { 'prefix': 'A1', 'nama': 'ANAK' },
+        { 'prefix': 'A2', 'nama': 'ANASTESI' },
+        { 'prefix': 'A3', 'nama': 'BEDAH' },
+        { 'prefix': 'A4', 'nama': 'BEDAH MULUT' },
+        { 'prefix': 'A5', 'nama': 'BEDAH PLASTIK' },
+        { 'prefix': 'A6', 'nama': 'GERIATRI' },
+        { 'prefix': 'A7', 'nama': 'PENYAKIT DALAM' },
+        { 'prefix': 'A8', 'nama': 'JANTUNG' },
+        { 'prefix': 'A9', 'nama': 'PENYAKIT JIWA' },
+        { 'prefix': 'B1', 'nama': 'KULIT KELAMIN' },
+        { 'prefix': 'B1', 'nama': 'MATA' },
+        { 'prefix': 'B3', 'nama': 'OBGYN' },
+        { 'prefix': 'B4', 'nama': 'ORTHOPEDI' },
+        { 'prefix': 'B5', 'nama': 'PARU' },
+        { 'prefix': 'B6', 'nama': 'REHABILITASI MEDIK' },
+        { 'prefix': 'B7', 'nama': 'SARAF' },
+        { 'prefix': 'B8', 'nama': 'THT' },
+        { 'prefix': 'B9', 'nama': 'UMUM' },
+        { 'prefix': 'C1', 'nama': 'UROLOGI' },
+    ];
+
+    getDataPoli() {
+        this.antrianService.getPoliBpjs().subscribe(data => {
+            this.dataPoli = data.data;
+        })
     }
 
-    showDataAntrian() {
+    getAntrian() {
+        let data = {
+            tgl: this.tglKunjungan.toLocaleDateString(),
+            poli: this.selectedPoli.kode,
+            jadwal: this.selectedJadwal.jadwal
+        }
+        this.antrianService.getAntrian(data).subscribe(data => {
+            this.dataAntrian = [];
+            this.dataCalled = [];
+            this.lastCall = {};
+            this.nextCall = '';
 
+            if (data.data.length > 0) {
+                let dataAntrian: any[] = data.data;
+                let lastIdxCalled: any = '';
+                dataAntrian.forEach((element, index) => {
+                    if (element.call_time) {
+                        this.dataCalled.push(element);
+                        lastIdxCalled = index;
+                    } else {
+                        this.dataAntrian.push(element);
+                    }
+                });
+                if (this.dataCalled[lastIdxCalled]) {
+                    this.lastCall = this.dataCalled[lastIdxCalled];
+                }
+
+                if (this.dataAntrian[0]) {
+                    this.nextCall = this.dataAntrian[0].prefix_antrian + '-' + this.dataAntrian[0].no_antrian;
+                }
+            }
+        })
     }
 
-    next() {
-
-    }
-
-    canceled() {
-        if( confirm('Yakin antrian ini tidak hadir ?') ){
-            this.antrianService.cancelAntrian().subscribe(data => {
-                console.log(data);
-            });
-            alert('antrian tidak hadir');
+    getJadwalDokter() {
+        if (this.tglKunjungan && this.selectedPoli.kode) {
+            this.selectedJadwal = {};
+            let data = {
+                tgl: this.tglKunjungan.toLocaleDateString(),
+                poli: this.selectedPoli.kode
+            }
+            this.registrasiService.getJadwalDokter(data).subscribe(data => {
+                this.dataJadwalPraktek = data.response;
+            })
         }
     }
 
-    caller() {
-        let s: string = 'dua puluh lima';
+    callNext() {
+        if (this.nextCall == '') {
+            alert('Tidak ada data dalam antrian');
+        } else {
+            if (confirm('Yakin ingin memanggil ?')) {
+                this.caller(this.dataAntrian[0]);
+
+                let data = {
+                    id_antrian: this.dataAntrian[0].id,
+                    kodebooking: this.dataAntrian[0].booking_code
+                };
+
+                this.antrianService.callAntrian(data).subscribe(data => {
+                    if (data.code == '200') {
+                        this.updateWaktuAntrian(4);
+                        this.getAntrian();
+                    }
+                })
+            }
+        }
+    }
+
+    updateWaktuAntrian(taskId: any) {
+        let booking_code: string = '';
+        if (this.dataAntrian[0]) {
+            booking_code = this.dataAntrian[0].booking_code;
+        } else {
+            booking_code = this.lastCall.booking_code;
+        }
+        let data = {
+            kodebooking: booking_code,
+            taskid: taskId
+        };
+        this.antrianService.updateWaktuAntrian(data).subscribe(data => {
+            console.log(data.metadata.message);
+        })
+    }
+
+    canceled() {
+        if (confirm('Yakin antrian ini tidak hadir ?')) {
+            this.antrianService.cancelAntrian().subscribe(res => {
+                console.log(res)
+            })
+        }
+    }
+
+    caller(dataAntrian:any) {
+        let s = this.antrianService.terbilang(dataAntrian.no_antrian).trim();
         let as = s.split(' ');
+
+        let letPrefix = dataAntrian.prefix_antrian.substring(0,1);
+        let noPrefix = this.antrianService.terbilang(dataAntrian.prefix_antrian.substring(1,2)).trim();
+
         let array: HTMLAudioElement[] = [];
         array.push(new Audio("./assets/audio/nomor_antrian.mp3"));
-        as.forEach(element => {
+
+        array.push(new Audio("./assets/audio/"+letPrefix.toLowerCase()+".mp3"));
+        array.push(new Audio("./assets/audio/"+noPrefix+".mp3"));
+
+
+        as.forEach((element: string) => {
             array.push(new Audio("./assets/audio/" + element + ".mp3"));
         });
         array.push(new Audio("./assets/audio/silahkan.mp3"));
-        // array.push(new Audio("./assets/audio/tiga.mp3"));
+
         array.push(new Audio("./assets/audio/poli_anak.mp3"));
         this.play_sound_queue(array);
+    }
+
+    recall() {
+        this.caller(this.lastCall);
     }
 
     play(audio: any, callback: any) {
@@ -81,10 +205,12 @@ export class CallerComponent implements OnInit {
     }
 
     constructor(
-        private antrianService: AntrianService
+        private antrianService: AntrianService,
+        private registrasiService: RegistrasiService
     ) { }
 
     ngOnInit(): void {
+        this.getDataPoli();
     }
 
 }

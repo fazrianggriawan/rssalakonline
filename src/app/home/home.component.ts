@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     title = 'rssalakonline';
     panelRegistrasi: boolean = false;
     jadwalDokter: any = [];
-    selectedDokter: any;
+    selectedDokter: any = {};
     noKartuBPJS: string = '';
     dataPasien: any = {};
     dataDokter: any[] = [];
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
     statusJadwalDokter: boolean = false;
     loading: boolean = false;
     today: Date = new Date();
+    kodeBooking : string = '';
 
     dataPoli: any[] = [
         { kode: "ANA", nama: "Anak", prefix: "A1", selected: false },
@@ -160,6 +161,7 @@ export class HomeComponent implements OnInit {
         this.statusJadwalDokter = false;
         if (this.formRegistrasi.valid) {
             this.loading = true;
+            this.selectedDokter = {};
             let data = {
                 tgl: this.formRegistrasi.value.tanggal.toLocaleDateString(),
                 poli: this.formRegistrasi.value.poli
@@ -189,7 +191,9 @@ export class HomeComponent implements OnInit {
         }
 
         this.registrasiService.saveRegistrasi(data).subscribe(data => {
-            console.log(data);
+            if( data.metadata.code == 200 ){
+                this.kodeBooking = data.response.kodebooking
+            }
         })
     }
 
@@ -224,6 +228,12 @@ export class HomeComponent implements OnInit {
 
     hidePanelRegistrasi() {
         this.resetFormRegistrasi();
+    }
+
+    hidePanelBooking() {
+        this.resetFormRegistrasi();
+        this.kodeBooking = '';
+        this.panelRegistrasi = false;
     }
 
     resetFormRegistrasi() {

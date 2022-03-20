@@ -206,3 +206,24 @@
 <div class="loading-panel" *ngIf="loading">
     <div class="blink p-1">Loading...</div>
 </div>
+
+<div class="kodebooking-panel" *ngIf="kodeBooking != ''">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-6 col-lg-5">
+                <p>Registrasi Telah Berhasil. </p>
+                <h1>KODE BOOKING</h1>
+                <h1 style="padding: 15px; width: 270px; background-color:#9defcb; margin: auto;">{{kodeBooking}}</h1>
+                <qr-code value="{{kodeBooking}}" size="300" errorCorrectionLevel="M"></qr-code>
+                <p style="width: 90%; margin: auto; padding: 10px; border: 1px solid orange;">Scan Barcode di atas pada mesin anjungan di bagian pendaftaran untuk pembuatan SEP.</p>
+                <p style="padding: 10px; margin-top: 40px; background-color: #303030; color: #b9b9b9;">
+                    Jika membutuhkan bantuan, silahkan datang ke loket pendaftaran. <br>
+                    Terima Kasih.
+                </p>
+                <div style="position: absolute; top: 20px; right: 20px;">
+                    <button class="btn btn-outline-secondary" (click)="hidePanelBooking()"><i class="bi bi-x-lg"></i>  Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

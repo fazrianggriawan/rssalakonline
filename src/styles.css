@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 body{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background-color: white;
@@ -58,14 +59,30 @@ body{
 }
 
 .loading-panel{
+    color: black;
     top: 0;
+    left: 0;
     position: fixed;
     height: 100%;
     width: 100%;
     z-index: 9999;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     text-align: center;
     vertical-align: middle;
+}
+
+.vcenter-item{
+    display: flex;
+    align-items: center;
+}
+
+.wrapper{
+    min-height: 100%;
+}
+
+.box{
+    padding: 25px;
+    width: 100%;
 }
 
 .clickable{
@@ -73,5 +90,189 @@ body{
 }
 
 .clickable:hover{
-    opacity: 0.8;
+    /* opacity: 0.9; */
 }
+
+.kodebooking-panel{
+    top: 0;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 100px;
+}
+
+.dialog-booking-code{
+    color: white !important;
+    background-color: #59a88e !important;
+    background-image: linear-gradient(135deg, #59a88e 0%, #95e2b4 100%) !important;
+    margin: 0 !important;
+}
+
+.dialog-booking-code .p-dialog-header{
+    background: none !important;
+    color: white;
+    text-align: center;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.hg-theme-default .hg-button{
+    font-size: 1.2rem;
+    color: black;
+    height: 70px;
+    text-transform: uppercase;
+}
+
+.hg-functionBtn {
+    text-transform: lowercase !important;
+}
+
+.p-toast-center{ top: 25% !important;}
+
+.p-toast .p-toast-message{
+    box-shadow: 1px 1px 25rem 25rem rgba(255, 255, 255, .6);
+}
+
+.hidden{ display: none; }
+
+.p-confirm-dialog .p-dialog-content{
+    background-color: antiquewhite;
+    font-size: 1.25rem;
+}
+
+.grey{ color: rgba(0, 0, 0, .6) !important; }
+.light{ color: rgba(0, 0, 0, .3) !important; }
+
+.bg-image{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    opacity: 10%;
+    background-image: url('assets/bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.panel-kiosk{
+    z-index: 1;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.header-kiosk{
+    background: linear-gradient(346deg, #ffffff 0%, #e7df83 100%);
+    letter-spacing: 0px; border-bottom: 3px solid #7ccb85;
+    color: white;
+    border-bottom: 2px solid white;
+    color: rgb(94 90 50);
+    letter-spacing: 0px;
+}
+
+.header-kiosk h1{ font-size: 2rem; }
+.header-kiosk h2{ font-size: 1.5rem; }
+
+.button-group{ margin-top: 3%; }
+
+.button-group h1{ background: rgba(0, 0, 0, 0.1); height: 65%; }
+
+.button-group p{ text-shadow: none; height: 35%; }
+
+.btn-bpjs{
+    background-color: #5994a8;
+    background-image: linear-gradient(135deg, #5994a8 0%, #95cce2 100%);
+    color: white;
+    text-shadow: 1px 1px 3px rgb(65, 65, 65);
+    border-color: #5994a8 !important;
+}
+
+.btn-tunai{
+    background-color: #5986a8;
+    background-image: linear-gradient(135deg, #5986a8 0%, #9599E2 100%);
+    color: white;
+    text-shadow: 1px 1px 3px rgb(65, 65, 65);
+    border-color: #5986a8 !important;
+}
+
+.btn-online{
+    background-color: #9f59a8;
+    background-image: linear-gradient(135deg, #9f59a8 0%, #e295c0 100%);
+    color: white;
+    text-shadow: 1px 1px 3px rgb(65, 65, 65);
+    border-color: #9f59a8 !important;
+}
+
+.btn-pasien-baru{
+    background-color: #59a892;
+    background-image: linear-gradient(135deg, #59a892 0%, #95e2b7 100%);
+    color: white;
+    text-shadow: 1px 1px 3px rgb(65, 65, 65);
+    border-color: #59a892 !important;
+}
+
+.btn-next{
+    background-color: #f9c249;
+    background-image: linear-gradient(178deg, #f9c249 0%, #ffbc00 100%);
+    color: #3d3e08;
+    border-color: #ffca00  !important;
+}
+
+.btn-selection{
+    background-color: #fbffc0;
+    background-image: linear-gradient(178deg, #fbffc0 0%, #c8c994 100%);
+    color: #50503a;
+    border-color: #cecf99 !important;
+}
+
+.btn-selection-dokter{
+    background-color: #f1f1f1;
+    background-image: linear-gradient(178deg, #f1f1f1 0%, #ffffff 100%);
+    color: #3a3a3a;
+    border-color: #d7d7d7 !important;
+}
+
+.btn-selection-expired{
+    background-color: #f1f1f1;
+    background-image: linear-gradient(107deg, #ed6e6e 0%, #ff8686 100%);
+    color: #fff;
+    border-color: #d79292 !important;
+}
+
+.btn-selection-disabled{
+    background: #686854 !important;
+    color: #9f9f81;
+    border-color: #686854 !important;
+}
+
+.btn-selection h3{
+    position: relative;
+    width: 100%;
+    height: 140px;
+}
+
+.btn-selection p{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.vcenter-item{
+    display: flex;
+    align-items: center;
+}
+/* Some custom styles to beautify this example */
+.wrapper{
+    min-height: 100%;
+}
+.box{
+    padding: 25px;
+    width: 100%;
+}
+
+.bold{ font-weight: bold; }

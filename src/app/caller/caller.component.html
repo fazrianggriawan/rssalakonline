@@ -1,37 +1,110 @@
-<div class="container-fuild" style="position: fixed; height: 100%; width: 100%; background-color: black;">
-    <div class="row bg-white">
-        <div class="col-12 text-center" style="background:#f4f4f4;">
-            <div class="border rounded p-3 m-2 shadow-sm bg-white">
-                <h1>Antrian Sekarang</h1>
-                <h1>A1-11</h1>
-                <h3>Fazri Anggriawan</h3>
-                <h3>No. RM : 808080</h3>
+<div class="container-fuild" style="position: fixed; height: 100%; width: 100%; overflow-y: auto; overflow-x: hidden;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="row p-4 bg-white">
+                <div class="col-12 p-0 mb-3 text-center">
+                    <div class="border rounded p-3 shadow-sm bg-white">
+                        <h3>Antrian Sekarang</h3>
+                        <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
+                        <h3>Fazri Anggriawan</h3>
+                        <h3>No. RM : 808080</h3>
+                    </div>
+                </div>
+                <div class="col-6 text-center p-3 clickable" (click)="canceled()" style="background-color: silver;">
+                    <div class="bi bi-x-lg" style="font-size: 1.5rem; padding-top: 6px;"></div>
+                    <div>Tidak Hadir</div>
+                </div>
+                <div class="col-6 text-center p-3 clickable" (click)="recall()" style="background-color: orange;">
+                    <div class="bi bi-arrow-clockwise" style="font-size: 1.8rem;"></div>
+                    <div>Panggil Lagi</div>
+                </div>
+                <div class="col-12" style="background-color: #3d7daa; color: white;">
+                    <div class="row">
+                        <div class="col p-4">
+                            <div style="color: #73b4e1;">Data Pasien :</div>
+                            <div>
+                                <div>FAZRI ANGGRIAWAN</div>
+                                <div>No. RM : 629039</div>
+                            </div>
+                        </div>
+                        <div class="col p-4">
+                            <div style="color: #73b4e1;">No. Antrian Selanjutnya :</div>
+                            <h2>{{nextCall}}</h2>
+                        </div>
+                        <div class="col p-4 text-center clickable" (click)="callNext()" style="background-color: #4596cf;">
+                            <h3>
+                                <i class="bi bi-volume-up-fill"></i><br>
+                                PANGGIL
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <div class=" row pb-3">
+                        <div class="col">
+                            <p-calendar
+                                [(ngModel)]="tglKunjungan"
+                                dateFormat="dd-mm-yy"
+                                [style]="{'width':'100%'}"
+                                [readonlyInput]="true"
+                                (onSelect)="getJadwalDokter()">
+                            </p-calendar>
+                        </div>
+                        <div class="col">
+                            <p-dropdown
+                                [options]="dataPoli"
+                                [(ngModel)]="selectedPoli"
+                                [style]="{'width':'100%'}"
+                                optionLabel="ket"
+                                placeholder="Pilih Poli"
+                                (onChange)="getJadwalDokter()">
+
+                            </p-dropdown>
+                        </div>
+                        <div class="col">
+                            <p-dropdown
+                                [options]="dataJadwalPraktek"
+                                [(ngModel)]="selectedJadwal"
+                                [style]="{'width':'100%'}"
+                                placeholder="Pilih Jadwal Dokter"
+                                (onChange)="getAntrian()">
+
+                                <ng-template pTemplate="selectedItem">
+                                    <div>({{selectedJadwal.jadwal}}) {{selectedJadwal.namadokter}} </div>
+                                </ng-template>
+                                <ng-template let-item pTemplate="item">
+                                    <div>({{item.jadwal}}) {{item.namadokter}} </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div>
+                        <p-table [value]="dataAntrian" dataKey="id" responsiveLayout="scroll">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Kode Booking</th>
+                                    <th>No. Antrian</th>
+                                    <th>Poliklinik</th>
+                                    <th>Update Waktu Antrian</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item>
+                                <tr>
+                                    <td>{{item.booking_code}}</td>
+                                    <td>{{item.prefix_antrian}}-{{item.no_antrian}}</td>
+                                    <td>{{item.nama_poli}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(1)" title="mulai waktu tunggu admisi">Task 1</button>&nbsp;
+                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(2)" title="akhir waktu tunggu admisi/mulai waktu layan admisi">Task 2</button>&nbsp;
+                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(3)" title="akhir waktu layan admisi/mulai waktu tunggu poli">Task 3</button>&nbsp;
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div *ngIf="dataAntrian.length == 0" class="text-center alert">Tidak Ada Data Antrian Saat Ini.</div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-6 text-center p-4 clickable" (click)="canceled()" style="background-color: silver; display: inline-flex;">
-            <div style="margin-left: 40px;"><i class="bi bi-x" style="font-size: 1.8rem;"></i></div>
-            <div style="padding: 10px;">Tidak Hadir</div>
-        </div>
-        <div class="col-6 text-center p-4 clickable" (click)="recall()" style="background-color: orange; display: inline-flex;">
-            <div style="margin-left: 40px;"><i class="bi bi-volume-up" style="font-size: 1.8rem;"></i></div>
-            <div style="padding: 10px;">Panggil Lagi</div>
-        </div>
-    </div>
-    <div class="row clickable" (click)="next()" style="background-color: #3d7daa; color: white;">
-        <div class="col-8 p-4" style="font-size: 1.2rem;">
-            No. Antrian :
-            A1-01 <br>
-            FAZRI ANGGRIAWAN <br>
-            No. RM : 629039
-        </div>
-        <div class="col" style="font-size: 1.5rem; padding-top: 45px;">
-            NEXT <i class="bi bi-chevron-right"></i>
-        </div>
-    </div>
-    <div class="row clickable" (click)="showDataAntrian()">
-        <div class="col-12 text-center border p-4" style="background-color: #a3ebac; color: black;">
-            POLI ANAK <br>
-            dr. Mugiyo Karto Utomo, Sp.A
         </div>
     </div>
 </div>

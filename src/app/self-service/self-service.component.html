@@ -1,0 +1,90 @@
+<div class="container-fluid panel-kiosk">
+    <div class="row mb-4 header-kiosk pb-4">
+        <div class="d-block d-md-none">
+            <div class="col-sm-12 p-3 pb-0 mb-0">
+                <img src="assets/logo.png" alt="Logo Salak" height="50px"> &nbsp;
+                <img src="assets/hesti.png" alt="Logo Salak" height="50px">
+                <img src="assets/kodam.png" alt="Logo Salak" height="50px">
+            </div>
+            <div class="col-sm-12 p-3 pt-0 pb-0">
+                <h1 class="mb-0 pb-0 pt-2">RS SALAK BOGOR</h1>
+                <h2 class="mt-0 pt-0 display-6">PELAYANAN MANDIRI TERINTEGRASI</h2>
+            </div>
+        </div>
+        <div class="col-sm-2 col-md-2 ps-5 pt-4 text-end d-none d-md-block">
+            <img src="assets/logo.png" alt="Logo Salak" style="height: 80px;">
+        </div>
+        <div class="col-sm-10 col-md-7 p-4 pb-0 d-none d-md-block">
+            <h1 class="mb-0 pb-0 pt-2">RS SALAK BOGOR</h1>
+            <h2 class="mt-0 pt-0 fs-4">PELAYANAN MANDIRI TERINTEGRASI</h2>
+        </div>
+        <div class="col-md-2 p-4 d-none d-md-block">
+            <img src="assets/hesti.png" alt="Logo Salak" height="50px">
+            <img src="assets/kodam.png" alt="Logo Salak" height="50px">
+        </div>
+    </div>
+    <div class="row button-group justify-content-center p-3">
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-bpjs" (click)="setPanelStatus('bpjs', true)" pRipple>
+            <h1 class="p-4">BPJS / KIS</h1>
+            <p class="ps-4 pe-4 pt-1">Pasien peserta BPJS dan KIS.</p>
+        </div>
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-tunai" (click)="setPanelStatus('tunai', true)" pRipple>
+            <h1 class="p-4">TUNAI / UMUM / ASURANSI</h1>
+            <p class="ps-4 pe-4 pt-1">Pasien dengan pembayaran pribadi atau Asuransi non BPJS.</p>
+        </div>
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-pasien-baru" (click)="setPanelStatus('pasienBaru', true)" pRipple>
+            <h1 class="p-4">PASIEN BARU</h1>
+            <p class="ps-4 pe-4 pt-1">Pengunjung baru yang belum memiliki nomor rekam medis.</p>
+        </div>
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" (click)="setPanelStatus('online', true)" pRipple>
+            <h1 class="p-4">REGISTRASI <br> ONLINE</h1>
+            <p class="ps-4 pe-4 pt-1">Pasien yang telah registrasi online dan memiliki kode booking.</p>
+        </div>
+    </div>
+</div>
+
+<app-pasien-baru></app-pasien-baru>
+<app-umum></app-umum>
+<app-bpjs></app-bpjs>
+<app-online></app-online>
+
+<div class="bg-image"></div>
+
+<div class="loading-panel" *ngIf="loading">
+    <div class="wrapper vcenter-item">
+        <div class="box display-5"><span class="blink">Loading...</span></div>
+    </div>
+</div>
+
+<p-toast position="center" key="c">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column" style="flex: 1">
+            <div class="text-center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                <h4>{{message.summary}}</h4>
+                <p>{{message.detail}}</p>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle" appendTo="body">
+    <ng-template pTemplate="header">
+        <h3>KONFIRMASI DATA</h3>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="row">
+            <div class="col m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" (click)="cd.reject()" pRipple>
+                <h1 class="p-4 text-center">TIDAK,<br/>Tinjau Kembali</h1>
+                <p class="ps-4 pe-4 pt-1 text-center">Mohon pastikan data sudah benar, <br>Kesalahan data tidak dapat dirubah kembali.</p>
+            </div>
+            <div class="col m-2 p-0 pb-3 clickable bg-white shadow border btn-pasien-baru rounded" (click)="cd.accept()" pRipple>
+                <h1 class="p-4 text-center">YA,<br/>Sudah Benar</h1>
+                <p class="ps-4 pe-4 pt-1 text-center">Selesaikan Proses Registrasi</p>
+            </div>
+        </div>
+
+        <!-- <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button> -->
+    </ng-template>
+</p-confirmDialog>
