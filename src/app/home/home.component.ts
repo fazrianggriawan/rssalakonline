@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api'
 import { NgxHowlerService } from "ngx-howler";
 import { RegistrasiService } from '../services/registrasi.service';
+import { formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-home',
@@ -50,8 +51,8 @@ export class HomeComponent implements OnInit {
     ];
 
     dataJnsKunjungan: any[] = [
-        { kode: 1, nama: 'Kunjungan Pertama Kali' },
-        { kode: 3, nama: 'Kontrol' },
+        { kode: 1, nama: 'Rujukan Baru' },
+        { kode: 3, nama: 'Kontrol Kembali' },
     ]
 
     dataJnsPasien: any[] = [
@@ -96,10 +97,24 @@ export class HomeComponent implements OnInit {
         this.clearPoli();
         this.clearJadwalDokter();
         if (this.formRegistrasi.value.jnsKunjungan == 3) {
-            this.getDataKontrol();
+            // this.getDataKontrol();
+            this.getDataHistorySep();
         } else {
             this.getDataRujukan();
         }
+    }
+
+    getDataHistorySep() {
+        this.clearDataKontrol();
+        this.clearDataRujukan();
+        this.loading = true;
+        this.registrasiService.getHistorySep(this.dataPasien.noKartu).subscribe(data => {
+            if (data.metaData.code == '200') {
+                this.dataSuratKontrol = data.response.histori;
+                console.log(this.dataSuratKontrol);
+            }
+            this.loading = false;
+        })
     }
 
     getDataKontrol() {
@@ -239,6 +254,11 @@ export class HomeComponent implements OnInit {
     resetFormRegistrasi() {
         this.formRegistrasi.reset();
         this.dataPasien = {};
+    }
+
+    reformatDate(a:string){
+        let b : any = formatDate(a, 'EEEE, dd MMM YYYY', 'id-ID');
+        return b;
     }
 
     constructor(

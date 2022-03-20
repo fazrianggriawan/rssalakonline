@@ -40,6 +40,9 @@ export class OnlineComponent implements OnInit {
     rujukan : {},
     dokter : {},
     poli : {},
+    suratKontrol : {},
+    sep : {},
+    asalFaskes: ''
   }
 
   ngAfterViewInit() {
@@ -48,7 +51,7 @@ export class OnlineComponent implements OnInit {
     this.data = {
       rujukan : [],
       jadwal : [],
-      kontrol: [],
+    kontrol: [],
       sep: []
     }
     this.booking = {};
@@ -100,7 +103,16 @@ export class OnlineComponent implements OnInit {
         this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: 'Kode Booking Tidak Ditemukan.'});
       }else{
         this.booking = data.data;
-        this.registrasiService.getRujukan(this.booking.no_referensi).subscribe(data => { this.selected.rujukan = data.response.rujukan; })
+
+        if( this.booking.jns_kunjungan == 1 ){
+          this.registrasiService.getRujukan(this.booking.no_referensi).subscribe(data => { this.selected.rujukan = data.response.rujukan; this.selected.asalFaskes = data.response.asalFaskes; })
+        }else{
+          this.registrasiService.getSep(this.booking.no_referensi).subscribe(data => {
+            this.selected.sep = data.response;
+            this.registrasiService.getRujukan(this.selected.sep.noRujukan).subscribe(data2 => { this.selected.rujukan = data2.response.rujukan; this.selected.asalFaskes = data2.response.asalFaskes; })
+          })
+        }
+
         this.registrasiService.getDokterBpjsById(this.booking.kodedokter_bpjs).subscribe(data => { this.selected.dokter = data.data })
         this.registrasiService.getPoliBpjsById(this.booking.poli).subscribe(data => { this.selected.poli = data.data })
       }
@@ -130,6 +142,118 @@ export class OnlineComponent implements OnInit {
       }else{
         this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: 'Tidak ada jadwal dokter hari ini.'});
         this.loading = false;
+      }
+    })
+  }
+
+  finish(){
+    let data = this.setFormSep();
+    if( this.booking.jns_kunjungan == 1 ){
+      this.saveSep(data);
+    }else{
+      this.createSuratKontrol();
+    }
+
+    console.log(data);
+    console.log(this.selected);
+  }
+
+  createSuratKontrol(){
+    let today = new Date();
+    let data : any = {
+      noSep: this.selected.sep.noSep,
+      dokter: this.selected.dokter.kode,
+      poli: this.selected.poli.kode,
+      tgl: today.toLocaleDateString()
+    }
+
+    this.registrasiService.saveSuratKontrol(data).subscribe(data => {
+      if( data.metaData.code == '200' ){
+        this.selected.suratKontrol = data.response;
+        let a = this.setFormSep();
+        this.saveSep(a);
+      }else{
+        alert(data.metaData.message);
+      }
+    })
+  }
+
+  setFormSep(){
+    var tujuanKunj = '0';
+    var assesmentPel = '';
+    var noSuratSkdp = '';
+    var kodeDPJP = '';
+
+    if( this.booking.jns_kunjungan != 1 ){
+      tujuanKunj = '2';
+      assesmentPel = '5';
+      noSuratSkdp = this.selected.suratKontrol.noSuratKontrol;
+      kodeDPJP = this.selected.dokter.kode;
+    }
+
+    let today = new Date();
+
+    let data : any = {
+      noKartu: this.booking.no_kartu_bpjs,
+      tglSep: today.toLocaleDateString(),
+      jnsPelayanan: '2',
+      noMR: '818181',
+      diagAwal: this.selected.rujukan.diagnosa,
+      catatan: '-',
+      cob: '0',
+      katarak: '0',
+      tujuanKunj: tujuanKunj,
+      flagProcedure: '',
+      kdPenunjang: '',
+      assesmentPel: assesmentPel,
+      dpjpLayan: this.selected.dokter.kode,
+      isLakalantas: '0',
+      tlp: '082110661682',
+      poli: {
+          tujuan: this.selected.poli,
+          isEksekutif: '0'
+      },
+      klsRawat: {
+          klsRawatHak: this.selected.rujukan.peserta.hakKelas.kode,
+          klsRawatNaik: '',
+          pembiayaan: '',
+          penanggungJawab: '',
+      },
+      rujukan: {
+          asalRujukan: this.selected.asalFaskes,
+          tglRujukan: this.selected.rujukan.tglKunjungan,
+          noRujukan: this.selected.rujukan.noKunjungan,
+          ppkRujukan: this.selected.rujukan.provPerujuk.kode,
+      },
+      skdp: {
+          noSurat: noSuratSkdp,
+          kodeDPJP: kodeDPJP,
+      },
+      detailLaka: {
+          penjamin: {
+              tglKejadian: '',
+              keterangan: '',
+          },
+          suplesi: {
+              isSuplesi: '0',
+              noSepSuplesi: ''
+          },
+          lokasiLaka: {
+              kdPropinsi: '',
+              kdKabupaten: '',
+              kdKecamatan: ''
+          }
+      }
+    }
+    return data;
+  }
+
+  saveSep(data:any){
+    this.registrasiService.saveSep(data).subscribe(data => {
+      if( data.metaData.code == '200' ){
+        console.log('success');
+      }else{
+        alert(data.metaData.message);
       }
     })
   }

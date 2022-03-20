@@ -48,6 +48,10 @@ export class RegistrasiService {
         return this.http.get<any>(config.api_vclaim('rujukan/get/nomor_rujukan?key='+noRujukan), {responseType: 'json'});
     }
 
+    getSuratKontrol(noSuratKontrol:string){
+        return this.http.get<any>(config.api_vclaim('rencana_kontrol/get/?key='+noSuratKontrol), {responseType: 'json'});
+    }
+
     getPoliBpjs(){
         return this.http.get<any>(config.api_online('get/poli_bpjs'), { responseType: 'json' });
     }
@@ -70,6 +74,14 @@ export class RegistrasiService {
 
     saveRegistrasi(data:any){
         return this.http.post<any>(config.api_online('save/registrasi'), data, {responseType: 'json'});
+    }
+
+    saveSep(data:any){
+        return this.http.post<any>(config.api('vclaim/sep/save/sep'), data, {responseType: 'json'});
+    }
+
+    saveSuratKontrol(data:any){
+        return this.http.post<any>(config.api('vclaim/rencana_kontrol/save/rencana_kontrol'), data, {responseType: 'json'});
     }
 
     constructor(

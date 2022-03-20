@@ -117,7 +117,7 @@
                                             (change)="changeJnsKunjungan()">
                                             <option selected></option>
                                             <option *ngFor="let item of dataJnsKunjungan" value="{{item.kode}}">
-                                                {{item.nama}}</option>
+                                                {{item.nama | uppercase}}</option>
                                         </select>
                                     </div>
                                     <div
@@ -135,14 +135,13 @@
                                     </div>
                                     <div
                                         *ngIf="formRegistrasi.value.jnsKunjungan == 3 && formRegistrasi.value.jnsPasien == 'jkn'">
-                                        <div>Surat Kontrol :</div>
+                                        <div>Kunjungan Sebelumnya :</div>
                                         <div class="mb-2">
-                                            <select class="form-select" formControlName="suratKontrol"
-                                                (change)="changeSuratKontrol()">
+                                            <select class="form-select" formControlName="suratKontrol">
                                                 <option selected></option>
                                                 <option *ngFor="let item of dataSuratKontrol"
-                                                    [value]="item.noSuratKontrol">
-                                                    {{item.noSuratKontrol}} - POLI {{item.namaPoliTujuan | uppercase}}
+                                                    [value]="item.noSep">
+                                                    POLI {{item.poli | uppercase}} - Tanggal : {{reformatDate(item.tglSep)}}
                                                 </option>
                                             </select>
                                         </div>
