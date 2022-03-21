@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import Keyboard from "simple-keyboard";
+import { config } from 'src/app/config';
 import { AnjunganService } from 'src/app/services/anjungan.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { RegistrasiService } from 'src/app/services/registrasi.service';
@@ -251,12 +252,18 @@ export class OnlineComponent implements OnInit {
   saveSep(data:any){
     this.registrasiService.saveSep(data).subscribe(data => {
       if( data.metaData.code == '200' ){
+          this.printSep(data.response.sep.noSep)
         console.log('success');
       }else{
         alert(data.metaData.message);
       }
     })
   }
+
+    printSep(noSep:string) {
+        var iframe = '<iframe src="' + config.api_vclaim + '/sep/cetak/index?key=' + noSep + '" style="height:calc(100% - 4px);width:calc(100% - 4px)"></iframe>';
+        window.open("", "", "width=1024,height=510,toolbar=no,menubar=no,resizable=yes")?.document.write(iframe);
+    }
 
   constructor(
     private registrasiService: RegistrasiService,
