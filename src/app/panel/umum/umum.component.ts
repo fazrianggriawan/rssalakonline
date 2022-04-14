@@ -175,7 +175,9 @@ export class UmumComponent implements OnInit, AfterViewInit {
   }
 
   destroyKeyboard(){
-    this.keyboard.destroy();
+    if( this.keyboard ){
+      this.keyboard.destroy();
+    }
   }
 
   onChange = (input: string) => {

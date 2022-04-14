@@ -72,6 +72,14 @@ export class RegistrasiService {
         return this.http.get<any>(config.api('master/poli/getPoliBpjsById/?key='+id), { responseType: 'json' });
     }
 
+    getToday(){
+        return this.http.get<any>(config.api('auth/getTodayDate'), { responseType: 'json' });
+    }
+
+    getDataPasien(noKartu:string){
+        return this.http.get<any>(config.api_public('vclaim/peserta/get/pasien?noKartu='+noKartu), { responseType: 'json' });
+    }
+
     saveRegistrasi(data:any){
         return this.http.post<any>(config.api_online('save/registrasi'), data, {responseType: 'json'});
     }

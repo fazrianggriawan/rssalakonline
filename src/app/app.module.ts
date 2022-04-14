@@ -39,6 +39,7 @@ import { PasienBaruComponent } from './panel/pasien-baru/pasien-baru.component';
 import { UmumComponent } from './panel/umum/umum.component';
 import { BpjsComponent } from './panel/bpjs/bpjs.component';
 import { OnlineComponent } from './panel/online/online.component';
+import { PerawatComponent } from './panel/perawat/perawat.component';
 
 @NgModule({
     declarations: [
@@ -50,7 +51,8 @@ import { OnlineComponent } from './panel/online/online.component';
         PasienBaruComponent,
         UmumComponent,
         BpjsComponent,
-        OnlineComponent
+        OnlineComponent,
+        PerawatComponent
     ],
     imports: [
         BrowserModule,

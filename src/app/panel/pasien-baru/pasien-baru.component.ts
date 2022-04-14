@@ -135,7 +135,6 @@ export class PasienBaruComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log('hallo');
     this.peserta.reset();
     this.jenisPasien = '';
     this.value = '';
@@ -151,7 +150,9 @@ export class PasienBaruComponent implements OnInit, AfterViewInit {
   }
 
   destroyKeyboard(){
-    this.keyboard.destroy();
+    if( this.keyboard ){
+      this.keyboard.destroy();
+    }
   }
 
   onChange = (input: string) => {

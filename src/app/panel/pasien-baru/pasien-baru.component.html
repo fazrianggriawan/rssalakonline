@@ -14,12 +14,13 @@
     <div class="row justify-content-center pb-5" *ngIf="!jenisPasien">
         <div class="col-10 text-center">
             <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">CARI DATA PASIEN</h1>
+            <hr>
             <div class="row justify-content-center pt-2">
-                <div class="col-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" pRipple (click)="setJenisPasien('bpjs')">
+                <div class="col-5 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" pRipple (click)="setJenisPasien('bpjs')">
                     <h1 class="p-4 pb-1 mt-5 mb-5">PESERTA BPJS / KIS</h1>
                     <p class="p-2 ps-4 pe-4 m-0" style="background-color: rgba(0, 0, 0, 0.1);">Cari menggunakan Kartu Pasien</p>
                 </div>
-                <div class="col-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-tunai" pRipple (click)="setJenisPasien('umum')">
+                <div class="col-5 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-tunai" pRipple (click)="setJenisPasien('umum')">
                     <h1 class="p-4 pb-1 mt-5 mb-5">UMUM / NON BPJS</h1>
                     <p class="p-2 ps-4 pe-4 m-0" style="background-color: rgba(0, 0, 0, 0.1);">Biaya ditanggung pribadi.</p>
                 </div>

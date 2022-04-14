@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { PrimeNGConfig } from 'primeng/api';
 import { AnjunganService } from "../services/anjungan.service";
 import { MessageService, ConfirmationService } from 'primeng/api';

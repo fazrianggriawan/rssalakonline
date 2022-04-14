@@ -3,7 +3,7 @@
     [fullScreen]="true"
     [showCloseIcon]="false"
     [modal]="false"
-    (onShow)="ngAfterViewInit()"
+    (onShow)="initOnShow()"
     (onHide)="destroyKeyboard()"
     styleClass="dialog-booking-code">
 
@@ -99,7 +99,7 @@
         <hr>
         <div class="row p-4 justify-content-center">
             <div class="col-5 pt-3 text-start">
-                <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" pRipple (click)="ngAfterViewInit()"><i class="bi bi-chevron-left"></i> BACK</button>
+                <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" pRipple (click)="initOnShow()"><i class="bi bi-chevron-left"></i> BACK</button>
             </div>
             <div class="col-5 pt-3 text-end">
                 <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" (click)="finish()" pRipple>NEXT <i class="bi bi-chevron-right"></i></button>
