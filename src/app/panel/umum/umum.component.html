@@ -14,22 +14,21 @@
     <div class="row justify-content-center pb-5" *ngIf="!jenisPasien">
         <div class="col-10 text-center">
             <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">CARI PASIEN</h1>
-            <div class="row justify-content-center pt-2 mt-5">
-                <div class="col-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" pRipple (click)="setJenisPasien('kartuPasien')">
+            <hr>
+            <div class="row justify-content-center pt-2 mt-3">
+                <div class="col-5 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" pRipple (click)="setJenisPasien('kartuPasien')">
                     <h1 class="p-4 pb-1 mt-5 mb-5">KARTU PASIEN</h1>
                     <p class="p-2 ps-4 pe-4 m-0" style="background-color: rgba(0, 0, 0, 0.1);">Daftar menggunakan nomor rekam medis pada kartu pasien.</p>
                 </div>
-                <div class="col-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-tunai" pRipple (click)="setJenisPasien('tglLahir')">
+                <div class="col-5 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-tunai" pRipple (click)="setJenisPasien('tglLahir')">
                     <h1 class="p-4 pb-1 mt-5 mb-5">TANGGAL LAHIR</h1>
                     <p class="p-2 ps-4 pe-4 m-0" style="background-color: rgba(0, 0, 0, 0.1);">Daftar menggunakan tanggal lahir pasien.</p>
                 </div>
             </div>
-            <div class="row justify-content-center mt-3">
-                <div class="col-9 text-start">
-                    <hr>
-                    <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="setPanelStatus('baru', false)"><i class="bi bi-chevron-left"></i> BACK</button>
-                </div>
-            </div>
+        </div>
+        <div class="col-10 pt-3 text-start">
+            <hr>
+            <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="setPanelStatus('baru', false)"><i class="bi bi-chevron-left"></i> BACK</button>
         </div>
     </div>
 

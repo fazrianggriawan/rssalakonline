@@ -13,7 +13,7 @@ export class RegistrasiService {
     }
 
     getJadwalDokter(data:any){
-        return this.http.post<any>(config.api_antrol('get/jadwal_dokter'), data, {responseType: 'json'});
+        return this.http.post<any>(config.api_antrol('get/jadwal_dokter'), data);
     }
 
     getPesertaBPJS(noKartu:string){
@@ -72,6 +72,15 @@ export class RegistrasiService {
         return this.http.get<any>(config.api('master/poli/getPoliBpjsById/?key='+id), { responseType: 'json' });
     }
 
+    getToday(){
+        return this.http.get<any>(config.api('auth/getTodayDate'), { responseType: 'json' });
+    }
+
+    getDataPasien(noKartu:string){
+        // return this.http.get<any>(config.api_public('vclaim/peserta/get/pasien?noKartu='+noKartu), { responseType: 'json' });
+        return this.http.get<any>(config.api('online/get/getPasien?noKartu='+noKartu), { responseType: 'json' });
+    }
+
     saveRegistrasi(data:any){
         return this.http.post<any>(config.api_online('save/registrasi'), data, {responseType: 'json'});
     }
@@ -82,6 +91,10 @@ export class RegistrasiService {
 
     saveSuratKontrol(data:any){
         return this.http.post<any>(config.api('vclaim/rencana_kontrol/save/rencana_kontrol'), data, {responseType: 'json'});
+    }
+
+    saveAntrol(data:any){
+        return this.http.post<any>(config.api('online/save/registrasi'), data, {responseType: 'json'});
     }
 
     constructor(

@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { formatDate, registerLocaleData } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import Keyboard from "simple-keyboard";
@@ -8,6 +8,8 @@ import { AnjunganService } from 'src/app/services/anjungan.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { RegistrasiService } from 'src/app/services/registrasi.service';
 import localeId from '@angular/common/locales/id';
+import { config } from 'src/app/config';
+import { AntrianService } from 'src/app/services/antrian.service';
 registerLocaleData(localeId, 'id');
 
 
@@ -27,7 +29,8 @@ registerLocaleData(localeId, 'id');
 })
 export class BpjsComponent implements OnInit {
 
-  value = "";
+  value = '';
+  today : any = '';
   panelStatus : boolean = false;
   keyboard !: Keyboard;
   loading : boolean = false;
@@ -43,7 +46,8 @@ export class BpjsComponent implements OnInit {
   selected : any = {
     suratKontrol: {},
     rujukan: {},
-    sep: {}
+    sep: {},
+    pasien: {}
   }
   peserta = this.fb.group({
     nama: [null],
@@ -58,6 +62,7 @@ export class BpjsComponent implements OnInit {
     statusPeserta: [null]
   })
   noRujukan: string = '';
+  kodeBooking: string = '';
 
   @ViewChild('search', {static: false}) searchElement!: ElementRef;
 
@@ -79,6 +84,11 @@ export class BpjsComponent implements OnInit {
             ppkAsal: res.provUmum.nmProvider,
             statusPeserta: res.statusPeserta.keterangan
           });
+          this.registrasiService.getDataPasien(this.value).subscribe(res => {
+            if( res.data.norekmed ){
+              this.selected.pasien = res.data;
+            }
+          })
         }else{
           this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: data.metadata.message});
           this.loading = false;
@@ -99,7 +109,7 @@ export class BpjsComponent implements OnInit {
     this.data.jadwal = [];
     let data = {
       poli: idPoli,
-      tgl: new Date().toLocaleDateString()
+      tgl: this.today
     }
     this.registrasiService.getJadwalDokter(data).subscribe(data => {
       if( data.metadata.code == 200 ){
@@ -155,7 +165,6 @@ export class BpjsComponent implements OnInit {
   setJadwal(data:any){
     this.selected.jadwal = data;
     this.review = true;
-    console.log(this.selected);
   }
 
   setJenisKunjungan(){
@@ -173,7 +182,11 @@ export class BpjsComponent implements OnInit {
 
   setHistory(dataSep: any){
     this.getSep(dataSep.noSep);
-    this.selected.rujukan = dataSep.noRujukan;
+
+    this.registrasiService.getRujukan(dataSep.noRujukan).subscribe(data => {
+      this.selected.rujukan = data.response;
+    })
+
     this.registrasiService.getDataKontrolByPeserta(this.value).subscribe(data => {
       data.response.list.forEach((element: any) => {
         if( element.noSepAsalKontrol == dataSep.noSep ){
@@ -225,8 +238,7 @@ export class BpjsComponent implements OnInit {
     }, 200);
   }
 
-  ngAfterViewInit() {
-    this.buildKeyboard();
+  initOnShow() {
     this.peserta.reset();
     this.jenisPasien = '';
     this.value = '';
@@ -237,6 +249,7 @@ export class BpjsComponent implements OnInit {
       sep: [],
     }
     this.review = false;
+    this.kodeBooking = '';
   }
 
   onBlur() {
@@ -244,7 +257,9 @@ export class BpjsComponent implements OnInit {
   }
 
   destroyKeyboard(){
-    this.keyboard.destroy();
+    if( this.keyboard ){
+      this.keyboard.destroy();
+    }
   }
 
   onChange = (input: string) => {
@@ -280,11 +295,153 @@ export class BpjsComponent implements OnInit {
     this.anjunganservice.panel.bpjs.next(status);
   }
 
+  save(){
+    let registrasi = {
+      jnsPasien: 'jkn',
+      isPasienBaru: '0',
+      jnsKunjungan: (this.jenisPasien == 'rujukan') ? '1' : '3',
+      rujukan: this.selected.rujukan,
+      suratKontrol: this.selected.suratKontrol,
+    };
+    this.selected.registrasi = registrasi;
+    this.selected.tanggalKunjungan = this.today;
+    this.selected.selectedPoli = this.selected.poli;
+    this.selected.peserta = this.peserta.value;
+
+    let data = {
+      dokter: {jadwal: this.selected.jadwal.jadwal, kodedokter: this.selected.jadwal.kodedokter, namadokter: this.selected.jadwal.namadokter},
+      registrasi: { jnsKunjungan: '2', jnsPasien: 'jkn', rujukan: '', suratKontrol: '' },
+      pasien: { noKartu: this.selected.peserta.noKartu, nik: this.selected.peserta.nik, hp: this.selected.pasien.tlp, norm: this.selected.pasien.norekmed.substr(-6,6), nama: this.selected.peserta.nama },
+      selectedPoli: this.selected.selectedPoli,
+      tanggalKunjungan: this.today,
+      isPasienBaru: 0
+    }
+
+    this.registrasiService.saveAntrol( data ).subscribe(res => {
+      alert( res.metadata.message );
+      if( res.metadata.code == 200 ){
+        this.kodeBooking = res.response.kodebooking;
+        this.updateTaskId( { kodebooking: res.response.kodebooking, taskid: 3 } );
+      }
+    })
+  }
+
+  updateTaskId(data:any){
+    this.antrianService.updateWaktuAntrian(data).subscribe(data => {
+        console.log(data.metadata.message);
+    })
+  }
+
+  createSuratKontrol(){
+    let data : any = {
+      noSep: this.selected.sep.noSep,
+      dokter: String(this.selected.jadwal.kodedokter),
+      poli: this.selected.poli.kode,
+      tgl: this.today
+    }
+    this.registrasiService.saveSuratKontrol(data).subscribe(data => {
+      if( data.metaData.code == '200' ){
+        this.selected.suratKontrol = data.response;
+        let a = this.setFormSep(true);
+        this.saveSep(a);
+      }else{
+        alert(data.metaData.message);
+      }
+    })
+  }
+
+  setFormSep(isSuratKontrol:boolean){
+    let tujuanKunj = '0';
+    let assesmentPel = (isSuratKontrol) ? '' : '4';
+    let noSuratSkdp = '';
+    let kodeDPJP = '';
+
+    let jnsKunjungan = (this.jenisPasien == 'rujukan') ? '1' : '3';
+
+    if( jnsKunjungan != '1' && isSuratKontrol ){
+      tujuanKunj = '2';
+      assesmentPel = '5';
+      noSuratSkdp = this.selected.suratKontrol.noSuratKontrol;
+      kodeDPJP = String(this.selected.jadwal.kodedokter);
+    }
+
+    let data : any = {
+      noKartu: this.selected.sep.peserta.noKartu,
+      tglSep: this.today,
+      jnsPelayanan: '2',
+      noMR: this.selected.pasien.norekmed.substr(-6,6),
+      diagAwal: this.selected.rujukan.rujukan.diagnosa,
+      catatan: '-',
+      cob: '0',
+      katarak: '0',
+      tujuanKunj: tujuanKunj,
+      flagProcedure: '',
+      kdPenunjang: '',
+      assesmentPel: assesmentPel,
+      dpjpLayan: String(this.selected.jadwal.kodedokter),
+      isLakalantas: '0',
+      tlp: this.selected.pasien.tlp,
+      poli: {
+          tujuan: this.selected.poli,
+          isEksekutif: '0'
+      },
+      klsRawat: {
+          klsRawatHak: this.selected.rujukan.rujukan.peserta.hakKelas.kode,
+          klsRawatNaik: '',
+          pembiayaan: '',
+          penanggungJawab: '',
+      },
+      rujukan: {
+          asalRujukan: this.selected.rujukan.asalFaskes,
+          tglRujukan: this.selected.rujukan.rujukan.tglKunjungan,
+          noRujukan: this.selected.rujukan.rujukan.noKunjungan,
+          ppkRujukan: this.selected.rujukan.rujukan.provPerujuk.kode,
+      },
+      skdp: {
+          noSurat: noSuratSkdp,
+          kodeDPJP: kodeDPJP,
+      },
+      detailLaka: {
+          penjamin: {
+              tglKejadian: '',
+              keterangan: '',
+          },
+          suplesi: {
+              isSuplesi: '0',
+              noSepSuplesi: ''
+          },
+          lokasiLaka: {
+              kdPropinsi: '',
+              kdKabupaten: '',
+              kdKecamatan: ''
+          }
+      }
+    }
+    return data;
+  }
+
+  saveSep(data:any){
+    this.registrasiService.saveSep(data).subscribe(data => {
+      if( data.metaData.code == '200' ){
+          this.printSep(data.response.sep.noSep)
+          console.log('success');
+      }else{
+        alert(data.metaData.message);
+      }
+    })
+  }
+
+  printSep(noSep:string) {
+    var iframe = '<iframe src="' + config.api_vclaim('/sep/cetak/index?key='+noSep) + '" style="height:calc(100% - 4px);width:calc(100% - 4px)"></iframe>';
+    window.open("", "", "width=1024,height=510,toolbar=no,menubar=no,resizable=yes")?.document.write(iframe);
+}
+
   constructor(
     private registrasiService: RegistrasiService,
     private messageService: MessageService,
     private errorService: ErrorService,
     private anjunganservice: AnjunganService,
+    private antrianService: AntrianService,
     private fb: FormBuilder
   ) { }
 
@@ -298,6 +455,10 @@ export class BpjsComponent implements OnInit {
     this.anjunganservice.getPanelStatusBpjs().subscribe(status => {
       this.panelStatus = status;
     })
+
+    this.registrasiService.getToday().subscribe(data=>{
+      this.today = new Date(data.date).toISOString().split('T')[0];
+    });
 
   }
 

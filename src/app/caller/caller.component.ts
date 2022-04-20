@@ -16,6 +16,7 @@ export class CallerComponent implements OnInit {
     selectedPoli: any = {};
     selectedJadwal: any = {};
     nextCall: string = '';
+    dataNextCall: any = {};
     lastCall: any = {};
     dataCalled: any = [];
 
@@ -70,12 +71,15 @@ export class CallerComponent implements OnInit {
                         this.dataAntrian.push(element);
                     }
                 });
+
                 if (this.dataCalled[lastIdxCalled]) {
                     this.lastCall = this.dataCalled[lastIdxCalled];
+                    console.log(this.lastCall);
                 }
 
                 if (this.dataAntrian[0]) {
                     this.nextCall = this.dataAntrian[0].prefix_antrian + '-' + this.dataAntrian[0].no_antrian;
+                    this.dataNextCall = this.dataAntrian[0];
                 }
             }
         })
