@@ -6,8 +6,8 @@
                     <div class="border rounded p-3 shadow-sm bg-white">
                         <h3>Antrian Sekarang</h3>
                         <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
-                        <h3>Fazri Anggriawan</h3>
-                        <h3>No. RM : 808080</h3>
+                        <h3>{{lastCall.nama}}</h3>
+                        <h3>No. RM : {{lastCall.norm}}</h3>
                     </div>
                 </div>
                 <div class="col-6 text-center p-3 clickable" (click)="canceled()" style="background-color: silver;">
@@ -21,10 +21,10 @@
                 <div class="col-12" style="background-color: #3d7daa; color: white;">
                     <div class="row">
                         <div class="col p-4">
-                            <div style="color: #73b4e1;">Data Pasien :</div>
+                            <div style="color: #73b4e1;">Pasien Selanjutnya :</div>
                             <div>
-                                <div>FAZRI ANGGRIAWAN</div>
-                                <div>No. RM : 629039</div>
+                                <div>{{dataNextCall.nama}}</div>
+                                <div *ngIf="dataNextCall.norm">No. RM : {{dataNextCall.norm}}</div>
                             </div>
                         </div>
                         <div class="col p-4">
@@ -82,22 +82,18 @@
                         <p-table [value]="dataAntrian" dataKey="id" responsiveLayout="scroll">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th>Kode Booking</th>
                                     <th>No. Antrian</th>
-                                    <th>Poliklinik</th>
-                                    <th>Update Waktu Antrian</th>
+                                    <th>Nama</th>
+                                    <th>No. RM</th>
+                                    <th>Kode Booking</th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-item>
                                 <tr>
-                                    <td>{{item.booking_code}}</td>
                                     <td>{{item.prefix_antrian}}-{{item.no_antrian}}</td>
-                                    <td>{{item.nama_poli}}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(1)" title="mulai waktu tunggu admisi">Task 1</button>&nbsp;
-                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(2)" title="akhir waktu tunggu admisi/mulai waktu layan admisi">Task 2</button>&nbsp;
-                                        <button class="btn btn-sm btn-primary" (click)="updateWaktuAntrian(3)" title="akhir waktu layan admisi/mulai waktu tunggu poli">Task 3</button>&nbsp;
-                                    </td>
+                                    <td>{{item.nama}}</td>
+                                    <td>{{item.norm}}</td>
+                                    <td>{{item.booking_code}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -108,5 +104,3 @@
         </div>
     </div>
 </div>
-
-<!-- <button (click)="caller()">Call</button> -->

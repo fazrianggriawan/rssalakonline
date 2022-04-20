@@ -9,6 +9,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { RegistrasiService } from 'src/app/services/registrasi.service';
 import localeId from '@angular/common/locales/id';
 import { config } from 'src/app/config';
+import { AntrianService } from 'src/app/services/antrian.service';
 registerLocaleData(localeId, 'id');
 
 
@@ -61,6 +62,7 @@ export class BpjsComponent implements OnInit {
     statusPeserta: [null]
   })
   noRujukan: string = '';
+  kodeBooking: string = '';
 
   @ViewChild('search', {static: false}) searchElement!: ElementRef;
 
@@ -247,6 +249,7 @@ export class BpjsComponent implements OnInit {
       sep: [],
     }
     this.review = false;
+    this.kodeBooking = '';
   }
 
   onBlur() {
@@ -304,22 +307,29 @@ export class BpjsComponent implements OnInit {
     this.selected.tanggalKunjungan = this.today;
     this.selected.selectedPoli = this.selected.poli;
     this.selected.peserta = this.peserta.value;
-    // let data = {
-    //   tanggalKunjungan: this.today,
-    //   selectedPoli: this.selected.poli,
-    //   pasien: this.peserta.value,
-    //   registrasi: registrasi,
-    // }
 
-    // console.log(data);
-    console.log(this.selected);
-
-    if( this.selected.poli.kode == this.selected.rujukan.rujukan.poliRujukan.kode ){
-      this.createSuratKontrol();
-    }else{
-      let a = this.setFormSep(false);
-      this.saveSep(a);
+    let data = {
+      dokter: {jadwal: this.selected.jadwal.jadwal, kodedokter: this.selected.jadwal.kodedokter, namadokter: this.selected.jadwal.namadokter},
+      registrasi: { jnsKunjungan: '2', jnsPasien: 'jkn', rujukan: '', suratKontrol: '' },
+      pasien: { noKartu: this.selected.peserta.noKartu, nik: this.selected.peserta.nik, hp: this.selected.pasien.tlp, norm: this.selected.pasien.norekmed.substr(-6,6), nama: this.selected.peserta.nama },
+      selectedPoli: this.selected.selectedPoli,
+      tanggalKunjungan: this.today,
+      isPasienBaru: 0
     }
+
+    this.registrasiService.saveAntrol( data ).subscribe(res => {
+      alert( res.metadata.message );
+      if( res.metadata.code == 200 ){
+        this.kodeBooking = res.response.kodebooking;
+        this.updateTaskId( { kodebooking: res.response.kodebooking, taskid: 3 } );
+      }
+    })
+  }
+
+  updateTaskId(data:any){
+    this.antrianService.updateWaktuAntrian(data).subscribe(data => {
+        console.log(data.metadata.message);
+    })
   }
 
   createSuratKontrol(){
@@ -431,6 +441,7 @@ export class BpjsComponent implements OnInit {
     private messageService: MessageService,
     private errorService: ErrorService,
     private anjunganservice: AnjunganService,
+    private antrianService: AntrianService,
     private fb: FormBuilder
   ) { }
 
@@ -447,7 +458,7 @@ export class BpjsComponent implements OnInit {
 
     this.registrasiService.getToday().subscribe(data=>{
       this.today = new Date(data.date).toISOString().split('T')[0];
-   });
+    });
 
   }
 

@@ -200,7 +200,10 @@
                 </div>
                 <div class="mt-2">
                     <span class="grey">Poliklinik :</span><br>
-                    <div class="fs-5 fs-3">{{item.poli | uppercase}}</div>
+                    <div class="fs-5 fs-3">
+                        <span *ngIf="item.poli">{{item.poli | uppercase}}</span>
+                        <span *ngIf="!item.poli">RAWAT INAP</span>
+                    </div>
                 </div>
             </div>
             <div class="p-3 pt-1 pb-2">
@@ -277,7 +280,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center pb-5" *ngIf="review" @fade>
+    <div class="row justify-content-center pb-5" *ngIf="review && !kodeBooking " @fade>
         <div class="row p-4 justify-content-center">
             <div class="col-10 text-center mb-4">
                 <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KONFIRMASI DATA</h1>
@@ -347,6 +350,16 @@
                 <div class="col text-end">
                     <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" pRipple (click)="save()" >NEXT <i class="bi bi-chevron-right"></i></button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pb-5" *ngIf="kodeBooking" @fade>
+        <div class="row p-4 justify-content-center">
+            <div class="col-10 text-center mb-4">
+                <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KODE BOOKING</h1>
+                <hr>
+                <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65); background: #2a503c; ">{{kodeBooking}}</h1>
             </div>
         </div>
     </div>

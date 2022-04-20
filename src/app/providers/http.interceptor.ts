@@ -23,6 +23,8 @@ export class HttpProvider implements HttpInterceptor {
             timeout(timeoutValueNumeric),
             retry(3),
             catchError((error: HttpErrorResponse) => {
+                alert(JSON.stringify(error));
+                console.log(error);
                 this.errorService.errorStatus.next(error.message);
                 return EMPTY;
             })

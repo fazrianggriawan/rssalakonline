@@ -17,15 +17,15 @@ export class AntrianService {
     }
 
     getAntrian(data: any) {
-        return this.http.post<any>(config.api_online('get/antrian'), data, { responseType: 'json' });
+        return this.http.post<any>(config.api_online('get/antrian'), data);
     }
 
     callAntrian(data: any) {
-        return this.http.post<any>(config.api_online('save/call_antrian'), data, { responseType: 'json' });
+        return this.http.post<any>(config.api_online('save/call_antrian'), data);
     }
 
     updateWaktuAntrian(data: any) {
-        return this.http.post<any>(config.api_online('save/update_waktu_antrian'), data, { responseType: 'json' });
+        return this.http.post<any>(config.api_online('save/update_waktu_antrian'), data);
     }
 
     getDataDashboard() {
