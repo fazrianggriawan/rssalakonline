@@ -8,13 +8,12 @@ import { catchError } from 'rxjs';
 })
 export class RegistrasiService {
 
-    getDokter() {
-        return this.http.get<any>(config.api('antrol/bpjs/get/ref_dokter'), {responseType: 'json'});
+    getJadwalDokter(data:any){
+        return this.http.post<any>(config.api_online('antrol/jadwal_dokter'), data);
     }
 
-    getJadwalDokter(data:any){
-        // return this.http.post<any>(config.api('antrol/bpjs/get/jadwal_dokter'), data);
-        return this.http.post<any>(config.api_antrol('antrol/jadwal_dokter'), data);
+    getDokter() {
+        return this.http.get<any>(config.api('antrol/get/ref_dokter'), {responseType: 'json'});
     }
 
     getPesertaBPJS(noKartu:string){

@@ -8,29 +8,38 @@ import { config } from '../config';
 })
 export class AntrianService {
 
+    getPoliBpjs() {
+        return this.http.get<any>(config.api_online('master/poli_bpjs'), { responseType: 'json' });
+    }
+
+    getAntrian(data: any) {
+        return this.http.post<any>(config.api_online('antrian/filter_data'), data);
+    }
+
+    callAntrian(data: any) {
+        return this.http.post<any>(config.api_online('antrian/call_antrian'), data);
+    }
+
+    updateWaktuAntrian(data: any) {
+        return this.http.post<any>(config.api_online('antrol/update_task_id'), data);
+    }
+
+    //
+
     cancelAntrian(): Observable<any> {
         return this.http.get<any>(config.api('online/delete/cancel_antrian'), { responseType: 'json' });
     }
 
-    getPoliBpjs() {
-        return this.http.get<any>(config.api('online/get/poli_bpjs'), { responseType: 'json' });
-    }
-
-    getAntrian(data: any) {
-        return this.http.post<any>(config.api_antrol('antrian/filter_data'), data);
-    }
-
-    callAntrian(data: any) {
-        return this.http.post<any>(config.api_antrol('antrian/call_antrian'), data);
-    }
-
-    updateWaktuAntrian(data: any) {
-        // return this.http.post<any>(config.api('online/save/update_waktu_antrian'), data);
-        return this.http.post<any>(config.api_antrol('antrol/update_task_id'), data);
-    }
-
     getDataDashboard() {
         return this.http.get<any>(config.api('online/get/data_dashboard'), { responseType: 'json' });
+    }
+
+    postDataTest(){
+        return this.http.post<any>('http://api.simrsmandiri.com/public/antrian', {username: 'fazri'});
+    }
+
+    getBookingCode(bookingCode:string){
+        return this.http.get<any>( config.api('anjungan/get/booking_code?booking_code='+bookingCode), {responseType: 'json'} );
     }
 
     terbilang(x:any, sen:boolean=false) {
