@@ -260,7 +260,7 @@ export class OnlineComponent implements OnInit {
   }
 
   printSep(noSep:string) {
-      var iframe = '<iframe src="' + config.api_vclaim('/sep/cetak/index?key='+noSep) + '" style="height:calc(100% - 4px);width:calc(100% - 4px)"></iframe>';
+      var iframe = '<iframe src="' + config.api('vclaim/sep/cetak/index?key='+noSep) + '" style="height:calc(100% - 4px);width:calc(100% - 4px)"></iframe>';
       window.open("", "", "width=1024,height=510,toolbar=no,menubar=no,resizable=yes")?.document.write(iframe);
   }
 
