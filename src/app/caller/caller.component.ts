@@ -51,8 +51,8 @@ export class CallerComponent implements OnInit {
     getAntrian() {
         let data = {
             tgl: this.tglKunjungan.toLocaleDateString(),
-            poli: this.selectedPoli.kode,
-            jadwal: this.selectedJadwal.jadwal
+            poli: this.selectedPoli,
+            jadwal: this.selectedJadwal
         }
         this.antrianService.getAntrian(data).subscribe(data => {
             this.dataAntrian = [];
@@ -86,11 +86,11 @@ export class CallerComponent implements OnInit {
     }
 
     getJadwalDokter() {
-        if (this.tglKunjungan && this.selectedPoli.kode) {
+        if (this.selectedPoli) {
             this.selectedJadwal = {};
             let data = {
                 tgl: this.tglKunjungan.toLocaleDateString(),
-                poli: this.selectedPoli.kode
+                poli: this.selectedPoli
             }
             this.registrasiService.getJadwalDokter(data).subscribe(data => {
                 this.dataJadwalPraktek = data.response;

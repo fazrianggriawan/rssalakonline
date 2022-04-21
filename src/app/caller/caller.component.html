@@ -1,14 +1,12 @@
-<div class="container-fuild" style="position: fixed; height: 100%; width: 100%; overflow-y: auto; overflow-x: hidden;">
+<div class="container-fuild" style="position: fixed; height: 100%; width: 100%; overflow-y: auto; overflow-x: hidden; background-color:#f4f4f4;">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="row p-4 bg-white">
-                <div class="col-12 p-0 mb-3 text-center">
-                    <div class="border rounded p-3 shadow-sm bg-white">
-                        <h3>Antrian Sekarang</h3>
-                        <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
-                        <h3>{{lastCall.nama}}</h3>
-                        <h3>No. RM : {{lastCall.norm}}</h3>
-                    </div>
+            <div class="row p-4">
+                <div class="col-12 p-4 bg-white text-center">
+                    <h4 style="color: silver;">ANTRIAN</h4>
+                    <h1>{{lastCall.prefix_antrian}}-{{lastCall.no_antrian}}</h1>
+                    <h3>{{lastCall.nama}}</h3>
+                    <h4 *ngIf="lastCall.norm">No.RM : {{lastCall.norm}}</h4>
                 </div>
                 <div class="col-6 text-center p-3 clickable" (click)="canceled()" style="background-color: silver;">
                     <div class="bi bi-x-lg" style="font-size: 1.5rem; padding-top: 6px;"></div>
@@ -39,43 +37,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mt-3">
+                <div class="col-12 mt-2">
                     <div class=" row pb-3">
-                        <div class="col">
-                            <p-calendar
-                                [(ngModel)]="tglKunjungan"
-                                dateFormat="dd-mm-yy"
-                                [style]="{'width':'100%'}"
-                                [readonlyInput]="true"
-                                (onSelect)="getJadwalDokter()">
-                            </p-calendar>
+                        <div class="col-4">
+                            Poliklinik :
+                            <select class="form-select" [(ngModel)]="selectedPoli" (change)="getJadwalDokter()">
+                                <option selected></option>
+                                <option *ngFor="let item of dataPoli" value="{{item.kode}}">
+                                    {{item.ket | uppercase}}
+                                </option>
+                            </select>
                         </div>
-                        <div class="col">
-                            <p-dropdown
-                                [options]="dataPoli"
-                                [(ngModel)]="selectedPoli"
-                                [style]="{'width':'100%'}"
-                                optionLabel="ket"
-                                placeholder="Pilih Poli"
-                                (onChange)="getJadwalDokter()">
-
-                            </p-dropdown>
-                        </div>
-                        <div class="col">
-                            <p-dropdown
-                                [options]="dataJadwalPraktek"
-                                [(ngModel)]="selectedJadwal"
-                                [style]="{'width':'100%'}"
-                                placeholder="Pilih Jadwal Dokter"
-                                (onChange)="getAntrian()">
-
-                                <ng-template pTemplate="selectedItem">
-                                    <div>({{selectedJadwal.jadwal}}) {{selectedJadwal.namadokter}} </div>
-                                </ng-template>
-                                <ng-template let-item pTemplate="item">
-                                    <div>({{item.jadwal}}) {{item.namadokter}} </div>
-                                </ng-template>
-                            </p-dropdown>
+                        <div class="col-8">
+                            Dokter :
+                            <select class="form-select" [(ngModel)]="selectedJadwal" (change)="getAntrian()">
+                                <option selected></option>
+                                <option *ngFor="let item of dataJadwalPraktek" value="{{item.jadwal}}">
+                                    ({{item.jadwal}}) {{item.namadokter}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div>
