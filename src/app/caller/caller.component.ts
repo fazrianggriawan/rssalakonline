@@ -42,26 +42,23 @@ export class CallerComponent implements OnInit {
         { 'prefix': 'C1', 'nama': 'UROLOGI' },
     ];
 
-    getDataPoli() {
-        this.antrianService.getPoliBpjs().subscribe(data => {
-            this.dataPoli = data.data;
-        })
-    }
-
     getAntrian() {
         let data = {
             tgl: this.tglKunjungan.toLocaleDateString(),
             poli: this.selectedPoli,
             jadwal: this.selectedJadwal
         }
-        this.antrianService.getAntrian(data).subscribe(data => {
+
+        this.antrianService.getAntrian(data);
+
+        this.antrianService.dataAntrian.subscribe(data => {
             this.dataAntrian = [];
             this.dataCalled = [];
             this.lastCall = {};
             this.nextCall = '';
 
-            if (data.data.length > 0) {
-                let dataAntrian: any[] = data.data;
+            if (data.length > 0) {
+                let dataAntrian: any[] = data;
                 let lastIdxCalled: any = '';
                 dataAntrian.forEach((element, index) => {
                     if (element.call_time) {
@@ -74,7 +71,6 @@ export class CallerComponent implements OnInit {
 
                 if (this.dataCalled[lastIdxCalled]) {
                     this.lastCall = this.dataCalled[lastIdxCalled];
-                    console.log(this.lastCall);
                 }
 
                 if (this.dataAntrian[0]) {
@@ -87,14 +83,8 @@ export class CallerComponent implements OnInit {
 
     getJadwalDokter() {
         if (this.selectedPoli) {
-            this.selectedJadwal = {};
-            let data = {
-                tgl: this.tglKunjungan.toLocaleDateString(),
-                poli: this.selectedPoli
-            }
-            this.registrasiService.getJadwalDokter(data).subscribe(data => {
-                this.dataJadwalPraktek = data.response;
-            })
+            let data = { poli: this.selectedPoli };
+            this.registrasiService.getJadwalDokter2(data);
         }
     }
 
@@ -112,7 +102,7 @@ export class CallerComponent implements OnInit {
 
                 this.antrianService.callAntrian(data).subscribe(data => {
                     if (data.code == '200') {
-                        this.updateWaktuAntrian(4);
+                        this.antrianService.updateWaktuAntrian({ taskid: 4, kodebooking: this.dataAntrian[0].booking_code })
                         this.getAntrian();
                     }
                 })
@@ -120,27 +110,9 @@ export class CallerComponent implements OnInit {
         }
     }
 
-    updateWaktuAntrian(taskId: any) {
-        let booking_code: string = '';
-        if (this.dataAntrian[0]) {
-            booking_code = this.dataAntrian[0].booking_code;
-        } else {
-            booking_code = this.lastCall.booking_code;
-        }
-        let data = {
-            kodebooking: booking_code,
-            taskid: taskId
-        };
-        this.antrianService.updateWaktuAntrian(data).subscribe(data => {
-            console.log(data.metadata.message);
-        })
-    }
-
     canceled() {
         if (confirm('Yakin antrian ini tidak hadir ?')) {
-            this.antrianService.cancelAntrian().subscribe(res => {
-                console.log(res)
-            })
+            this.antrianService.cancelAntrian();
         }
     }
 
@@ -214,7 +186,9 @@ export class CallerComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.getDataPoli();
+        this.antrianService.getPoliBpjs();
+        this.antrianService.dataPoli.subscribe(res => { this.dataPoli = res });
+        this.registrasiService.jadwalDokter.subscribe(res => { this.dataJadwalPraktek = res; })
     }
 
 }

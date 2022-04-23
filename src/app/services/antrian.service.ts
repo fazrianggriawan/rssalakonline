@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { config } from '../config';
 
 @Injectable({
@@ -8,34 +8,35 @@ import { config } from '../config';
 })
 export class AntrianService {
 
+    dataPoli = new BehaviorSubject<any>([]);
+    dataAntrian = new BehaviorSubject<any>([]);
+
     getPoliBpjs() {
-        return this.http.get<any>(config.api_online('master/poli_bpjs'), { responseType: 'json' });
+        this.http.get<any>(config.api_online('master/poli_bpjs'), { responseType: 'json' }).subscribe(res => {
+            this.dataPoli.next(res.data);
+        });
     }
 
     getAntrian(data: any) {
-        return this.http.post<any>(config.api_online('antrian/filter_data'), data);
+        this.http.post<any>(config.api_online('antrian/filterData'), data).subscribe(res => {
+            this.dataAntrian.next(res.data);
+        });
     }
 
     callAntrian(data: any) {
-        return this.http.post<any>(config.api_online('antrian/call_antrian'), data);
+        return this.http.post<any>(config.api_online('antrian/callAntrian'), data);
     }
 
     updateWaktuAntrian(data: any) {
-        return this.http.post<any>(config.api_online('antrol/update_task_id'), data);
+        this.http.post(config.api_online('antrol/update_task_id'), data);
     }
 
-    //
-
-    cancelAntrian(): Observable<any> {
-        return this.http.get<any>(config.api('online/delete/cancel_antrian'), { responseType: 'json' });
+    cancelAntrian(){
+        this.http.get<any>(config.api('online/delete/cancel_antrian'), { responseType: 'json' });
     }
 
     getDataDashboard() {
         return this.http.get<any>(config.api('online/get/data_dashboard'), { responseType: 'json' });
-    }
-
-    postDataTest(){
-        return this.http.post<any>('http://api.simrsmandiri.com/public/antrian', {username: 'fazri'});
     }
 
     getBookingCode(bookingCode:string){

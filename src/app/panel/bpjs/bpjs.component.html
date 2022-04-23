@@ -332,7 +332,7 @@
                     </div>
                     <div class="mt-3">
                         <span class="grey">No. Rujukan :</span><br>
-                        <div class="fs-5">{{selected.rujukan.rujukan.noKunjungan | uppercase}}</div>
+                        <div class="fs-5"><span *ngIf="selected.rujukan">{{selected.rujukan.rujukan.noKunjungan | uppercase}}</span></div>
                     </div>
                     <div class="mt-3">
                         <span class="grey">No. Surat Kontrol :</span><br>

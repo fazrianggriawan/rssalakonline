@@ -1,6 +1,4 @@
-// let host = 'http://api.simrsmandiri.com/public';
 let host = 'http://simrsmandiri.com/api/index.php';
-// let hostOnline = 'http://localhost/api_rssalakonline/public';
 let hostOnline = 'http://api.simrsmandiri.com/public';
 let hostPublic = 'http://182.253.22.220/vclaim/index.php';
 export const config = {

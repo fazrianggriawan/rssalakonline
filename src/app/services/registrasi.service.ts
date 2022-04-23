@@ -1,15 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { config } from "../config";
-import { catchError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrasiService {
 
+    isRegistered = new BehaviorSubject<any>(true);
+    jadwalDokter = new BehaviorSubject<any>(false);
+
+    checkIsRegistered(nomorKartu:string){
+        return this.http.get<any>(config.api_online('antrian/isRegistered/nomorKartu/'+nomorKartu))
+    }
+
     getJadwalDokter(data:any){
         return this.http.post<any>(config.api_online('antrol/jadwal_dokter'), data);
+    }
+
+    getJadwalDokter2(data:any){
+        this.jadwalDokter.next([]);
+        this.http.post<any>(config.api_online('antrol/jadwal_dokter'), data).subscribe(res => {
+            if( res.metadata.code == 200 && res.response ){
+                this.jadwalDokter.next(res.response);
+            }
+        });
     }
 
     getDokter() {
@@ -17,7 +33,27 @@ export class RegistrasiService {
     }
 
     getPesertaBPJS(noKartu:string){
-        return this.http.get<any>(config.api('vclaim/peserta/get/kartu_bpjs?noKartu='+noKartu), {responseType: 'json'});
+        return this.http.get<any>(config.api_online('vclaim/peserta/nomorKartu/'+noKartu), {responseType: 'json'});
+    }
+
+    getHistorySep(noKartu:string){
+        return this.http.get<any>(config.api_online('vclaim/historySep/nomorKartu/'+noKartu), {responseType: 'json'});
+    }
+
+    getSep(noSep:string){
+        return this.http.get<any>(config.api_online('vclaim/sep/nomorSep/'+noSep), {responseType: 'json'});
+    }
+
+    getRujukan(noRujukan:string){
+        return this.http.get<any>(config.api_online('vclaim/rujukan/nomorRujukan/'+noRujukan), {responseType: 'json'});
+    }
+
+    getDataKontrolByPeserta(noKartu:string){
+        return this.http.get<any>(config.api_online('vclaim/suratKontrol/byPeserta/nomorKartu/'+noKartu+'/filter/2'), {responseType: 'json'});
+    }
+
+    getPoli(key:string){
+        return this.http.get<any>(config.api_online('vclaim/referensi/poliklinik/'+key), {responseType: 'json'});
     }
 
     getDataRujukan(noKartu:string){
@@ -26,26 +62,6 @@ export class RegistrasiService {
 
     getDataKontrol(){
         return this.http.get<any>(config.api('vclaim/rencana_kontrol/get/data_no_surat_kontrol?filter=2'), {responseType: 'json'});
-    }
-
-    getDataKontrolByPeserta(noKartu:string){
-        return this.http.get<any>(config.api('vclaim/rencana_kontrol/get/data_no_surat_kontrol_by_peserta?noKartu='+noKartu+'&filter=2'), {responseType: 'json'});
-    }
-
-    getHistorySep(noKartu:string){
-        return this.http.get<any>(config.api('vclaim/monitoring/get/history_pelayanan?key='+noKartu), {responseType: 'json'});
-    }
-
-    getPoli(key:string){
-        return this.http.get<any>(config.api('vclaim/ref/get/poli?key='+key), {responseType: 'json'});
-    }
-
-    getSep(noSep:string){
-        return this.http.get<any>(config.api('vclaim/sep/get/cari_sep?key='+noSep), {responseType: 'json'});
-    }
-
-    getRujukan(noRujukan:string){
-        return this.http.get<any>(config.api('vclaim/rujukan/get/nomor_rujukan?key='+noRujukan), {responseType: 'json'});
     }
 
     getSuratKontrol(noSuratKontrol:string){
@@ -94,7 +110,7 @@ export class RegistrasiService {
     }
 
     saveAntrol(data:any){
-        return this.http.post<any>(config.api('online/save/registrasi'), data, {responseType: 'json'});
+        return this.http.post<any>(config.api_online('antrian/save'), data, {responseType: 'json'});
     }
 
     constructor(

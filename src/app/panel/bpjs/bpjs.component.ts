@@ -68,34 +68,50 @@ export class BpjsComponent implements OnInit {
 
   getPeserta(){
     if( this.value ){
-      this.loading = true;
-      this.registrasiService.getPesertaBPJS(this.value).subscribe(data => {
-        if( data.metaData.code == 200 ){
-          let res = data.response.peserta;
-          this.peserta.patchValue({
-            nama: res.nama,
-            tglLahir: res.tglLahir,
-            usia: res.umur.umurSekarang,
-            jnsKelamin: res.sex,
-            alamat: '',
-            noKartu: res.noKartu,
-            nik: res.nik,
-            jnsPeserta: res.jenisPeserta.keterangan,
-            ppkAsal: res.provUmum.nmProvider,
-            statusPeserta: res.statusPeserta.keterangan
-          });
-          this.registrasiService.getDataPasien(this.value).subscribe(res => {
-            if( res.data.norekmed ){
-              this.selected.pasien = res.data;
-            }
-          })
+      this.registrasiService.checkIsRegistered(this.value).subscribe(res => {
+        if( res.code == 201 ){
+          this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: 'Anda Sudah Mendaftar Hari Ini.'});
         }else{
-          this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: data.metadata.message});
-          this.loading = false;
+          this.getPesertaBpjs();
         }
-        this.loading = false;
       })
     }
+  }
+
+  getPesertaBpjs(){
+    this.loading = true;
+    this.registrasiService.getPesertaBPJS(this.value).subscribe(data => {
+      if( data.metaData.code == 200 ){
+        if( !data.response ){
+          this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: 'Terjadi Kendala Teknis. Silahkan Coba Kembali.'});
+          this.loading = false;
+          return
+        }
+
+        let res = data.response.peserta;
+        this.peserta.patchValue({
+          nama: res.nama,
+          tglLahir: res.tglLahir,
+          usia: res.umur.umurSekarang,
+          jnsKelamin: res.sex,
+          alamat: '',
+          noKartu: res.noKartu,
+          nik: res.nik,
+          jnsPeserta: res.jenisPeserta.keterangan,
+          ppkAsal: res.provUmum.nmProvider,
+          statusPeserta: res.statusPeserta.keterangan
+        });
+        this.registrasiService.getDataPasien(this.value).subscribe(res => {
+          if( res.data.norekmed ){
+            this.selected.pasien = res.data;
+          }
+        })
+      }else{
+        this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: data.metaData.message});
+        this.loading = false;
+      }
+      this.loading = false;
+    })
   }
 
   getPoli(){
@@ -108,17 +124,15 @@ export class BpjsComponent implements OnInit {
     this.loading = true;
     this.data.jadwal = [];
     let data = {
-      poli: idPoli,
-      tgl: this.today
+      poli: idPoli
     }
     this.registrasiService.getJadwalDokter(data).subscribe(data => {
-      if( data.metadata.code == 200 ){
+      if( data.metadata.code == 200 && data.response ){
         this.data.jadwal = data.response;
-        this.loading = false;
       }else{
         this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: 'Tidak ada jadwal dokter hari ini.'});
-        this.loading = false;
       }
+      this.loading = false;
     })
   }
 
@@ -141,12 +155,14 @@ export class BpjsComponent implements OnInit {
     this.data.rujukan = [];
     this.registrasiService.getDataKontrolByPeserta(this.value).subscribe(data => {
       if( data.metaData.code == 200 ){
-        let res = data.response.list;
-        res.forEach((element: { noKartu: string; }) => {
-          if( element.noKartu == this.value ){
-            this.data.kontrol.push(element)
-          }
-        });
+        if( data.response ){
+          let res = data.response.list;
+          res.forEach((element: { noKartu: string; }) => {
+            if( element.noKartu == this.value ){
+              this.data.kontrol.push(element)
+            }
+          });
+        }
       }else{
         this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: data.metaData.message});
         this.loading = false;
@@ -181,19 +197,21 @@ export class BpjsComponent implements OnInit {
   }
 
   setHistory(dataSep: any){
-    this.getSep(dataSep.noSep);
+    // this.getSep(dataSep.noSep);
 
-    this.registrasiService.getRujukan(dataSep.noRujukan).subscribe(data => {
-      this.selected.rujukan = data.response;
-    })
+    // this.registrasiService.getRujukan(dataSep.noRujukan).subscribe(data => {
+    //   this.selected.rujukan = data.response;
+    // })
 
-    this.registrasiService.getDataKontrolByPeserta(this.value).subscribe(data => {
-      data.response.list.forEach((element: any) => {
-        if( element.noSepAsalKontrol == dataSep.noSep ){
-          this.selected.suratKontrol = element;
-        }
-      });
-    })
+    // this.registrasiService.getDataKontrolByPeserta(this.value).subscribe(data => {
+    //   if( data.response ){
+    //     data.response.list.forEach((element: any) => {
+    //       if( element.noSepAsalKontrol == dataSep.noSep ){
+    //         this.selected.suratKontrol = element;
+    //       }
+    //     });
+    //   }
+    // })
     let poli = dataSep.poli.split(" ");
     this.registrasiService.getPoli(poli[0]).subscribe(data => {
       data.response.poli.forEach((element: any) => {
@@ -296,6 +314,7 @@ export class BpjsComponent implements OnInit {
   }
 
   save(){
+    this.loading = true;
     let registrasi = {
       jnsPasien: 'jkn',
       isPasienBaru: '0',
@@ -318,123 +337,15 @@ export class BpjsComponent implements OnInit {
     }
 
     this.registrasiService.saveAntrol( data ).subscribe(res => {
-      alert( res.metadata.message );
-      if( res.metadata.code == 200 ){
-        this.kodeBooking = res.response.kodebooking;
-        this.updateTaskId( { kodebooking: res.response.kodebooking, taskid: 3 } );
-      }
-    })
-  }
-
-  updateTaskId(data:any){
-    this.antrianService.updateWaktuAntrian(data).subscribe(data => {
-        console.log(data.metadata.message);
-    })
-  }
-
-  createSuratKontrol(){
-    let data : any = {
-      noSep: this.selected.sep.noSep,
-      dokter: String(this.selected.jadwal.kodedokter),
-      poli: this.selected.poli.kode,
-      tgl: this.today
-    }
-    this.registrasiService.saveSuratKontrol(data).subscribe(data => {
-      if( data.metaData.code == '200' ){
-        this.selected.suratKontrol = data.response;
-        let a = this.setFormSep(true);
-        this.saveSep(a);
+      if( res.code == 200 ){
+        this.kodeBooking = res.data.kodebooking;
+        this.antrianService.updateWaktuAntrian( { taskid: 3, kodebooking: res.data.kodebooking } );
       }else{
-        alert(data.metaData.message);
+        this.messageService.add({key: 'c', severity:'error', summary: 'Perhatian', detail: res.message});
       }
+      this.loading = false;
     })
   }
-
-  setFormSep(isSuratKontrol:boolean){
-    let tujuanKunj = '0';
-    let assesmentPel = (isSuratKontrol) ? '' : '4';
-    let noSuratSkdp = '';
-    let kodeDPJP = '';
-
-    let jnsKunjungan = (this.jenisPasien == 'rujukan') ? '1' : '3';
-
-    if( jnsKunjungan != '1' && isSuratKontrol ){
-      tujuanKunj = '2';
-      assesmentPel = '5';
-      noSuratSkdp = this.selected.suratKontrol.noSuratKontrol;
-      kodeDPJP = String(this.selected.jadwal.kodedokter);
-    }
-
-    let data : any = {
-      noKartu: this.selected.sep.peserta.noKartu,
-      tglSep: this.today,
-      jnsPelayanan: '2',
-      noMR: this.selected.pasien.norekmed.substr(-6,6),
-      diagAwal: this.selected.rujukan.rujukan.diagnosa,
-      catatan: '-',
-      cob: '0',
-      katarak: '0',
-      tujuanKunj: tujuanKunj,
-      flagProcedure: '',
-      kdPenunjang: '',
-      assesmentPel: assesmentPel,
-      dpjpLayan: String(this.selected.jadwal.kodedokter),
-      isLakalantas: '0',
-      tlp: this.selected.pasien.tlp,
-      poli: {
-          tujuan: this.selected.poli,
-          isEksekutif: '0'
-      },
-      klsRawat: {
-          klsRawatHak: this.selected.rujukan.rujukan.peserta.hakKelas.kode,
-          klsRawatNaik: '',
-          pembiayaan: '',
-          penanggungJawab: '',
-      },
-      rujukan: {
-          asalRujukan: this.selected.rujukan.asalFaskes,
-          tglRujukan: this.selected.rujukan.rujukan.tglKunjungan,
-          noRujukan: this.selected.rujukan.rujukan.noKunjungan,
-          ppkRujukan: this.selected.rujukan.rujukan.provPerujuk.kode,
-      },
-      skdp: {
-          noSurat: noSuratSkdp,
-          kodeDPJP: kodeDPJP,
-      },
-      detailLaka: {
-          penjamin: {
-              tglKejadian: '',
-              keterangan: '',
-          },
-          suplesi: {
-              isSuplesi: '0',
-              noSepSuplesi: ''
-          },
-          lokasiLaka: {
-              kdPropinsi: '',
-              kdKabupaten: '',
-              kdKecamatan: ''
-          }
-      }
-    }
-    return data;
-  }
-
-  saveSep(data:any){
-    this.registrasiService.saveSep(data).subscribe(data => {
-      if( data.metaData.code == '200' ){
-          this.printSep(data.response.sep.noSep)
-          console.log('success');
-      }else{
-        alert(data.metaData.message);
-      }
-    })
-  }
-
-  printSep(noSep:string) {
-    var iframe = '<iframe src="' + config.api('vclaim/sep/cetak/index?key='+noSep) + '" style="height:calc(100% - 4px);width:calc(100% - 4px)"></iframe>';
-    window.open("", "", "width=1024,height=510,toolbar=no,menubar=no,resizable=yes")?.document.write(iframe);
-}
 
   constructor(
     private registrasiService: RegistrasiService,
