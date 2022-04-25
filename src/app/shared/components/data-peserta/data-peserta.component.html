@@ -1,0 +1,79 @@
+<div class="row justify-content-center pb-5" *ngIf="peserta && !confirmDataPeserta" @fadeIn>
+    <div class="row p-4 justify-content-center">
+        <div class="col-10 text-center mb-4">
+            <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">DATA PESERTA BPJS</h1>
+            <hr>
+        </div>
+        <div class="row justify-content-center">
+            <form class="col-5">
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">NAMA PESERTA</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control fs-3" value="{{peserta.nama}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">TANGGAL LAHIR</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control fs-3" value="{{peserta.tglLahir}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">USIA</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control fs-3" value="{{peserta.umur.umurSekarang}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">JENIS KELAMIN</label>
+                    <div class="col-8">
+                        <input type="text" class="form-control fs-3" value="{{peserta.sex}}" readonly>
+                    </div>
+                </div>
+            </form>
+            <form class="col-5">
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">NO. KARTU BPJS</label>
+                    <div class="col-8">
+                        <input type="email" class="form-control fs-3" value="{{peserta.noKartu}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">NIK</label>
+                    <div class="col-8">
+                        <input type="email" class="form-control fs-3" value="{{peserta.nik}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">JENIS PESERTA</label>
+                    <div class="col-8">
+                        <input type="email" class="form-control fs-3" value="{{peserta.jenisPeserta.keterangan}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">PPK ASAL</label>
+                    <div class="col-8">
+                        <input type="email" class="form-control fs-3" value="{{peserta.provUmum.nmProvider}}" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="nama" class="col col-form-label fs-3">STATUS PESERTA</label>
+                    <div class="col-8">
+                        <input type="email" class="form-control fs-3" value="{{peserta.statusPeserta.keterangan}}" readonly>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-10 pt-3 text-end">
+        <hr>
+        <div class="row">
+            <div class="col text-start">
+                <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="this.back()" pRipple><i class="bi bi-chevron-left"></i> BACK</button>
+            </div>
+            <div class="col text-end">
+                <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" pRipple (click)="next()" >NEXT <i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

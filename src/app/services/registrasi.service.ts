@@ -8,7 +8,7 @@ import { BehaviorSubject, catchError, Observable } from 'rxjs';
 })
 export class RegistrasiService {
 
-    isRegistered = new BehaviorSubject<any>(true);
+    isRegistered = new BehaviorSubject<any>(false);
     jadwalDokter = new BehaviorSubject<any>(false);
 
     checkIsRegistered(nomorKartu:string){

@@ -1,0 +1,42 @@
+<div class="row justify-content-center pb-5" *ngIf="dataJadwalDokter && !jadwalDokter" @fadeIn>
+    <div class="col-10 text-center mb-2">
+        <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">PILIH JADWAL DOKTER {{jadwalDokter}}</h1>
+    </div>
+
+    <div class="row p-4 justify-content-center">
+        <div class="col-5 m-2 p-0 clickable bg-white shadow border rounded btn-selection-dokter" pRipple
+            *ngFor="let item of dataJadwalDokter" (click)="pilihJadwalDokter(item)">
+            <div class="row">
+                <div class="col-4 p-1">
+                    <img width="100%"
+                        src="https://st.depositphotos.com/1771835/1477/i/600/depositphotos_14779771-stock-photo-portrait-of-confident-young-doctor.jpg"
+                        alt="Dokter">
+                </div>
+                <div class="col p-3" style="line-height: normal;">
+                    <div class="mt-2">
+                        <small class="grey">Nama Dokter :</small><br>
+                        <div class="fs-5">{{item.namadokter}}</div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="grey">Hari :</small><br>
+                        <div class="fs-5">{{item.namahari}}</div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="grey">Jam Praktek :</small><br>
+                        <div class="fs-5">{{item.jadwal}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10 pt-3 text-start">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="back()" pRipple><i class="bi bi-chevron-left"></i> BACK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

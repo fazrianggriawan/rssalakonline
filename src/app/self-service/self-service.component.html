@@ -41,9 +41,6 @@
             <p class="ps-4 pe-4 pt-1">Pasien yang telah registrasi online dan memiliki kode booking.</p>
         </div>
     </div>
-
-    <!-- <app-perawat></app-perawat> -->
-
 </div>
 
 <app-pasien-baru></app-pasien-baru>
@@ -70,24 +67,3 @@
         </div>
     </ng-template>
 </p-toast>
-
-<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle" appendTo="body">
-    <ng-template pTemplate="header">
-        <h3>KONFIRMASI DATA</h3>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <div class="row">
-            <div class="col m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-online" (click)="cd.reject()" pRipple>
-                <h1 class="p-4 text-center">TIDAK,<br/>Tinjau Kembali</h1>
-                <p class="ps-4 pe-4 pt-1 text-center">Mohon pastikan data sudah benar, <br>Kesalahan data tidak dapat dirubah kembali.</p>
-            </div>
-            <div class="col m-2 p-0 pb-3 clickable bg-white shadow border btn-pasien-baru rounded" (click)="cd.accept()" pRipple>
-                <h1 class="p-4 text-center">YA,<br/>Sudah Benar</h1>
-                <p class="ps-4 pe-4 pt-1 text-center">Selesaikan Proses Registrasi</p>
-            </div>
-        </div>
-
-        <!-- <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button> -->
-    </ng-template>
-</p-confirmDialog>

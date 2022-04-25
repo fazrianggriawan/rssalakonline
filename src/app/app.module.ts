@@ -21,7 +21,6 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-
 import { MatButtonModule } from '@angular/material/button';
 
 import { NgxHowlerService } from 'ngx-howler';
@@ -34,12 +33,21 @@ import { HomeComponent } from './home/home.component';
 import { CallerComponent } from './caller/caller.component';
 import { SelfServiceComponent } from './self-service/self-service.component';
 
-import Keyboard from "simple-keyboard";
 import { PasienBaruComponent } from './panel/pasien-baru/pasien-baru.component';
 import { UmumComponent } from './panel/umum/umum.component';
 import { BpjsComponent } from './panel/bpjs/bpjs.component';
 import { OnlineComponent } from './panel/online/online.component';
 import { PerawatComponent } from './panel/perawat/perawat.component';
+import { CariPesertaComponent } from './shared/components/cari-peserta/cari-peserta.component';
+import { DataPesertaComponent } from './shared/components/data-peserta/data-peserta.component';
+import { DataRujukanComponent } from './shared/components/data-rujukan/data-rujukan.component';
+import { DataSuratKontrolComponent } from './shared/components/data-surat-kontrol/data-surat-kontrol.component';
+import { DataHistorySepComponent } from './shared/components/data-history-sep/data-history-sep.component';
+import { KonfirmasiDataComponent } from './shared/components/konfirmasi-data/konfirmasi-data.component';
+import { PilihJenisKunjunganComponent } from './shared/components/pilih-jenis-kunjungan/pilih-jenis-kunjungan.component';
+import { JadwalDokterComponent } from './shared/components/jadwal-dokter/jadwal-dokter.component';
+import { KeyboardComponent } from './shared/components/keyboard/keyboard.component';
+import { NumpadComponent } from './shared/components/numpad/numpad.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +60,17 @@ import { PerawatComponent } from './panel/perawat/perawat.component';
         UmumComponent,
         BpjsComponent,
         OnlineComponent,
-        PerawatComponent
+        PerawatComponent,
+        CariPesertaComponent,
+        DataPesertaComponent,
+        DataRujukanComponent,
+        DataSuratKontrolComponent,
+        DataHistorySepComponent,
+        KonfirmasiDataComponent,
+        PilihJenisKunjunganComponent,
+        JadwalDokterComponent,
+        KeyboardComponent,
+        NumpadComponent
     ],
     imports: [
         BrowserModule,
