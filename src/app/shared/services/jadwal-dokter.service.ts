@@ -31,9 +31,7 @@ export class JadwalDokterService {
 
     public cariJadwalDokter(poliklinik:string)
     {
-        this.anjunganService.loading.next(true);
-        let data = { poli: poliklinik };
-        this.http.post<any>( config.api_online('antrol/jadwal_dokter'), data, {responseType: 'json'} )
+        this.http.get<any>( config.api_online('antrol/jadwal_dokter/poliklinik/'+poliklinik), {responseType: 'json'} )
             .subscribe(res => {
                 if( res.metadata.code == 200 ) {
                     this.dataJadwalDokter.next(res.response);

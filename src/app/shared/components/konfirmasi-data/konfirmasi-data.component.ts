@@ -39,6 +39,7 @@ export class KonfirmasiDataComponent implements OnInit {
     }
 
     public save() {
+        console.log(this.pasien);
         let data = {
             dokter: this.jadwalDokter,
             registrasi: { jnsKunjungan: '2', jnsPasien: 'jkn', rujukan: '', suratKontrol: '' },
@@ -49,7 +50,7 @@ export class KonfirmasiDataComponent implements OnInit {
                 norm: this.pasien.norekmed.substr(-6, 6),
                 nama: this.peserta.nama
             },
-            selectedPoli: this.jadwalDokter.kodepoli,
+            selectedPoli: {kode: this.jadwalDokter.kodepoli, nama: this.jadwalDokter.namapoli},
             tanggalKunjungan: this.today,
             isPasienBaru: 0
         }

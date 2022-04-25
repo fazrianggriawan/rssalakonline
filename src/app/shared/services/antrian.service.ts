@@ -12,6 +12,7 @@ export class AntrianService {
 
     public kodeBooking: BehaviorSubject<string> = new BehaviorSubject<string>('');
     public today: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    public printStatus =  new BehaviorSubject<boolean>(false);
 
     constructor(
         private http: HttpClient,
@@ -27,6 +28,10 @@ export class AntrianService {
         return this.today.asObservable();
     }
 
+    public getPrintStatus() {
+        return this.printStatus.asObservable();
+    }
+
     public getTodayDate() {
         this.http.get<any>(config.api('auth/getTodayDate'), { responseType: 'json' })
             .subscribe(data => {
@@ -37,12 +42,14 @@ export class AntrianService {
 
     public save(data: any) {
         this.anjunganService.loading.next(true);
-        this.http.post<any>(config.api_online('vclaim/antrian/save'), data)
+        this.http.post<any>(config.api_online('antrian/save'), data)
             .subscribe(res => {
-                if (res.metadata.code == 200) {
+                if (res.code == 200) {
                     this.kodeBooking.next(res.data.kodebooking);
+                    this.printStatus.next(true);
                 } else {
                     this.errorMessageService.errorHandle(res.message);
+                    this.anjunganService.openPanel.next(false);
                 }
                 this.anjunganService.loading.next(false);
             })

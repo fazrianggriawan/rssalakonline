@@ -57,6 +57,7 @@ export class CariPesertaComponent implements OnInit {
     public getPeserta() {
         if (this.nomorKartu) {
             this.pesertaService.cariPeserta(this.nomorKartu);
+            this.pesertaService.cariPasien(this.nomorKartu);
         }
     }
 

@@ -43,7 +43,7 @@
                             Poliklinik :
                             <select class="form-select" [(ngModel)]="selectedPoli" (change)="getJadwalDokter()">
                                 <option selected></option>
-                                <option *ngFor="let item of dataPoli" value="{{item.kode}}">
+                                <option *ngFor="let item of dataPoli" value="{{item.ket}}">
                                     {{item.ket | uppercase}}
                                 </option>
                             </select>
