@@ -4,29 +4,13 @@
     [showCloseIcon]="false"
     [modal]="false"
     (onShow)="initOnShow()"
-    (onHide)="destroyKeyboard()"
     styleClass="dialog-booking-code">
 
     <div class="row">
         <div class="col text-end pe-4 fs-1"><i class="bi bi-x-lg clickable" (click)="panelStatus=false"></i></div>
     </div>
 
-    <div class="row justify-content-center pb-5" *ngIf="!booking.booking_code" @fade>
-        <div class="col-10 text-center">
-            <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KODE BOOKING</h1>
-            <input type="text" style="text-transform: uppercase; background: #327652;
-            color: #ffdc2f;
-            border-color: #5f9b7a;" (input)="onInputChange($event)" #search (blur)="onBlur()" (keydown)="listenKey($event)" class="input" [(ngModel)]="value" value={{value}} class="form-control p-2 fs-1 text-center">
-            <p class="fs-5" style="color: #21583b;">Scan QR Code / Input Keyboard</p>
-            <div class="pt-2">
-                <div class="simple-keyboard"></div>
-            </div>
-        </div>
-        <div class="col-10 pt-3 text-end">
-            <hr>
-            <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" (click)="getKodeBooking()" pRipple>NEXT <i class="bi bi-chevron-right"></i></button>
-        </div>
-    </div>
+    <app-cari-booking-online></app-cari-booking-online>
 
     <div class="row justify-content-center pb-5" *ngIf="booking.booking_code" @fade>
         <h1 class="display-4 mb-3 text-center" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">DATA BOOKING</h1>

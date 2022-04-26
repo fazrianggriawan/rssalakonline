@@ -48,6 +48,8 @@ import { PilihJenisKunjunganComponent } from './shared/components/pilih-jenis-ku
 import { JadwalDokterComponent } from './shared/components/jadwal-dokter/jadwal-dokter.component';
 import { KeyboardComponent } from './shared/components/keyboard/keyboard.component';
 import { NumpadComponent } from './shared/components/numpad/numpad.component';
+import { CariBookingOnlineComponent } from './shared/components/cari-booking-online/cari-booking-online.component';
+import { LoadingComponent } from './shared/components/loading/loading.component';
 
 @NgModule({
     declarations: [
@@ -70,7 +72,9 @@ import { NumpadComponent } from './shared/components/numpad/numpad.component';
         PilihJenisKunjunganComponent,
         JadwalDokterComponent,
         KeyboardComponent,
-        NumpadComponent
+        NumpadComponent,
+        CariBookingOnlineComponent,
+        LoadingComponent
     ],
     imports: [
         BrowserModule,

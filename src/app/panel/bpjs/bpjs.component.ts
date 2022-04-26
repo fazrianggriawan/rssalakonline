@@ -26,10 +26,10 @@ export class BpjsComponent implements OnInit {
           this.anjunganService.buildKeyboard.next(false);
         }
       })
-    this.anjunganService.getOpenPanel()
-      .subscribe(data => {
-        this.closePanel();
-      })
+    // this.anjunganService.getOpenPanel()
+    //   .subscribe(data => {
+    //     this.closePanel();
+    //   })
   }
 
   public closePanel() {

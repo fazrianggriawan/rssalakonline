@@ -5,6 +5,7 @@ import { timeout, catchError } from 'rxjs/operators';
 import { ErrorHandlerService } from '../services/error-handler.service';
 import { ErrorService } from '../services/error.service';
 import { ErrorMessageService } from '../shared/services/error-message.service';
+import { LoadingService } from '../shared/services/loading.service';
 
 export const DEFAULT_TIMEOUT = new InjectionToken<number>('defaultTimeout');
 
@@ -13,7 +14,8 @@ export class HttpProvider implements HttpInterceptor {
     constructor(
         @Inject(DEFAULT_TIMEOUT) protected defaultTimeout: number,
         private errorHandleService: ErrorHandlerService,
-        private errorMessageService: ErrorMessageService
+        private errorMessageService: ErrorMessageService,
+        private loadingService: LoadingService
     ){}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -24,6 +26,7 @@ export class HttpProvider implements HttpInterceptor {
             timeout(timeoutValueNumeric),
             retry(3),
             catchError((error: HttpErrorResponse) => {
+                this.loadingService.status.next(false);
                 this.errorMessageService.errorHandle(error.message);
                 return EMPTY;
             })
