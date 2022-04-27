@@ -6,20 +6,13 @@ import { config } from 'src/app/config';
 import { AnjunganService } from 'src/app/services/anjungan.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { RegistrasiService } from 'src/app/services/registrasi.service';
+import { fadeIn } from 'src/app/shared/animations';
 
 @Component({
   selector: 'app-online',
   templateUrl: './online.component.html',
   styleUrls: ['./online.component.css'],
-  animations: [
-    trigger('fade', [
-      state('in', style({ opacity: 1 })),
-      transition('void => *', [
-        style({ opacity: 0 }),
-        animate(200)
-      ])
-    ])
-  ]
+  animations: [fadeIn]
 })
 export class OnlineComponent implements OnInit {
 
@@ -47,7 +40,6 @@ export class OnlineComponent implements OnInit {
   }
 
   initOnShow() {
-    this.buildKeyboard();
     this.value = '';
     this.data = {
       rujukan : [],
@@ -57,47 +49,6 @@ export class OnlineComponent implements OnInit {
     }
     this.booking = {};
     this.review = false;
-  }
-
-  buildKeyboard() {
-    setTimeout(() => {
-      this.keyboard = new Keyboard({
-        onChange: input => this.onChange(input),
-        onKeyPress: (button: any) => this.onKeyPress(button)
-      });
-      this.searchElement.nativeElement.focus();
-    }, 200);
-  }
-
-  destroyKeyboard(){
-    if( this.keyboard ){
-      this.keyboard.destroy();
-    }
-  }
-
-  onChange = (input: string) => {
-    this.value = input;
-  };
-
-  onKeyPress = (button: string) => {
-    if (button === "{shift}" || button === "{lock}") this.handleShift();
-  };
-
-  handleShift = () => {
-    let currentLayout = this.keyboard.options.layoutName;
-    let shiftToggle = currentLayout === "default" ? "shift" : "default";
-
-    this.keyboard.setOptions({
-      layoutName: shiftToggle
-    });
-  };
-
-  onInputChange = (event: any) => {
-    this.keyboard.setInput(event.target.value);
-  };
-
-  onBlur() {
-    this.searchElement.nativeElement.focus();
   }
 
   getKodeBooking(){

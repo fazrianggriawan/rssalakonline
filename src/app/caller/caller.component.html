@@ -20,14 +20,16 @@
                     <div class="row">
                         <div class="col p-4">
                             <div style="color: #73b4e1;">Pasien Selanjutnya :</div>
-                            <div>
-                                <div>{{dataNextCall.nama}}</div>
-                                <div *ngIf="dataNextCall.norm">No. RM : {{dataNextCall.norm}}</div>
+                            <div *ngIf="dataAntrian[0]">
+                                <div>{{dataAntrian[0].nama}}</div>
+                                <div *ngIf="dataAntrian[0].norm">No. RM : {{dataAntrian[0].norm}}</div>
                             </div>
                         </div>
                         <div class="col p-4">
                             <div style="color: #73b4e1;">No. Antrian Selanjutnya :</div>
-                            <h2>{{nextCall}}</h2>
+                            <h2 *ngIf="dataAntrian[0]">
+                                {{dataAntrian[0].prefix_antrian}}-{{dataAntrian[0].no_antrian}}
+                            </h2>
                         </div>
                         <div class="col p-4 text-center clickable" (click)="callNext()" style="background-color: #4596cf;">
                             <h3>
@@ -84,3 +86,5 @@
         </div>
     </div>
 </div>
+
+<app-loading></app-loading>

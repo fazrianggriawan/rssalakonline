@@ -1,0 +1,19 @@
+<div class="row justify-content-center pb-5" @fadeIn>
+    <div class="col-10 text-center">
+        <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KODE BOOKING</h1>
+        <input
+            #search
+            type="text"
+            style="text-transform: uppercase; background: #327652; color: #ffdc2f; border-color: #5f9b7a;"
+            (keydown)="listenKey($event)"
+            (blur)="onBlur()"
+            [(ngModel)]="kodeBooking"
+            value={{kodeBooking}}
+            class="form-control p-2 fs-1 text-center input">
+
+        <p class="fs-5" style="color: #21583b;">Scan QR Code / Input Keyboard</p>
+        <div class="mt-2">
+            <app-numpad></app-numpad>
+        </div>
+    </div>
+</div>

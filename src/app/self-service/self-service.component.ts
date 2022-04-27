@@ -2,11 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { PrimeNGConfig } from 'primeng/api';
 import { AnjunganService } from "../services/anjungan.service";
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { ErrorService } from "../services/error.service";
 import { ErrorMessageService } from "../shared/services/error-message.service";
-import { HttpClient } from "@angular/common/http";
 import { AntrianService } from "../shared/services/antrian.service";
 import { config } from "../config";
+import { KeyboardService } from "../shared/services/keyboard.service";
 
 @Component({
     selector: 'app-self-service',
@@ -24,7 +23,8 @@ export class SelfServiceComponent implements OnInit {
         private anjunganservice: AnjunganService,
         private errorMessageService: ErrorMessageService,
         private messageService: MessageService,
-        private antrianService: AntrianService
+        private antrianService: AntrianService,
+        private keyboardService: KeyboardService
     ) { }
 
     ngOnInit() {
@@ -43,17 +43,33 @@ export class SelfServiceComponent implements OnInit {
 
         this.antrianService.getPrintStatus()
             .subscribe(data => {
-                this.printKodeBooking();
+                if (data) {
+                    this.printKodeBooking();
+                }
+            })
+
+        this.antrianService.getPrintStatusBooking()
+            .subscribe(data => {
+                if (data) {
+                    this.printBooking();
+                }
             })
     }
 
-    printKodeBooking() {
-        if( this.kodeBooking ) {
-            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api_online('antrian/print/kodeBooking/'+this.kodeBooking);
+    public printKodeBooking() {
+        if (this.kodeBooking) {
+            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api_online('antrian/print/kodeBooking/' + this.kodeBooking);
         }
     }
 
-    setPanelStatus(type: string, status: boolean) {
+    public printBooking() {
+        if (this.kodeBooking) {
+            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api_online('antrian/print/booking/kodeBooking/' + this.kodeBooking);
+            this.keyboardService.value.next('');
+        }
+    }
+
+    public setPanelStatus(type: string, status: boolean) {
         this.anjunganservice.openPanel.next(true);
         if (type == 'online')
             this.anjunganservice.panel.online.next(status);
