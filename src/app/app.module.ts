@@ -48,6 +48,7 @@ import { PilihJenisKunjunganComponent } from './shared/components/pilih-jenis-ku
 import { JadwalDokterComponent } from './shared/components/jadwal-dokter/jadwal-dokter.component';
 import { KeyboardComponent } from './shared/components/keyboard/keyboard.component';
 import { NumpadComponent } from './shared/components/numpad/numpad.component';
+import { CariKodeBookingComponent } from './shared/components/cari-kode-booking/cari-kode-booking.component';
 
 @NgModule({
     declarations: [
@@ -70,7 +71,8 @@ import { NumpadComponent } from './shared/components/numpad/numpad.component';
         PilihJenisKunjunganComponent,
         JadwalDokterComponent,
         KeyboardComponent,
-        NumpadComponent
+        NumpadComponent,
+        CariKodeBookingComponent
     ],
     imports: [
         BrowserModule,

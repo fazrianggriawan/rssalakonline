@@ -1,14 +1,15 @@
-<div class="row justify-content-center pb-5" *ngIf="!peserta" @fadeIn>
+<div class="row justify-content-center pb-5" @fadeIn>
     <div class="col-10 text-center">
-        <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">NO. KARTU BPJS / KIS</h1>
+        <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KODE BOOKING</h1>
         <input
             #search
             type="text"
             style="text-transform: uppercase; background: #327652; color: #ffdc2f; border-color: #5f9b7a;"
+            (input)="onInputChange($event)"
             (blur)="onBlur()"
             (keydown)="listenKey($event)"
-            [(ngModel)]="nomorKartu"
-            value={{nomorKartu}}
+            [(ngModel)]="kodeBooking"
+            value={{kodeBooking}}
             maxlength="16"
             class="form-control p-2 fs-1 text-center input">
 
@@ -24,9 +25,6 @@
             <div class="col text-start">
                 <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="back()" pRipple><i class="bi bi-chevron-left"></i> BACK</button>
             </div>
-            <!-- <div class="col text-end">
-                <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" (click)="getPeserta()" pRipple>NEXT <i class="bi bi-chevron-right"></i></button>
-            </div> -->
         </div>
 
     </div>

@@ -61,10 +61,6 @@ export class CariPesertaComponent implements OnInit {
         }
     }
 
-    public onInputChange = (event: any) => {
-        this.anjunganService.nomorPeserta.next(event.target.value);
-    };
-
     public onBlur() {
         this.searchElement.nativeElement.focus();
     }
