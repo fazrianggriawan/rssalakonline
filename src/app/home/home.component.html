@@ -16,7 +16,7 @@
             </div>
             <div class="row button-group">
                 <div class="col col-md-2 col-lg-2 m-2 p-4 bg-white shadow border rounded thumbnail text-center"
-                    (click)="panelRegistrasi=true">
+                     routerLink="registrasiOnline">
                     <img src="assets/registrasi.png" alt="Registrasi Online">
                     <p>Registrasi Online</p>
                 </div>
@@ -61,12 +61,13 @@
                                     <form>
                                         <div class="mb-3">
                                             <label for="No.RM" class="form-label">No. Rekam Medis</label>
-                                            <input type="text" class="form-control">
+                                            <input type="text" class="form-control" [(ngModel)]="noRm" name="noRm">
                                             <div id="emailHelp" class="form-text">Nomor rekam medis tercantum pada kartu
                                                 pasien anda.</div>
                                         </div>
                                         <div class="md-3 text-end">
-                                            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+                                            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"
+                                                (click)="getPasienSIMRS()"></p-button>
                                         </div>
                                     </form>
                                 </p-tabPanel>
@@ -96,10 +97,9 @@
                                 <h1 class="lead">{{dataPasien.nama}}</h1>
                                 <div>
                                     <span *ngIf="dataPasien.sex == 'L'">LAKI-LAKI</span>
-                                    <span *ngIf="dataPasien.sex == 'P'">PEREMPUAN</span>,
-                                    {{dataPasien.umurSekarang}}.
+                                    <span *ngIf="dataPasien.sex == 'P'">PEREMPUAN</span>
                                 </div>
-                                <div>{{dateHuman(dataPasien.tglLahir)}}</div>
+                                <div>Tgl. Lahir : {{dateHuman(dataPasien.tglLahir)}}</div>
                             </div>
                             <form [formGroup]="formRegistrasi">
                                 <div class="mb-4">
@@ -139,9 +139,9 @@
                                         <div class="mb-2">
                                             <select class="form-select" formControlName="suratKontrol">
                                                 <option selected></option>
-                                                <option *ngFor="let item of dataSuratKontrol"
-                                                    [value]="item.noSep">
-                                                    POLI {{item.poli | uppercase}} - Tanggal : {{reformatDate(item.tglSep)}}
+                                                <option *ngFor="let item of dataSuratKontrol" [value]="item.noSep">
+                                                    POLI {{item.poli | uppercase}} - Tanggal :
+                                                    {{reformatDate(item.tglSep)}}
                                                 </option>
                                             </select>
                                         </div>
@@ -214,13 +214,15 @@
                 <h1>KODE BOOKING</h1>
                 <h1 style="padding: 15px; width: 270px; background-color:#9defcb; margin: auto;">{{kodeBooking}}</h1>
                 <qr-code value="{{kodeBooking}}" size="300" errorCorrectionLevel="M"></qr-code>
-                <p style="width: 90%; margin: auto; padding: 10px; border: 1px solid orange;">Scan Barcode di atas pada mesin anjungan di bagian pendaftaran untuk pembuatan SEP.</p>
+                <p style="width: 90%; margin: auto; padding: 10px; border: 1px solid orange;">Scan Barcode di atas pada
+                    mesin anjungan di bagian pendaftaran untuk pembuatan SEP.</p>
                 <p style="padding: 10px; margin-top: 40px; background-color: #303030; color: #b9b9b9;">
                     Jika membutuhkan bantuan, silahkan datang ke loket pendaftaran. <br>
                     Terima Kasih.
                 </p>
                 <div style="position: absolute; top: 20px; right: 20px;">
-                    <button class="btn btn-outline-secondary" (click)="hidePanelBooking()"><i class="bi bi-x-lg"></i>  Close</button>
+                    <button class="btn btn-outline-secondary" (click)="hidePanelBooking()"><i class="bi bi-x-lg"></i>
+                        Close</button>
                 </div>
             </div>
         </div>

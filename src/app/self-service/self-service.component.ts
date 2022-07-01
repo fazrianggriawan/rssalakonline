@@ -58,13 +58,13 @@ export class SelfServiceComponent implements OnInit {
 
     public printKodeBooking() {
         if (this.kodeBooking) {
-            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api_online('antrian/print/kodeBooking/' + this.kodeBooking);
+            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api('antrian/print/kodeBooking/' + this.kodeBooking);
         }
     }
 
     public printBooking() {
         if (this.kodeBooking) {
-            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api_online('antrian/print/booking/kodeBooking/' + this.kodeBooking);
+            (<HTMLIFrameElement>document.getElementById('printKodeBooking')).src = config.api('antrian/print/booking/kodeBooking/' + this.kodeBooking);
             this.keyboardService.value.next('');
         }
     }

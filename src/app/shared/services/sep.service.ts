@@ -32,7 +32,7 @@ export class SepService {
     public getDataHistorySep(nomorKartu:string)
     {
         this.anjunganService.loading.next(true);
-        this.http.get<any>( config.api_online('vclaim/sep/history/nomorKartu/'+nomorKartu), {responseType: 'json'} )
+        this.http.get<any>( config.api('vclaim/sep/history/nomorKartu/'+nomorKartu), {responseType: 'json'} )
             .subscribe(res => {
                 if( res.metaData.code == 200 ) {
                     this.historySep.next(res.response.histori);

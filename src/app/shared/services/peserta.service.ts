@@ -38,7 +38,7 @@ export class PesertaService {
     public cariPeserta(nomorKartu:string)
     {
         this.anjunganService.loading.next(true);
-        this.http.get<any>( config.api_online('vclaim/peserta/nomorKartu/'+nomorKartu), {responseType: 'json'} )
+        this.http.get<any>( config.api('vclaim/peserta/nomorKartu/'+nomorKartu), {responseType: 'json'} )
             .subscribe(res => {
                 if( res.metaData.code == 200 ) {
                     this.peserta.next(res.response.peserta);

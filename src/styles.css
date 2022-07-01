@@ -326,3 +326,8 @@ body {
 .btn-action-numpad {
     background: #ffd559;
 }
+
+.item-rujukan:hover{
+    border-color: orange !important;
+    background-color: white !important;
+}

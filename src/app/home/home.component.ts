@@ -4,6 +4,7 @@ import { PrimeNGConfig } from 'primeng/api'
 import { NgxHowlerService } from "ngx-howler";
 import { RegistrasiService } from '../services/registrasi.service';
 import { formatDate } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
     loading: boolean = false;
     today: Date = new Date();
     kodeBooking : string = '';
+    noRm: string = '';
 
     dataPoli: any[] = [
         { kode: "ANA", nama: "Anak", prefix: "A1", selected: false },
@@ -234,6 +236,12 @@ export class HomeComponent implements OnInit {
         })
     }
 
+    getPasienSIMRS() {
+        if( this.noRm ){
+            this.registrasiService.getPasienSimrs(this.noRm)
+        }
+    }
+
     dateHuman(a: string) {
         let thn = a.substring(0, 4);
         let bln = a.substring(5, 7);
@@ -265,7 +273,8 @@ export class HomeComponent implements OnInit {
         private config: PrimeNGConfig,
         private fb: FormBuilder,
         private registrasiService: RegistrasiService,
-        private howl: NgxHowlerService
+        private howl: NgxHowlerService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -277,6 +286,23 @@ export class HomeComponent implements OnInit {
             dayNamesShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
             dayNamesMin: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
             monthNames: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"]
+        })
+
+        this.registrasiService.pasien.subscribe(data => {
+            if( data ){
+                let sex = '';
+                if( data.data.kelamin.trim().toLowerCase() == 'wanita' ) sex = 'P';
+                if( data.data.kelamin.trim().toLowerCase() == 'pria' ) sex = 'L';
+
+                let pasien = {
+                    nama: data.data.nama,
+                    sex: sex,
+                    umurSekarang: '',
+                    tglLahir: data.data.tglahir
+                }
+
+                this.dataPasien = pasien;
+            }
         })
     }
 

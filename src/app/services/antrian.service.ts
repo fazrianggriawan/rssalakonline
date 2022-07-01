@@ -12,23 +12,23 @@ export class AntrianService {
     dataAntrian = new BehaviorSubject<any>([]);
 
     getPoliBpjs() {
-        this.http.get<any>(config.api_online('master/poli_bpjs'), { responseType: 'json' }).subscribe(res => {
+        this.http.get<any>(config.api('master/poli_bpjs'), { responseType: 'json' }).subscribe(res => {
             this.dataPoli.next(res.data);
         });
     }
 
     getAntrian(data: any) {
-        this.http.post<any>(config.api_online('antrian/filterData'), data).subscribe(res => {
+        this.http.post<any>(config.api('antrian/filterData'), data).subscribe(res => {
             this.dataAntrian.next(res.data);
         });
     }
 
     callAntrian(data: any) {
-        return this.http.post<any>(config.api_online('antrian/callAntrian'), data);
+        return this.http.post<any>(config.api('antrian/callAntrian'), data);
     }
 
     updateWaktuAntrian(data: any) {
-        this.http.post(config.api_online('antrol/update_task_id'), data);
+        this.http.post(config.api('antrol/update_task_id'), data);
     }
 
     cancelAntrian(){

@@ -20,12 +20,12 @@ import { RippleModule } from 'primeng/ripple';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-
+import { StepsModule } from 'primeng/steps';
 import { MatButtonModule } from '@angular/material/button';
-
 import { NgxHowlerService } from 'ngx-howler';
 import { QrCodeModule } from "ng-qrcode";
 import { MatKeyboardModule } from 'angular-onscreen-material-keyboard';
+import { NgxCaptureModule } from 'ngx-capture';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -50,6 +50,11 @@ import { KeyboardComponent } from './shared/components/keyboard/keyboard.compone
 import { NumpadComponent } from './shared/components/numpad/numpad.component';
 import { CariBookingOnlineComponent } from './shared/components/cari-booking-online/cari-booking-online.component';
 import { LoadingComponent } from './shared/components/loading/loading.component';
+import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online.component';
+import { JenisKunjunganComponent } from './registrasi-online/jenis-kunjungan/jenis-kunjungan.component';
+import { RencanaKunjunganComponent } from './registrasi-online/rencana-kunjungan/rencana-kunjungan.component';
+import { KonfirmasiComponent } from './registrasi-online/konfirmasi/konfirmasi.component';
+import { SuccessComponent } from './registrasi-online/success/success.component';
 
 @NgModule({
     declarations: [
@@ -74,7 +79,12 @@ import { LoadingComponent } from './shared/components/loading/loading.component'
         KeyboardComponent,
         NumpadComponent,
         CariBookingOnlineComponent,
-        LoadingComponent
+        LoadingComponent,
+        RegistrasiOnlineComponent,
+        JenisKunjunganComponent,
+        RencanaKunjunganComponent,
+        KonfirmasiComponent,
+        SuccessComponent
     ],
     imports: [
         BrowserModule,
@@ -98,7 +108,9 @@ import { LoadingComponent } from './shared/components/loading/loading.component'
         MatButtonModule,
         MatKeyboardModule,
         ToastModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        StepsModule,
+        NgxCaptureModule
     ],
     providers: [
         NgxHowlerService,

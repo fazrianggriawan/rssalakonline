@@ -38,7 +38,7 @@ export class RujukanService {
     public cariDataRujukanFaskes(nomorKartu:string)
     {
         this.anjunganService.loading.next(true);
-        this.http.get<any>(config.api_online('vclaim/rujukan/faskes/nomorKartu/'+nomorKartu))
+        this.http.get<any>(config.api('vclaim/rujukan/faskes/nomorKartu/'+nomorKartu))
             .subscribe( res => {
                 if( res.metaData.code == 200 ){
                     this.dataRujukanFaskes.next(res.response);
@@ -52,7 +52,7 @@ export class RujukanService {
     public cariDataRujukanRs(nomorKartu:string)
     {
         this.anjunganService.loading.next(true);
-        this.http.get<any>(config.api_online('vclaim/rujukan/rs/nomorKartu/'+nomorKartu))
+        this.http.get<any>(config.api('vclaim/rujukan/rs/nomorKartu/'+nomorKartu))
             .subscribe( res => {
                 if( res.metaData.code == 200 ){
                     this.dataRujukanRs.next(res.response);
