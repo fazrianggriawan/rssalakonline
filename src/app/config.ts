@@ -1,4 +1,4 @@
-let host = 'http://192.168.0.8/';
+let host = 'http://rssalakbogor.co.id/';
 let hostSimrs = 'http://182.253.22.220/';
 
 export const config = {
