@@ -19,7 +19,8 @@ const routes: Routes = [
     { path: 'registrasiOnline/success', component: SuccessComponent },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'caller', component: CallerComponent },
-    { path: 'anjungan', component: SelfServiceComponent }
+    // { path: 'anjungan', component: SelfServiceComponent },
+    { path: 'anjungan', loadChildren: () => import('./anjungan/anjungan.module').then(m => m.AnjunganModule) }
 ];
 
 @NgModule({

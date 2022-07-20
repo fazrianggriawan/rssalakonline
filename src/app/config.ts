@@ -1,4 +1,5 @@
 let host = 'http://rssalakbogor.co.id/';
+// let host = 'http://localhost/';
 let hostSimrs = 'http://182.253.22.220/';
 
 export const config = {

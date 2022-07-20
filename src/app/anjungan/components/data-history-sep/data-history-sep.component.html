@@ -1,0 +1,44 @@
+<div class="row justify-content-center pb-5" *ngIf="!sep && jenisKunjungan == 'kontrol'" @fadeIn>
+    <div class="col-10 text-center mb-4">
+        <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">PILIH KUNJUNGAN SEBELUMNYA</h1>
+    </div>
+    <div class="col-3 m-2 p-2 clickable bg-white shadow border rounded btn-selection-dokter"
+        style="line-height: normal;" pRipple *ngFor="let item of dataHistorySep" (click)="pilihSep(item)">
+        <div class="p-3 mb-2 rounded" style="background-color: rgb(227 227 227);">
+            <div>
+                <span class="grey">Tanggal :</span><br>
+                <span class="fs-5">{{item.tglSep}}</span>
+            </div>
+            <div class="mt-2">
+                <span class="grey">Poliklinik :</span><br>
+                <div class="fs-5 fs-3">
+                    <span *ngIf="item.poli">{{item.poli | uppercase}}</span>
+                    <span *ngIf="!item.poli">RAWAT INAP</span>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 pt-1 pb-2">
+            <span class="grey">No. SEP :</span><br>
+            <span>{{item.noSep | uppercase}}</span>
+        </div>
+        <div class="p-3 pt-1 pb-2">
+            <span class="grey">No. Rujukan :</span><br>
+            <div>{{item.noRujukan | uppercase}}</div>
+        </div>
+        <div class="p-3 pt-1 pb-4">
+            <span class="grey">Diagnosa :</span><br>
+            <div>{{item.diagnosa | uppercase}}</div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10 pt-3 text-start">
+            <hr>
+            <div class="row">
+                <div class="col text-start">
+                    <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="back()" pRipple><i class="bi bi-chevron-left"></i> BACK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

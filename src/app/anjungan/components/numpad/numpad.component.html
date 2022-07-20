@@ -1,0 +1,24 @@
+<div class="row justify-content-center">
+    <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border" pRipple *ngFor="let item of number" (click)="keypadInput(item)">{{item}}</div>
+    <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border" pRipple (click)="keypadInput('0')">0</div>
+    <div class="w-100"></div>
+    <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border" pRipple *ngFor="let item of qwerty1" (click)="keypadInput(item)">{{item}}</div>
+    <div class="w-100"></div>
+    <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border" pRipple *ngFor="let item of qwerty2" (click)="keypadInput(item)">{{item}}</div>
+    <div class="w-100"></div>
+    <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border" pRipple *ngFor="let item of qwerty3" (click)="keypadInput(item)">{{item}}</div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border bg-warning fs-5" pRipple (click)="hapusNumber()">HAPUS</div>
+    </div>
+    <div class="col-auto">
+        <div style="padding: 10px 40px;" class="col-auto m-1 text-center fs-3 rounded clickable border bg-warning fs-5" pRipple (click)="ok()">ENTER</div>
+    </div>
+
+
+    <!-- <div class="col-auto p-2 m-2 text-center fs-3 rounded clickable border" pRipple *ngFor="let item of number" (click)="keypadInput(item)">{{item}}</div>
+    <div class="col-auto p-2 m-2 text-center fs-5 btn-warning rounded grey clickable" pRipple (click)="hapusNumber()">HAPUS</div>
+    <div class="col-auto p-2 m-2 text-center fs-3 rounded clickable border" pRipple (click)="keypadInput('0')">0</div>
+    <div class="col-auto p-2 m-2 text-center fs-5 btn-warning rounded grey clickable" pRipple (click)="ok()" >ENTER</div> -->
+</div>

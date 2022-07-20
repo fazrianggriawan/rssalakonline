@@ -1,0 +1,65 @@
+<div class="row justify-content-center pb-5" *ngIf="peserta && jadwalDokter" @fadeIn>
+    <div class="row p-4 justify-content-center">
+        <div class="col-10 text-center mb-4">
+            <h1 class="display-4 mb-3" style="text-shadow: 1px 1px 2px rgb(65, 65, 65);">KONFIRMASI DATA</h1>
+            <hr>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-5 btn-selection-dokter">
+                <div class="mt-3">
+                    <span class="grey">Nama :</span><br>
+                    <div class="fs-5">{{peserta.nama | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Jenis Kelamin :</span><br>
+                    <div class="fs-5">{{peserta.sex | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Tanggal Lahir :</span><br>
+                    <div class="fs-5">{{peserta.tglLahir | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Usia :</span><br>
+                    <div class="fs-5">{{peserta.usia | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">No. Peserta :</span><br>
+                    <div class="fs-5">{{peserta.noKartu | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Status :</span><br>
+                    <div class="fs-5">{{peserta.statusPeserta.keterangan | uppercase}}</div>
+                </div>
+            </div>
+
+            <div class="col-5">
+                <div class="mt-3">
+                    <span class="grey">Jenis Kunjungan :</span><br>
+                    <div class="fs-5">{{jenisKunjungan | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Poliklinik :</span><br>
+                    <div class="fs-5">{{jadwalDokter.namapoli | uppercase}}</div>
+                </div>
+                <div class="mt-3">
+                    <span class="grey">Jadwal Dokter :</span><br>
+                    <div class="fs-5">
+                        {{jadwalDokter.namadokter}} <br>
+                        {{jadwalDokter.jadwal}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-10 pt-3 text-end">
+        <hr>
+        <div class="row">
+            <div class="col text-start">
+                <button class="btn btn-secondary fs-2 p-5 shadow pt-2 pb-2" (click)="back()" pRipple><i class="bi bi-chevron-left"></i> BACK</button>
+            </div>
+            <div class="col text-end">
+                <button class="btn btn-warning fs-2 p-5 shadow pt-2 pb-2 btn-next" pRipple (click)="save()" >NEXT <i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
