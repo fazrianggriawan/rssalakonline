@@ -33,7 +33,7 @@ export class JadwalDokterService {
     {
         this.anjunganService.loading.next(true);
         let data = { poli: poliklinik };
-        this.http.post<any>( config.api('antrol/jadwal_dokter'), data, {responseType: 'json'} )
+        this.http.get<any>( config.api_vclaim('referensi/jadwalDokter/poli/'+poliklinik+'/tanggal/now'))
             .subscribe(res => {
                 if( res.metadata.code == 200 ) {
                     this.dataJadwalDokter.next(res.response);

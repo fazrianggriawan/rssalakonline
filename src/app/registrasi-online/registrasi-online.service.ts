@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { config } from '../config';
+import { LoadingService } from '../shared/services/loading.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,24 +25,29 @@ export class RegistrasiOnlineService {
     saveStatus = new BehaviorSubject<boolean>(false);
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private loadingService: LoadingService
     ) { }
 
     getPesertaBpjs(key: string) {
+        this.loadingService.status.next(true)
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
                     this.dataPasien.next(data.data)
                 }
+                this.loadingService.status.next(false)
             })
     }
 
     getPasienByRm(key: string) {
+        this.loadingService.status.next(true)
         this.http.get<any>(config.api_simrs('online/get/pasienByRm?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
                     this.dataPasien.next(data.data)
                 }
+                this.loadingService.status.next(false)
             })
     }
 
@@ -104,9 +110,10 @@ export class RegistrasiOnlineService {
     }
 
     getHistorySep(nomorKartu: string) {
+        this.loadingService.status.next(true);
         let end = this.reformatDate(new Date());
         let to = new Date(end.toString());
-        to = new Date(to.setDate(to.getDate() - 30));
+        to = new Date(to.setDate(to.getDate() - 90));
         let from = this.reformatDate(to);
 
         this.http.get<any>(config.api_vclaim('history/nomorKartu/' + nomorKartu + '/from/' + from + '/to/' + end))
@@ -114,6 +121,7 @@ export class RegistrasiOnlineService {
                 if (data.metaData.code == '200') {
                     this.dataHistorySep.next(data.response.histori);
                 }
+                this.loadingService.status.next(false);
             })
     }
 
@@ -150,6 +158,7 @@ export class RegistrasiOnlineService {
     }
 
     createSuratKontrol(data: any) {
+        this.loadingService.status.next(true)
         this.http.post<any>(config.api_vclaim('suratKontrol/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
@@ -157,15 +166,20 @@ export class RegistrasiOnlineService {
                     sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
                     this.suratKontrol.next(suratKontrol);
                     this.createSuratKontrolStatus.next(true);
+                } else {
+                    alert(data.metaData.message);
+                    this.createSuratKontrolStatus.next(false);
                 }
+                this.loadingService.status.next(false)
             })
     }
 
     save(data: any) {
-        this.http.post<any>( config.api_vclaim('antrian/save'), data )
+        this.loadingService.status.next(true)
+        this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
-                if( data.metadata.code == 200 ){
-                    let booking : any = {
+                if (data.metadata.code == 200) {
+                    let booking: any = {
                         kodeBooking: data.response.kodebooking,
                         noAntrian: data.response.nomorantrean,
                         nama: this.pasien.value.nama,
@@ -182,10 +196,11 @@ export class RegistrasiOnlineService {
                     sessionStorage.setItem('booking', JSON.stringify(booking));
                     this.saveStatus.next(true);
                 }
+                this.loadingService.status.next(false)
             })
     }
 
-    clearAllSession(){
+    clearAllSession() {
         sessionStorage.clear();
     }
 

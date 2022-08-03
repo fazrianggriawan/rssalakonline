@@ -24,7 +24,6 @@ export class HttpProvider implements HttpInterceptor {
 
         return next.handle(req).pipe(
             timeout(timeoutValueNumeric),
-            retry(3),
             catchError((error: HttpErrorResponse) => {
                 this.loadingService.status.next(false);
                 this.errorMessageService.errorHandle(error.message);

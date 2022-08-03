@@ -3,6 +3,7 @@ import { RegistrasiOnlineService } from '../registrasi-online.service';
 import { NgxCaptureService } from 'ngx-capture';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { LoadingService } from 'src/app/shared/services/loading.service';
 
 @Component({
     selector: 'app-konfirmasi',
@@ -26,7 +27,8 @@ export class KonfirmasiComponent implements OnInit {
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private captureService: NgxCaptureService,
-        private router: Router
+        private router: Router,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -81,6 +83,7 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     handleSaveStatus(data: any){
+        this.loadingService.status.next(false);
         if( data ){
             this.router.navigateByUrl('/registrasiOnline/success');
         }
@@ -94,19 +97,20 @@ export class KonfirmasiComponent implements OnInit {
             tgl: this.jadwalDokter.tglKunjungan
         }
 
-        this.handleCreateSuratKontrol(true);
-
-        // this.registrasiOnlineService.createSuratKontrol(data);
+        this.registrasiOnlineService.createSuratKontrol(data);
 
     }
 
     next() {
         if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli ){
+            // Rencana Kontrol
             this.createSuratKontrol();
         }else{
             if( parseInt(this.rujukan.jumlahSep) > 0 ){
+                // Rujukan Internal
                 this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
             }else{
+                // Rujukan Baru
                 this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
             }
             this.save();
@@ -114,6 +118,7 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     save() {
+        this.loadingService.status.next(true);
         let data = {
             pasien: this.pasien,
             rujukan: this.rujukan,

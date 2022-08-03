@@ -46,8 +46,6 @@ export class CallerComponent implements OnInit {
         }
         this.antrianService.filterAntrian(data);
 
-        return false;
-
         //this.antrianService.getAntrian(data);
 
         this.antrianService.dataAntrian.subscribe(data => {

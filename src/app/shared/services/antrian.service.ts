@@ -79,7 +79,7 @@ export class AntrianService {
 
     public filterAntrian(data: any) {
         this.loadingService.status.next(true);
-        this.http.post<any>(config.api('antrian/filterData'), data)
+        this.http.post<any>(config.api_vclaim('antrian/filterData'), data)
             .subscribe(res => {
                 this.dataAntrian.next(res.data);
                 this.loadingService.status.next(false);

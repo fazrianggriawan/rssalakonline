@@ -18,7 +18,12 @@ export class SuccessComponent implements OnInit {
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private captureService: NgxCaptureService
-    ) { }
+    ) {
+        sessionStorage.removeItem('pasien');
+        sessionStorage.removeItem('rujukan');
+        sessionStorage.removeItem('jadwalDokter');
+        sessionStorage.removeItem('jenisPembayaran');
+    }
 
     ngOnInit(): void {
         this.registrasiOnlineService.getSessionBooking();

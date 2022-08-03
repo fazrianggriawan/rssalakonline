@@ -19,7 +19,7 @@ export class MasterService {
     }
 
     public getAllPoliBpjs() {
-        this.http.get<any>(config.api('master/poli_bpjs'))
+        this.http.get<any>(config.api_vclaim('master/poliklinik'))
             .subscribe(res => {
                 this.poliBpjs.next(res.data);
             })

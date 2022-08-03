@@ -5,11 +5,13 @@ import { config } from 'src/app/config';
 import { LoadingService } from 'src/app/shared/services/loading.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AnjunganService {
 
     registrasiOnline = new BehaviorSubject<any>('');
+    peserta = new BehaviorSubject<any>('');
+    sep = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
@@ -20,11 +22,37 @@ export class AnjunganService {
         this.loadingService.status.next(true);
         this.http.get<any>(config.api_vclaim('antrian/kodeBooking/' + bookingCode))
             .subscribe(data => {
-                if( data.code == 200 ){
+                if (data.code == 200) {
                     this.registrasiOnline.next(data.data)
                 }
                 this.loadingService.status.next(false);
             });
+    }
+
+    getPeserta(noKartuBpjs: string) {
+        this.peserta.next('');
+        this.loadingService.status.next(true);
+        this.http.get<any>(config.api_vclaim('peserta/nomorKartu/' + noKartuBpjs))
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    this.peserta.next(data.response.peserta);
+                }
+                this.loadingService.status.next(false);
+            })
+    }
+
+    createSep(data: any) {
+        this.sep.next('');
+        this.loadingService.status.next(true);
+        this.http.post<any>(config.api_vclaim('sep/save'), data)
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    this.sep.next(data.response.sep);
+                }else{
+                    alert(data.metaData.message+' Hubungi loket pendaftaran untuk mendapatkan bantuan.');
+                }
+                this.loadingService.status.next(false);
+            })
     }
 
     dateHuman(date: string) {
