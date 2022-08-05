@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { config } from '../config';
+import { ErrorMessageService } from '../shared/services/error-message.service';
 import { LoadingService } from '../shared/services/loading.service';
 
 @Injectable({
@@ -14,6 +15,7 @@ export class RegistrasiOnlineService {
     dataJadwalDokter = new BehaviorSubject<any>('');
     dataPoliklinik = new BehaviorSubject<any>('');
     dataHistorySep = new BehaviorSubject<any>('');
+    dataSuratKontrol = new BehaviorSubject<any>('');
     jumlahSepRujukan = new BehaviorSubject<any>('');
     pasien = new BehaviorSubject<any>('');
     rujukan = new BehaviorSubject<any>('');
@@ -23,20 +25,21 @@ export class RegistrasiOnlineService {
     createSuratKontrolStatus = new BehaviorSubject<boolean>(false);
     dataBooking = new BehaviorSubject<any>('');
     saveStatus = new BehaviorSubject<boolean>(false);
+    registrasiOnline = new BehaviorSubject<any>('');
+    sep = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
+        private errorMessageService: ErrorMessageService
     ) { }
 
     getPesertaBpjs(key: string) {
-        this.loadingService.status.next(true)
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
                     this.dataPasien.next(data.data)
                 }
-                this.loadingService.status.next(false)
             })
     }
 
@@ -121,8 +124,16 @@ export class RegistrasiOnlineService {
                 if (data.metaData.code == '200') {
                     this.dataHistorySep.next(data.response.histori);
                 }
-                this.loadingService.status.next(false);
             })
+    }
+
+    getBookingCode(bookingCode: string) {
+        this.http.get<any>(config.api_vclaim('antrian/kodeBooking/' + bookingCode))
+            .subscribe(data => {
+                if (data.code == 200) {
+                    this.registrasiOnline.next(data.data)
+                }
+            });
     }
 
     getSessionPasien() {
@@ -157,8 +168,17 @@ export class RegistrasiOnlineService {
             })
     }
 
+    getDataSuratKontrol(noKartuBPJS: string) {
+        let tanggal = this.reformatDate(new Date());
+        this.http.get<any>( config.api_vclaim('suratKontrol/byPeserta/nomorKartu/'+noKartuBPJS+'/bulan/'+tanggal+'/filter/'+1) )
+            .subscribe(data => {
+                if( data.metaData.code == '200' ){
+                    this.dataSuratKontrol.next(data.response.list);
+                }
+            })
+    }
+
     createSuratKontrol(data: any) {
-        this.loadingService.status.next(true)
         this.http.post<any>(config.api_vclaim('suratKontrol/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
@@ -167,15 +187,14 @@ export class RegistrasiOnlineService {
                     this.suratKontrol.next(suratKontrol);
                     this.createSuratKontrolStatus.next(true);
                 } else {
-                    alert(data.metaData.message);
+                    this.errorMessageService.errorHandle(data.metaData.message);
+                    // alert(data.metaData.message);
                     this.createSuratKontrolStatus.next(false);
                 }
-                this.loadingService.status.next(false)
             })
     }
 
     save(data: any) {
-        this.loadingService.status.next(true)
         this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
                 if (data.metadata.code == 200) {
@@ -192,11 +211,42 @@ export class RegistrasiOnlineService {
                         noRujukan: this.rujukan.value.noKunjungan,
                         noSuratKontrol: this.suratKontrol.value.noSuratKontrol
                     }
-                    this.clearAllSession();
-                    sessionStorage.setItem('booking', JSON.stringify(booking));
+                    // this.clearAllSession();
+                    // sessionStorage.setItem('booking', JSON.stringify(booking));
+                    this.dataBooking.next(booking);
                     this.saveStatus.next(true);
                 }
-                this.loadingService.status.next(false)
+            })
+    }
+
+    getExpiredRujukan(tanggalRujukan: string) {
+        let tujukan = {};
+        let tanggal : any = tanggalRujukan.split('-');
+        let tglRujukan = new Date(tanggal[0], tanggal[1]-1, tanggal[2]);
+        let expiredDate = new Date(tglRujukan.setDate(tglRujukan.getDate()+90));
+
+        let start =  new Date(this.reformatDate(new Date()));
+        let end = new Date(this.reformatDate(expiredDate));
+
+        let Time = end.getTime() - start.getTime();
+        let Days = Time / (1000 * 3600 * 24); //Diference in Days
+
+        let rujukan = {
+            expired: this.reformatDate(expiredDate),
+            hariExpired: Days
+        }
+
+        return rujukan;
+    }
+
+    createSep(data: any) {
+        this.http.post<any>(config.api_vclaim('sep/save'), data)
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    this.sep.next(data.response.sep);
+                }else{
+                    this.errorMessageService.errorHandle(data.metaData.message+'. Hubungi loket pendaftaran untuk mendapatkan bantuan.');
+                }
             })
     }
 
@@ -214,5 +264,9 @@ export class RegistrasiOnlineService {
         let arrBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
         let bulan = parseInt(tanggal[1]) - 1
         return tanggal[2] + ' ' + arrBulan[bulan] + ' ' + tanggal[0];
+    }
+
+    trimRekmed(noRekmed: string){
+        return noRekmed.substr(-6)
     }
 }

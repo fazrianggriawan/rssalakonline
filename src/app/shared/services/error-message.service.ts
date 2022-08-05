@@ -7,20 +7,16 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ErrorMessageService {
 
-    public errorMessage: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    errorMessage = new BehaviorSubject<string>('');
 
-    constructor(
-        // private messageService: MessageService
-    ) { }
+    constructor() { }
 
     public getErrorMessage() {
         return this.errorMessage.asObservable();
     }
 
-
     public errorHandle(errorMessage: string) {
         this.errorMessage.next(errorMessage);
-        // this.messageService.add({ key: 'c', severity: 'error', summary: 'Perhatian', detail: errorMessage });
     }
 
 }

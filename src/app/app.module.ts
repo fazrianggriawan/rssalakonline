@@ -47,7 +47,6 @@ import { KonfirmasiDataComponent } from './shared/components/konfirmasi-data/kon
 import { PilihJenisKunjunganComponent } from './shared/components/pilih-jenis-kunjungan/pilih-jenis-kunjungan.component';
 import { JadwalDokterComponent } from './shared/components/jadwal-dokter/jadwal-dokter.component';
 import { KeyboardComponent } from './shared/components/keyboard/keyboard.component';
-import { NumpadComponent } from './shared/components/numpad/numpad.component';
 import { CariBookingOnlineComponent } from './shared/components/cari-booking-online/cari-booking-online.component';
 import { LoadingComponent } from './shared/components/loading/loading.component';
 import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online.component';
@@ -55,6 +54,7 @@ import { JenisKunjunganComponent } from './registrasi-online/jenis-kunjungan/jen
 import { RencanaKunjunganComponent } from './registrasi-online/rencana-kunjungan/rencana-kunjungan.component';
 import { KonfirmasiComponent } from './registrasi-online/konfirmasi/konfirmasi.component';
 import { SuccessComponent } from './registrasi-online/success/success.component';
+import { AnjunganModule } from './anjungan/anjungan.module';
 
 @NgModule({
     declarations: [
@@ -77,7 +77,6 @@ import { SuccessComponent } from './registrasi-online/success/success.component'
         PilihJenisKunjunganComponent,
         JadwalDokterComponent,
         KeyboardComponent,
-        NumpadComponent,
         CariBookingOnlineComponent,
         LoadingComponent,
         RegistrasiOnlineComponent,
@@ -110,7 +109,8 @@ import { SuccessComponent } from './registrasi-online/success/success.component'
         ToastModule,
         ConfirmDialogModule,
         StepsModule,
-        NgxCaptureModule
+        NgxCaptureModule,
+        AnjunganModule
     ],
     providers: [
         NgxHowlerService,

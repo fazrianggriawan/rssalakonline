@@ -37,7 +37,7 @@ export class RegistrasiOnlineComponent implements OnInit {
 
     ngOnInit(): void {
         this.registrasiOnlineService.getSessionPasien();
-        this.registrasiOnlineService.dataPasien.subscribe(data => this.pasien = data);
+        this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data));
         this.registrasiOnlineService.pasien.subscribe(data => this.pasien = data);
         this.dataJnsKunjungan = [{ id: 1, name: 'Rujukan / Kunjungan Baru' }, { id: 2, name: 'Kontrol Kembali' }]
         this.dataJnsPasien = [{ id: 1, name: 'Tunai' }, { id: 2, name: 'BPJS' }]
@@ -50,7 +50,14 @@ export class RegistrasiOnlineComponent implements OnInit {
         ];
     }
 
+    handlePasien(data: any){
+        if(data){
+            this.pasien = data;
+        }
+    }
+
     getPasien() {
+        this.pasien = '';
         if (this.nomorPasien.length > 10) {
             this.registrasiOnlineService.getPesertaBpjs(this.nomorPasien);
         } else {

@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { config } from 'src/app/config';
 import { LoadingService } from 'src/app/shared/services/loading.service';
 import { AnjunganService } from '../services/anjungan.service';
@@ -24,7 +25,8 @@ export class RegistrasiOnlineComponent implements OnInit {
 
     constructor(
         private keyboardService: KeyboardService,
-        public anjunganService: AnjunganService
+        public anjunganService: AnjunganService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -145,6 +147,12 @@ export class RegistrasiOnlineComponent implements OnInit {
     checkIn() {
         this.createSep();
     }
+
+    home() {
+        this.reset();
+        window.location.replace(config.host + 'registrasi/#/anjungan');
+    }
+
 
     printAnjungan(noSep:string, bookingCode:string) {
         (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + noSep + '/' + bookingCode);
