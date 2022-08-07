@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { config } from '../config';
-import { ErrorMessageService } from '../shared/services/error-message.service';
-import { LoadingService } from '../shared/services/loading.service';
+import { ErrorMessageService } from '../services/error-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +29,6 @@ export class RegistrasiOnlineService {
 
     constructor(
         private http: HttpClient,
-        private loadingService: LoadingService,
         private errorMessageService: ErrorMessageService
     ) { }
 
@@ -38,19 +36,21 @@ export class RegistrasiOnlineService {
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
-                    this.dataPasien.next(data.data)
+                    if( data.data.nama ){
+                        this.dataPasien.next(data.data)
+                    }else{
+                        this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                    }
                 }
             })
     }
 
     getPasienByRm(key: string) {
-        this.loadingService.status.next(true)
         this.http.get<any>(config.api_simrs('online/get/pasienByRm?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
                     this.dataPasien.next(data.data)
                 }
-                this.loadingService.status.next(false)
             })
     }
 
@@ -112,8 +112,7 @@ export class RegistrasiOnlineService {
             })
     }
 
-    getHistorySep(nomorKartu: string) {
-        this.loadingService.status.next(true);
+    getHistorySep(nomorKartu: string) {        ;
         let end = this.reformatDate(new Date());
         let to = new Date(end.toString());
         to = new Date(to.setDate(to.getDate() - 90));
@@ -187,7 +186,6 @@ export class RegistrasiOnlineService {
                     this.suratKontrol.next(suratKontrol);
                     this.createSuratKontrolStatus.next(true);
                 } else {
-                    this.errorMessageService.errorHandle(data.metaData.message);
                     // alert(data.metaData.message);
                     this.createSuratKontrolStatus.next(false);
                 }
@@ -244,8 +242,6 @@ export class RegistrasiOnlineService {
             .subscribe(data => {
                 if (data.metaData.code == '200') {
                     this.sep.next(data.response.sep);
-                }else{
-                    this.errorMessageService.errorHandle(data.metaData.message+'. Hubungi loket pendaftaran untuk mendapatkan bantuan.');
                 }
             })
     }

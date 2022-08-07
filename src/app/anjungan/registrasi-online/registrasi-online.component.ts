@@ -1,9 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { config } from 'src/app/config';
-import { LoadingService } from 'src/app/shared/services/loading.service';
-import { AnjunganService } from '../services/anjungan.service';
-import { KeyboardService } from '../services/keyboard.service';
+import { AnjunganService } from '../anjungan.service';
+import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
 
 @Component({
     selector: 'app-registrasi-online',
@@ -24,7 +23,7 @@ export class RegistrasiOnlineComponent implements OnInit {
     sep: any = '';
 
     constructor(
-        private keyboardService: KeyboardService,
+        private keyboardService: VirtualKeyboardService,
         public anjunganService: AnjunganService,
         private router: Router
     ) { }

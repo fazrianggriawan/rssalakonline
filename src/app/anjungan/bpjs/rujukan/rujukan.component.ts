@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
-import { LoadingService } from 'src/app/shared/services/loading.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
     selector: 'app-rujukan',
