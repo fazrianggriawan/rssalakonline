@@ -26,6 +26,7 @@ export class RegistrasiOnlineService {
     saveStatus = new BehaviorSubject<boolean>(false);
     registrasiOnline = new BehaviorSubject<any>('');
     sep = new BehaviorSubject<any>('');
+    checkinStatus = new BehaviorSubject<boolean>(false);
 
     constructor(
         private http: HttpClient,
@@ -186,8 +187,8 @@ export class RegistrasiOnlineService {
                     this.suratKontrol.next(suratKontrol);
                     this.createSuratKontrolStatus.next(true);
                 } else {
-                    // alert(data.metaData.message);
-                    this.createSuratKontrolStatus.next(false);
+                    this.errorMessageService.message(data.metaData.message);
+                    this.suratKontrol.next('')
                 }
             })
     }
@@ -196,23 +197,23 @@ export class RegistrasiOnlineService {
         this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
                 if (data.metadata.code == 200) {
-                    let booking: any = {
-                        kodeBooking: data.response.kodebooking,
-                        noAntrian: data.response.nomorantrean,
-                        nama: this.pasien.value.nama,
-                        tglKunjungan: this.jadwalDokter.value.tglKunjungan,
-                        namadokter: this.jadwalDokter.value.namadokter,
-                        hari: this.jadwalDokter.value.namahari,
-                        jadwal: this.jadwalDokter.value.jadwal,
-                        norekmed: this.pasien.value.norekmed,
-                        noaskes: this.pasien.value.noaskes,
-                        noRujukan: this.rujukan.value.noKunjungan,
-                        noSuratKontrol: this.suratKontrol.value.noSuratKontrol
-                    }
-                    // this.clearAllSession();
-                    // sessionStorage.setItem('booking', JSON.stringify(booking));
+                    let booking = data.response;
+                    sessionStorage.setItem('booking', JSON.stringify(booking));
                     this.dataBooking.next(booking);
                     this.saveStatus.next(true);
+                }else{
+                    this.saveStatus.next(false);
+                }
+            })
+    }
+
+    checkin(data: any){
+        this.http.post<any>(config.api_vclaim('antrian/checkin'), data)
+            .subscribe(data => {
+                if(data.code == 200){
+                    this.checkinStatus.next(true);
+                }else {
+                    this.checkinStatus.next(false);
                 }
             })
     }
@@ -242,6 +243,9 @@ export class RegistrasiOnlineService {
             .subscribe(data => {
                 if (data.metaData.code == '200') {
                     this.sep.next(data.response.sep);
+                }else{
+                    this.errorMessageService.message(data.metaData.message);
+                    this.sep.next('');
                 }
             })
     }
