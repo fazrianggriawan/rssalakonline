@@ -25,6 +25,8 @@ import { LoadingComponent } from './anjungan/shared/components/loading/loading.c
 
 import { AnjunganModule } from './anjungan/anjungan.module';
 import { RegistrasiOnlineModule } from './registrasi-online/registrasi-online.module';
+import { CallerModule } from './caller/caller.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @NgModule({
@@ -51,7 +53,9 @@ import { RegistrasiOnlineModule } from './registrasi-online/registrasi-online.mo
         ToastModule,
         NgxCaptureModule,
         AnjunganModule,
-        RegistrasiOnlineModule
+        RegistrasiOnlineModule,
+        CallerModule,
+        DashboardModule
     ],
     providers: [
         NgxHowlerService,
