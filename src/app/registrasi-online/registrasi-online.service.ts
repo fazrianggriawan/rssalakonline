@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { config } from '../config';
+import { ErrorMessageService } from '../services/error-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,7 @@ export class RegistrasiOnlineService {
     dataJadwalDokter = new BehaviorSubject<any>('');
     dataPoliklinik = new BehaviorSubject<any>('');
     dataHistorySep = new BehaviorSubject<any>('');
+    dataSuratKontrol = new BehaviorSubject<any>('');
     jumlahSepRujukan = new BehaviorSubject<any>('');
     pasien = new BehaviorSubject<any>('');
     rujukan = new BehaviorSubject<any>('');
@@ -22,16 +24,24 @@ export class RegistrasiOnlineService {
     createSuratKontrolStatus = new BehaviorSubject<boolean>(false);
     dataBooking = new BehaviorSubject<any>('');
     saveStatus = new BehaviorSubject<boolean>(false);
+    registrasiOnline = new BehaviorSubject<any>('');
+    sep = new BehaviorSubject<any>('');
+    checkinStatus = new BehaviorSubject<boolean>(false);
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private errorMessageService: ErrorMessageService
     ) { }
 
     getPesertaBpjs(key: string) {
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
             .subscribe(data => {
                 if (data.code == '200') {
-                    this.dataPasien.next(data.data)
+                    if( data.data.nama ){
+                        this.dataPasien.next(data.data)
+                    }else{
+                        this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                    }
                 }
             })
     }
@@ -103,10 +113,10 @@ export class RegistrasiOnlineService {
             })
     }
 
-    getHistorySep(nomorKartu: string) {
+    getHistorySep(nomorKartu: string) {        ;
         let end = this.reformatDate(new Date());
         let to = new Date(end.toString());
-        to = new Date(to.setDate(to.getDate() - 30));
+        to = new Date(to.setDate(to.getDate() - 90));
         let from = this.reformatDate(to);
 
         this.http.get<any>(config.api_vclaim('history/nomorKartu/' + nomorKartu + '/from/' + from + '/to/' + end))
@@ -115,6 +125,15 @@ export class RegistrasiOnlineService {
                     this.dataHistorySep.next(data.response.histori);
                 }
             })
+    }
+
+    getBookingCode(bookingCode: string) {
+        this.http.get<any>(config.api_vclaim('antrian/kodeBooking/' + bookingCode))
+            .subscribe(data => {
+                if (data.code == 200) {
+                    this.registrasiOnline.next(data.data)
+                }
+            });
     }
 
     getSessionPasien() {
@@ -149,6 +168,16 @@ export class RegistrasiOnlineService {
             })
     }
 
+    getDataSuratKontrol(noKartuBPJS: string) {
+        let tanggal = this.reformatDate(new Date());
+        this.http.get<any>( config.api_vclaim('suratKontrol/byPeserta/nomorKartu/'+noKartuBPJS+'/bulan/'+tanggal+'/filter/'+1) )
+            .subscribe(data => {
+                if( data.metaData.code == '200' ){
+                    this.dataSuratKontrol.next(data.response.list);
+                }
+            })
+    }
+
     createSuratKontrol(data: any) {
         this.http.post<any>(config.api_vclaim('suratKontrol/save'), data)
             .subscribe(data => {
@@ -157,35 +186,71 @@ export class RegistrasiOnlineService {
                     sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
                     this.suratKontrol.next(suratKontrol);
                     this.createSuratKontrolStatus.next(true);
+                } else {
+                    this.errorMessageService.message(data.metaData.message);
+                    this.suratKontrol.next('')
                 }
             })
     }
 
     save(data: any) {
-        this.http.post<any>( config.api_vclaim('antrian/save'), data )
+        this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
-                if( data.metadata.code == 200 ){
-                    let booking : any = {
-                        kodeBooking: data.response.kodebooking,
-                        noAntrian: data.response.nomorantrean,
-                        nama: this.pasien.value.nama,
-                        tglKunjungan: this.jadwalDokter.value.tglKunjungan,
-                        namadokter: this.jadwalDokter.value.namadokter,
-                        hari: this.jadwalDokter.value.namahari,
-                        jadwal: this.jadwalDokter.value.jadwal,
-                        norekmed: this.pasien.value.norekmed,
-                        noaskes: this.pasien.value.noaskes,
-                        noRujukan: this.rujukan.value.noKunjungan,
-                        noSuratKontrol: this.suratKontrol.value.noSuratKontrol
-                    }
-                    this.clearAllSession();
+                if (data.metadata.code == 200) {
+                    let booking = data.response;
                     sessionStorage.setItem('booking', JSON.stringify(booking));
+                    this.dataBooking.next(booking);
                     this.saveStatus.next(true);
+                }else{
+                    this.saveStatus.next(false);
                 }
             })
     }
 
-    clearAllSession(){
+    checkin(data: any){
+        this.http.post<any>(config.api_vclaim('antrian/checkin'), data)
+            .subscribe(data => {
+                if(data.code == 200){
+                    this.checkinStatus.next(true);
+                }else {
+                    this.checkinStatus.next(false);
+                }
+            })
+    }
+
+    getExpiredRujukan(tanggalRujukan: string) {
+        let tujukan = {};
+        let tanggal : any = tanggalRujukan.split('-');
+        let tglRujukan = new Date(tanggal[0], tanggal[1]-1, tanggal[2]);
+        let expiredDate = new Date(tglRujukan.setDate(tglRujukan.getDate()+90));
+
+        let start =  new Date(this.reformatDate(new Date()));
+        let end = new Date(this.reformatDate(expiredDate));
+
+        let Time = end.getTime() - start.getTime();
+        let Days = Time / (1000 * 3600 * 24); //Diference in Days
+
+        let rujukan = {
+            expired: this.reformatDate(expiredDate),
+            hariExpired: Days
+        }
+
+        return rujukan;
+    }
+
+    createSep(data: any) {
+        this.http.post<any>(config.api_vclaim('sep/save'), data)
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    this.sep.next(data.response.sep);
+                }else{
+                    this.errorMessageService.message(data.metaData.message);
+                    this.sep.next('');
+                }
+            })
+    }
+
+    clearAllSession() {
         sessionStorage.clear();
     }
 
@@ -199,5 +264,9 @@ export class RegistrasiOnlineService {
         let arrBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
         let bulan = parseInt(tanggal[1]) - 1
         return tanggal[2] + ' ' + arrBulan[bulan] + ' ' + tanggal[0];
+    }
+
+    trimRekmed(noRekmed: string){
+        return noRekmed.substr(-6)
     }
 }
