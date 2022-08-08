@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { config } from 'src/app/config';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
-import { AnjunganService } from '../services/anjungan.service';
-import { KeyboardService } from '../services/keyboard.service';
+import { ErrorMessageService } from 'src/app/services/error-message.service';
+import { AnjunganService } from '../anjungan.service';
+import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
 
 @Component({
     selector: 'app-bpjs',
@@ -22,7 +22,8 @@ export class BpjsComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private keyboardService: KeyboardService,
+        private keyboardService: VirtualKeyboardService,
+        private errorMessageService: ErrorMessageService,
         public registrasiOnlineService: RegistrasiOnlineService,
         public anjunganService: AnjunganService
     ) { }
@@ -40,6 +41,9 @@ export class BpjsComponent implements OnInit {
             if (this.pasien.noaskes) {
                 this.anjunganService.getPeserta(this.pasien.noaskes)
                 this.anjunganService.peserta.subscribe(data => this.peserta = data )
+            }else{
+                this.errorMessageService.message('Nomor BPJS anda belum terinput.')
+                this.keyboardService.clearAction();
             }
         }
     }
@@ -50,10 +54,14 @@ export class BpjsComponent implements OnInit {
         }
     }
 
-    getPeserta(nomorBpjs: string) {
-        if (nomorBpjs) {
+    getPeserta(value: string) {
+        if (value) {
             this.clearDataPasien();
-            this.registrasiOnlineService.getPesertaBpjs(nomorBpjs);
+            if( value.length == 6 ){
+                this.registrasiOnlineService.getPasienByRm(value);
+            }else{
+                this.registrasiOnlineService.getPesertaBpjs(value.padStart(13, '0'));
+            }
             this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
         }
     }
@@ -67,14 +75,14 @@ export class BpjsComponent implements OnInit {
     }
 
     clearDataPasien() {
-        this.registrasiOnlineService.dataPasien.next(false);
-        this.anjunganService.peserta.next(false);
+        this.registrasiOnlineService.dataPasien.next('');
+        this.anjunganService.peserta.next('');
     }
 
     reset() {
         this.clearDataPasien();
         this.keyboardService.enterAction.next(false);
-        this.keyboardService.value.next('');
+        this.keyboardService.clearAction();
     }
 
     home() {

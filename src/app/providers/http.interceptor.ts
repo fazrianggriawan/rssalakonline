@@ -2,7 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { EMPTY, Observable, throwError, retry } from 'rxjs';
 import { timeout, catchError, finalize } from 'rxjs/operators';
-import { LoadingService } from '../shared/services/loading.service';
+import { LoadingService } from '../services/loading.service';
 
 export const DEFAULT_TIMEOUT = new InjectionToken<number>('defaultTimeout');
 

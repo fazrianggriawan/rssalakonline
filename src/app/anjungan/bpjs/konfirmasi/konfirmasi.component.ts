@@ -109,7 +109,7 @@ export class KonfirmasiComponent implements OnInit {
         this.router.navigateByUrl('anjungan/bpjs/jadwalDokter');
     }
 
-    next() {
+    daftar() {
         if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
             // Rencana Kontrol
             this.createSuratKontrol();
@@ -130,7 +130,6 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     createSuratKontrol() {
-
         let data = {
             noSep: this.lastSep.noSep,
             dokter: this.jadwalDokter.kodedokter,
