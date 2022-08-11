@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 const routes: Routes = [
     { path: '', component: AppComponent },
     { path: 'anjungan', loadChildren: () => import('./anjungan/anjungan.module').then(m => m.AnjunganModule) },
-    { path: 'registrasiOnline', loadChildren: () => import('./registrasi-online/registrasi-online.module').then(m => m.RegistrasiOnlineModule) }
+    { path: 'registrasiOnline', loadChildren: () => import('./registrasi-online/registrasi-online.module').then(m => m.RegistrasiOnlineModule) },
+    { path: 'caller', loadChildren: () => import('./caller/caller.module').then(m => m.CallerModule) }
 ];
 
 @NgModule({

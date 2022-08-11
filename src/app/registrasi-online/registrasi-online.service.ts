@@ -27,6 +27,7 @@ export class RegistrasiOnlineService {
     registrasiOnline = new BehaviorSubject<any>('');
     sep = new BehaviorSubject<any>('');
     checkinStatus = new BehaviorSubject<boolean>(false);
+    dataAntrian = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
@@ -236,6 +237,15 @@ export class RegistrasiOnlineService {
         }
 
         return rujukan;
+    }
+
+    getAntrianByJadwal(jamPraktek: string, kodePoli: string, tglKunjungan: string){
+        this.http.get<any>( config.api_vclaim('antrian/byJadwal/'+jamPraktek+'/'+kodePoli+'/'+tglKunjungan) )
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    this.dataAntrian.next(data.data);
+                }
+            })
     }
 
     createSep(data: any) {
