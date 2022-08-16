@@ -99,18 +99,19 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     daftar() {
-        if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
-            // Rencana Kontrol
-            this.createSuratKontrol();
+        if (parseInt(this.rujukan.jumlahSep) == 0) {
+            // Rujukan Baru
+            this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
+            this.createSep();
         } else {
-            if (parseInt(this.rujukan.jumlahSep) > 0) {
+            if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
+                // Rencana Kontrol
+                this.createSuratKontrol();
+            }else{
                 // Rujukan Internal
                 this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
-            } else {
-                // Rujukan Baru
-                this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
+                this.createSep();
             }
-            this.createSep();
         }
     }
 
@@ -168,23 +169,20 @@ export class KonfirmasiComponent implements OnInit {
             tlp: this.rujukan.peserta.mr.noTelepon
         }
 
-        if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
-            // Tujuan Kontrol
-            data.tujuanKunj = '2'
-            data.flagProcedure = ''
-            data.assessmentPel = '5'
-            data.skdp.noSuratKontrol = this.suratKontrol.noSuratKontrol;
-            data.skdp.kodeDokter = this.jadwalDokter.kodedokter;
-        } else {
-            if( parseInt(this.rujukan.jumlahSep) > 0 ){
+        if( parseInt(this.rujukan.jumlahSep) == 0 ){
+            // Rujukan Baru
+            data.tujuanKunj = '0'
+        }else{
+            if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
+                // Tujuan Kontrol
+                data.tujuanKunj = '2'
+                data.assessmentPel = '5'
+                data.skdp.noSuratKontrol = this.suratKontrol.noSuratKontrol;
+                data.skdp.kodeDokter = this.jadwalDokter.kodedokter;
+            }else{
                 // Rujukan Internal
                 data.tujuanKunj = '0'
-                data.flagProcedure = ''
                 data.assessmentPel = '1'
-            }else{
-                // Rujukan Baru
-                data.tujuanKunj = '0'
-                data.flagProcedure = ''
             }
         }
 

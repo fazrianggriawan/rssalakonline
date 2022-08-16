@@ -202,6 +202,7 @@ export class RegistrasiOnlineService {
                     this.dataBooking.next(booking);
                     this.saveStatus.next(true);
                 }else{
+                    this.errorMessageService.message(data.metadata.message);
                     this.saveStatus.next(false);
                 }
             })
@@ -213,6 +214,7 @@ export class RegistrasiOnlineService {
                 if(data.code == 200){
                     this.checkinStatus.next(true);
                 }else {
+                    this.errorMessageService.message('Gagal untuk checkin');
                     this.checkinStatus.next(false);
                 }
             })
