@@ -30,7 +30,7 @@ export class BpjsComponent implements OnInit {
 
     ngOnInit(): void {
         this.onBlur();
-        this.registrasiOnlineService.clearAllSession();
+        this.registrasiOnlineService.refreshForm();
         this.keyboardService.value.subscribe(data => this.nomorBpjs = data)
         this.keyboardService.enterAction.subscribe(data => { if (data) this.getPeserta(this.nomorBpjs) })
     }
