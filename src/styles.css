@@ -326,3 +326,17 @@ body {
 .btn-action-numpad {
     background: #ffd559;
 }
+
+.item-rujukan:hover{
+    border-color: orange !important;
+    background-color: white !important;
+}
+
+.selected-item{
+    background-color: #fffd98 !important;
+    border-color: #ffd898 !important;
+}
+
+.p-ripple.yellow .p-ink {
+        background: rgba(221, 198, 22, 0.5) !important ;
+    }

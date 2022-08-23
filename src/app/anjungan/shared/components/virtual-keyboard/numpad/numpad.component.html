@@ -1,0 +1,10 @@
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-12 col-lg-7">
+        <div class="row justify-content-center">
+            <div style="padding: 20px 25px;" class="col-3 m-1 bg-light text-center fs-3 rounded clickable border fs-5 yellow" pRipple *ngFor="let item of number" (click)="keypadInput(item)">{{item}}</div>
+            <div style="padding: 20px 25px; background-color: #ffed56 !important;" class="col-3 m-1 text-center fs-3 rounded clickable border fs-5" pRipple (click)="hapusNumber()">HAPUS</div>
+            <div style="padding: 20px 25px;" class="col-3 m-1 bg-light text-center fs-3 rounded clickable border fs-5 yellow" pRipple (click)="keypadInput('0')">0</div>
+            <div style="padding: 20px 25px; background-color: #ffed56 !important;" class="col-3 m-1 text-center fs-3 rounded clickable border fs-5" pRipple (click)="ok()">ENTER</div>
+        </div>
+    </div>
+</div>
