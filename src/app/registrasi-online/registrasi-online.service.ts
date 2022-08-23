@@ -264,6 +264,18 @@ export class RegistrasiOnlineService {
         sessionStorage.clear();
     }
 
+    refreshForm() {
+        this.clearAllSession();
+        this.dataBooking.next('');
+        this.jumlahSepRujukan.next('');
+        this.dataBooking.next('');
+        this.dataRujukan.next('');
+        this.dataJadwalDokter.next('');
+        this.sep.next('');
+        this.saveStatus.next(false);
+        this.dataHistorySep.next('');
+    }
+
     reformatDate(date: Date) {
         let parsingTanggal = date.toLocaleDateString('id-ID').toString().split('/');
         return parsingTanggal[2].toString() + '-' + parsingTanggal[1].toString().padStart(2, '0') + '-' + parsingTanggal[0].toString().padStart(2, '0')

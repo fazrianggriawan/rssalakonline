@@ -31,6 +31,17 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
         this.registrasiOnlineService.dataSuratKontrol.subscribe(data => this.handleDataSuratKontrol(data))
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.handleCreateSuratKontrol(data))
+        this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
+    }
+
+    handleDataBooking(data: any){
+        if( data ){
+            this.success = true;
+            this.dataBooking = data;
+            this.printAnjungan();
+            // Checkin data antrian
+            this.registrasiOnlineService.checkin(this.dataBooking);
+        }
     }
 
     getSessionData() {
@@ -226,26 +237,6 @@ export class KonfirmasiComponent implements OnInit {
 
         this.registrasiOnlineService.save(data);
 
-        this.registrasiOnlineService.saveStatus.subscribe(data => {
-            if(data){
-                this.registrasiOnlineService.dataBooking.subscribe(dataBooking => {
-                    this.dataBooking = dataBooking;
-                    this.checkin();
-                })
-            }
-        })
-
-
-    }
-
-    checkin(){
-        this.registrasiOnlineService.checkin(this.dataBooking);
-        this.registrasiOnlineService.checkinStatus.subscribe(data => {
-            if( data ){
-                this.success = true;
-                this.printAnjungan();
-            }
-        })
     }
 
     done(){
