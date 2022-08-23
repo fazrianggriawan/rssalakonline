@@ -1,0 +1,14 @@
+<p-toast position="center">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column" style="flex: 1">
+            <div class="text-center">
+                <i class="bi bi-exclamation-circle" style="font-size: 2rem"></i>
+                <h4>{{message.summary}}</h4>
+                <div>
+                    <div>{{message.detail}}</div>
+                    <div class="mt-2"><small style="opacity: 0.5;">Hubungi Loket Pendaftaran Untuk Bantuan.</small></div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
