@@ -55,6 +55,7 @@ import { JenisKunjunganComponent } from './registrasi-online/jenis-kunjungan/jen
 import { RencanaKunjunganComponent } from './registrasi-online/rencana-kunjungan/rencana-kunjungan.component';
 import { KonfirmasiComponent } from './registrasi-online/konfirmasi/konfirmasi.component';
 import { SuccessComponent } from './registrasi-online/success/success.component';
+import { RegistrasiModule } from './registrasi/registrasi.module';
 
 @NgModule({
     declarations: [
@@ -110,7 +111,8 @@ import { SuccessComponent } from './registrasi-online/success/success.component'
         ToastModule,
         ConfirmDialogModule,
         StepsModule,
-        NgxCaptureModule
+        NgxCaptureModule,
+        RegistrasiModule
     ],
     providers: [
         NgxHowlerService,
