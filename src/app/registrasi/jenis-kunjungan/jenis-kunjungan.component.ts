@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RegistrasiOnlineService } from '../registrasi-online.service';
+import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 
 @Component({
     selector: 'app-jenis-kunjungan',
@@ -38,7 +38,7 @@ export class JenisKunjunganComponent implements OnInit {
                 this.jnsPembayaran = 'bpjs';
             }
         }else{
-            this.router.navigate(['/registrasiOnline']);
+            this.router.navigateByUrl('/');
         }
     }
 
@@ -83,7 +83,7 @@ export class JenisKunjunganComponent implements OnInit {
         this.rujukan.jumlahSep = this.jumlahSepRujukan;
         sessionStorage.setItem('rujukan', JSON.stringify(this.rujukan));
         sessionStorage.setItem('jenisPembayaran', this.jnsPembayaran);
-        this.router.navigate(['/registrasiOnline/rencana-kunjungan']);
+        this.router.navigateByUrl('registrasi/rencana-kunjungan')
     }
 
 }

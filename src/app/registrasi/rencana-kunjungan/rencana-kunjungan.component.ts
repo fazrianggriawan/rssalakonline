@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RegistrasiOnlineService } from '../registrasi-online.service';
+import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 
 @Component({
     selector: 'app-rencana-kunjungan',
@@ -26,13 +26,13 @@ export class RencanaKunjunganComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.registrasiOnlineService.getSessionPasien();
-        this.registrasiOnlineService.getSessionRujukan();
+        // this.registrasiOnlineService.getSessionRujukan();
         this.registrasiOnlineService.getSessionJadwalDokter();
         this.registrasiOnlineService.getDataPoliklinik();
+        this.registrasiOnlineService.getSessionPasien();
+        this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.dataPoliklinik.subscribe(data => this.dataPoliklinik = data)
         this.registrasiOnlineService.dataJadwalDokter.subscribe(data => this.dataJadwalDokter = data)
-        this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.rujukan.subscribe(data => this.handleSessionRujukan(data))
         this.registrasiOnlineService.jadwalDokter.subscribe(data => this.handleJadwalDokter(data));
     }
@@ -41,12 +41,13 @@ export class RencanaKunjunganComponent implements OnInit {
         if(data){
             this.pasien = data;
         }else{
-            this.router.navigate(['/registrasiOnline']);
+            this.router.navigateByUrl('/')
         }
     }
 
     handleJadwalDokter(data: any) {
         if (data) {
+            console.log('handle jadwal dokter')
             this.jadwalDokter = data;
             this.setTujuanPoli(this.jadwalDokter.kodepoli);
         }
@@ -57,7 +58,7 @@ export class RencanaKunjunganComponent implements OnInit {
             this.rujukan = data;
             this.endDate = new Date(data.expired.toString());
             this.setTujuanPoli(this.rujukan.poliRujukan.kode);
-            this.getJadwalDokter();
+            console.log('handle session rujukan rencana kunjungan')
         }
     }
 
@@ -73,6 +74,7 @@ export class RencanaKunjunganComponent implements OnInit {
     }
 
     getJadwalDokter() {
+        console.log('ambil data jadwal dokter')
         setTimeout(() => {
             if (this.tujuanPoli && this.tglKunjungan) {
                 this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
@@ -88,7 +90,7 @@ export class RencanaKunjunganComponent implements OnInit {
     next() {
         this.jadwalDokter.tglKunjungan = this.registrasiOnlineService.reformatDate(this.tglKunjungan);
         sessionStorage.setItem('jadwalDokter', JSON.stringify(this.jadwalDokter));
-        this.router.navigate(['registrasiOnline/konfirmasi']);
+        this.router.navigateByUrl('registrasi/konfirmasi');
     }
 
 }

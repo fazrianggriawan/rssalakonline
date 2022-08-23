@@ -32,9 +32,7 @@
                     <div class="mb-3">
                         <label for="Jenis Kunjungan" class="text-muted">Jenis Pembayaran</label>
                         <select [(ngModel)]="jnsPembayaran" class="form-select" aria-label="Default select example">
-                            <option value="tunai">Tunai</option>
                             <option value="bpjs">BPJS</option>
-                            <option value="asuransi">Asuransi</option>
                         </select>
                     </div>
                     <div class="mb-3" hidden>
@@ -97,11 +95,11 @@
                             <button class="btn btn-outline-primary pt-3 pb-3" type="button" (click)="dialogDataRujukan=true">Pilih Surat Rujukan</button>
                         </div>
                         <div class="d-grid gap-2 mb-4 mt-4">
-                            <button class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>
+                            <button [disabled]="!rujukan" class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/registrasiOnline'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/'"> <i class="bi bi-chevron-left"></i> Kembali</button>
                             </div>
                         </div>
                     </div>
@@ -154,3 +152,5 @@
         </div>
     </div>
 </p-dialog>
+
+<app-error-handle></app-error-handle>

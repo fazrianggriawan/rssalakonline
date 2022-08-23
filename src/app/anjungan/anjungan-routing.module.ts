@@ -9,7 +9,7 @@ import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online
 
 const routes: Routes = [
     { path: '', component: AnjunganComponent },
-    { path: 'registrasiOnline', component: RegistrasiOnlineComponent },
+    { path: 'anjungan/registrasi-online', component: RegistrasiOnlineComponent },
     { path: 'anjungan/bpjs', component: BpjsComponent },
     { path: 'anjungan/bpjs/rujukan', component: RujukanComponent },
     { path: 'anjungan/bpjs/jadwalDokter', component: JadwalDokterComponent },

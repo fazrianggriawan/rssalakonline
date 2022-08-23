@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgxCaptureService } from 'ngx-capture';
 import { tap } from 'rxjs';
-import { RegistrasiOnlineService } from '../registrasi-online.service';
+import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 
 @Component({
     selector: 'app-success',
@@ -21,9 +21,21 @@ export class SuccessComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.registrasiOnlineService.getSessionBooking();
-        this.registrasiOnlineService.dataBooking.subscribe(data => this.booking = data)
+        let booking : any = sessionStorage.getItem('booking');
+        this.booking = JSON.parse(booking);
         this.captureImage();
+        this.clearData();
+    }
+
+    clearData(){
+        this.registrasiOnlineService.dataBooking.next('');
+        this.registrasiOnlineService.createSuratKontrolStatus.next(false);
+        this.registrasiOnlineService.saveStatus.next(false);
+        sessionStorage.removeItem('jadwalDokter');
+        sessionStorage.removeItem('jenisPembayaran');
+        sessionStorage.removeItem('peserta');
+        sessionStorage.removeItem('rujukan');
+        sessionStorage.removeItem('suratKontrol');
     }
 
     captureImage(){

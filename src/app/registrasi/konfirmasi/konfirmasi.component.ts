@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RegistrasiOnlineService } from '../registrasi-online.service';
 import { NgxCaptureService } from 'ngx-capture';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 
 @Component({
     selector: 'app-konfirmasi',
@@ -40,9 +40,9 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.jadwalDokter.subscribe(data => this.jadwalDokter = data)
         this.registrasiOnlineService.jenisPembayaran.subscribe(data => this.jenisPembayaran = data)
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
-        this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.registrasiOnlineService.createSuratKontrolStatus.subscribe(data => this.handleCreateSuratKontrol(data) )
-        this.registrasiOnlineService.saveStatus.subscribe(data => this.handleSaveStatus(data))
+        this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
+        this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.captureImage();
     }
 
@@ -80,9 +80,16 @@ export class KonfirmasiComponent implements OnInit {
         }
     }
 
-    handleSaveStatus(data: any){
+    handleDataBooking(data: any){
         if( data ){
-            this.router.navigateByUrl('/registrasiOnline/success');
+            data.nama = this.pasien.nama;
+            data.norekmed = this.pasien.norekmed;
+            data.noaskes = this.pasien.noaskes;
+            data.noRujukan = this.rujukan.noKunjungan;
+
+            sessionStorage.setItem('booking', JSON.stringify(data));
+
+            this.router.navigateByUrl('/registrasi/success');
         }
     }
 
@@ -94,21 +101,23 @@ export class KonfirmasiComponent implements OnInit {
             tgl: this.jadwalDokter.tglKunjungan
         }
 
-        this.handleCreateSuratKontrol(true);
-
-        // this.registrasiOnlineService.createSuratKontrol(data);
+        this.registrasiOnlineService.createSuratKontrol(data);
 
     }
 
-    next() {
-        if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli ){
-            this.createSuratKontrol();
-        }else{
-            if( parseInt(this.rujukan.jumlahSep) > 0 ){
-                this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+    daftar() {
+        if( parseInt(this.rujukan.jumlahSep) > 0 ){
+            if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli ){
+                // Kontrol Kembali
+                this.createSuratKontrol();
             }else{
-                this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
+                // Rujukan Internal
+                this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+                this.save();
             }
+        }else{
+            // Rujukan Baru
+            this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
             this.save();
         }
     }

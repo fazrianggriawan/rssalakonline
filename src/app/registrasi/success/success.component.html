@@ -7,18 +7,18 @@
                     <h4>RS SALAK BOGOR</h4>
                 </div>
 
-                <div class="border p-3 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;">
+                <div class="border p-3 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;" *ngIf="booking">
                     <h5 align="center" class="mb-4">Registrasi Online<br>Rawat Jalan</h5>
                     <hr>
                     <div class="mt-3">
                         <div class="text-center mb-2">
                             NOMOR ANTRIAN
-                            <div class="bold bg-white rounded p-1 border fs-5">{{booking.noAntrian}}</div>
+                            <div class="bold bg-white rounded p-1 border fs-5">{{booking.nomorantrean}}</div>
                         </div>
                         <div class="text-center rounded border bg-white">
                             <div class="mt-3">KODE BOOKING</div>
-                            <div class="bold fs-5">{{booking.kodeBooking}}</div>
-                            <qr-code value="{{booking.kodeBooking}}" size="210" [margin]="2" errorCorrectionLevel="M"></qr-code>
+                            <div class="bold fs-5">{{booking.kodebooking}}</div>
+                            <qr-code value="{{booking.kodebooking}}" size="210" [margin]="2" errorCorrectionLevel="M"></qr-code>
                         </div>
                         <p class="p-2 text-center">Scan Barcode ini pada mesin anjungan mandiri.</p>
                             <p hidden>
@@ -35,12 +35,12 @@
                             </div>
                             <div>
                                 <small class="text-muted">Tgl. Kunjungan :</small>
-                                <div>{{registrasiOnlineService.dateHuman(booking.tglKunjungan)}}</div>
+                                <div>{{registrasiOnlineService.dateHuman(booking.tanggalperiksa)}}</div>
                             </div>
                             <div>
                                 <small class="text-muted">Jadwal Dokter :</small>
                                 <div>{{booking.namadokter}}</div>
-                                <div>{{booking.hari}} ({{booking.jadwal}})</div>
+                                <div>{{booking.jadwal}}</div>
                                 <div></div>
                             </div>
                             <hr>
@@ -50,15 +50,11 @@
                             </div>
                             <div>
                                 <small class="text-muted">No. BPJS / Asuransi :</small>
-                                <div>{{booking.noaskes}}</div>
+                                <div>{{booking.nomorkartu}}</div>
                             </div>
                             <div>
                                 <small class="text-muted">No. Surat Rujukan :</small>
                                 <div>{{booking.noRujukan}}</div>
-                            </div>
-                            <div *ngIf="booking.noSuratKontrol">
-                                <small class="text-muted">No. Surat Kontrol :</small>
-                                <div>{{booking.noSuratKontrol}}</div>
                             </div>
                         </div>
                     </div>

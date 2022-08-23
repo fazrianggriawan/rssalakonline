@@ -17,6 +17,7 @@ export class RegistrasiOnlineService {
     dataSuratKontrol = new BehaviorSubject<any>('');
     jumlahSepRujukan = new BehaviorSubject<any>('');
     pasien = new BehaviorSubject<any>('');
+    peserta = new BehaviorSubject<any>('');
     rujukan = new BehaviorSubject<any>('');
     jadwalDokter = new BehaviorSubject<any>('');
     jenisPembayaran = new BehaviorSubject<any>('');
@@ -50,8 +51,25 @@ export class RegistrasiOnlineService {
     getPasienByRm(key: string) {
         this.http.get<any>(config.api_simrs('online/get/pasienByRm?key=' + key))
             .subscribe(data => {
-                if (data.code == '200') {
+                if (data.data.nama) {
                     this.dataPasien.next(data.data)
+                }else{
+                    this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                }
+            })
+    }
+
+    getPeserta(noKartuBpjs: string) {
+        this.http.get<any>(config.api_vclaim('peserta/nomorKartu/' + noKartuBpjs))
+            .subscribe(data => {
+                if(data){
+                    if (data.metaData.code == '200') {
+                        this.peserta.next(data.response.peserta);
+                    }else{
+                        this.errorMessageService.message(data.metaData.message);
+                    }
+                }else{
+                    this.errorMessageService.message('Data Peserta BPJS Tidak Ditemukan');
                 }
             })
     }
@@ -198,9 +216,7 @@ export class RegistrasiOnlineService {
         this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
                 if (data.metadata.code == 200) {
-                    let booking = data.response;
-                    sessionStorage.setItem('booking', JSON.stringify(booking));
-                    this.dataBooking.next(booking);
+                    this.dataBooking.next(data.response);
                     this.saveStatus.next(true);
                 }else{
                     this.errorMessageService.message(data.metadata.message);
