@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 
@@ -7,7 +7,7 @@ import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-on
     templateUrl: './rencana-kunjungan.component.html',
     styleUrls: ['./rencana-kunjungan.component.css']
 })
-export class RencanaKunjunganComponent implements OnInit {
+export class RencanaKunjunganComponent implements OnInit, OnDestroy {
 
     today = new Date();
     endDate: any;
@@ -20,21 +20,42 @@ export class RencanaKunjunganComponent implements OnInit {
     dataJadwalDokter: any;
     jadwalDokter: any;
 
+    subPasien: any;
+    subRujukan: any;
+    subJadwalDokter: any;
+
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private router: Router
     ) { }
 
     ngOnInit(): void {
-        // this.registrasiOnlineService.getSessionRujukan();
+        this.registrasiOnlineService.getSessionRujukan();
         this.registrasiOnlineService.getSessionJadwalDokter();
         this.registrasiOnlineService.getDataPoliklinik();
         this.registrasiOnlineService.getSessionPasien();
-        this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
+        this.subPasien = this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.dataPoliklinik.subscribe(data => this.dataPoliklinik = data)
         this.registrasiOnlineService.dataJadwalDokter.subscribe(data => this.dataJadwalDokter = data)
-        this.registrasiOnlineService.rujukan.subscribe(data => this.handleSessionRujukan(data))
-        this.registrasiOnlineService.jadwalDokter.subscribe(data => this.handleJadwalDokter(data));
+        this.subJadwalDokter = this.registrasiOnlineService.jadwalDokter.subscribe(data => this.handleJadwalDokter(data));
+        this.subRujukan = this.registrasiOnlineService.rujukan.subscribe(data => this.handleSessionRujukan(data))
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subPasien.unsubscribe();
+        this.subRujukan.unsubscribe();
+        this.subJadwalDokter.unsubscribe();
+    }
+
+    handleJadwalDokter(data: any){
+        this.jadwalDokter = data;
+        if(data){
+            this.tglKunjungan = new Date(data.tglKunjungan);
+        }else{
+            this.tglKunjungan =  new Date();
+        }
     }
 
     handlePasien(data: any){
@@ -45,27 +66,24 @@ export class RencanaKunjunganComponent implements OnInit {
         }
     }
 
-    handleJadwalDokter(data: any) {
-        if (data) {
-            console.log('handle jadwal dokter')
-            this.jadwalDokter = data;
-            this.setTujuanPoli(this.jadwalDokter.kodepoli);
-        }
-    }
-
     handleSessionRujukan(data: any) {
         if (data) {
             this.rujukan = data;
             this.endDate = new Date(data.expired.toString());
-            this.setTujuanPoli(this.rujukan.poliRujukan.kode);
-            console.log('handle session rujukan rencana kunjungan')
+
+            if (this.jadwalDokter) {
+                this.setTujuanPoli(this.jadwalDokter.kodepoli);
+            }else{
+                this.setTujuanPoli(this.rujukan.poliRujukan.kode);
+            }
         }
     }
 
     setTujuanPoli(data: any) {
         setTimeout(() => {
             this.tujuanPoli = data;
-        }, 100);
+            this.getJadwalDokter();
+        }, 500);
     }
 
     changePoliklinik() {
@@ -74,12 +92,9 @@ export class RencanaKunjunganComponent implements OnInit {
     }
 
     getJadwalDokter() {
-        console.log('ambil data jadwal dokter')
-        setTimeout(() => {
-            if (this.tujuanPoli && this.tglKunjungan) {
-                this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
-            }
-        }, 100);
+        if (this.tujuanPoli && this.tglKunjungan) {
+            this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
+        }
     }
 
     selectJadwal(item: any) {

@@ -41,11 +41,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="Jenis Kunjungan" class="text-muted">Tanggal Kunjungan</label>
-                        <p-calendar (ngModelChange)="getJadwalDokter()" [inline]="true" [(ngModel)]="tglKunjungan" [style]="{width: '100%'}" [minDate]="today" [maxDate]="endDate"></p-calendar>
+                        <p-calendar (ngModelChange)="changePoliklinik()" [inline]="true" [(ngModel)]="tglKunjungan" [style]="{width: '100%'}" [minDate]="today" [maxDate]="endDate"></p-calendar>
                     </div>
                     <div class="mb-3">
                         <label for="Jenis Kunjungan" class="text-muted">Tujuan Poliklinik</label>
                         <select class="form-select" [(ngModel)]="tujuanPoli" (change)="changePoliklinik()" aria-label="Default select example">
+                            <option value=""></option>
                             <option value="{{item.kode}}" *ngFor="let item of dataPoliklinik">{{item.ket | uppercase}}</option>
                         </select>
                     </div>
@@ -53,13 +54,14 @@
                         <label for="Jenis Kunjungan" class="text-muted">Jadwal Dokter</label>
 
                         <div class="d-grid gap-2" *ngIf="!jadwalDokter">
-                            <button class="btn btn-outline-primary" type="button" (click)="dialogDataJadwalDokter=true">Pilih Jadwal Dokter</button>
+                            <button [disabled]="!dataJadwalDokter" class="btn btn-outline-primary" type="button" (click)="dialogDataJadwalDokter=true">Pilih Jadwal Dokter</button>
                         </div>
 
                         <div *ngIf="jadwalDokter" class="p-3 item-rujukan bg-light rounded border mb-3" >
                             <div class="row">
                                 <div class="col-12">
-                                    <strong>{{jadwalDokter.namadokter | uppercase}}</strong>
+                                    <strong>{{jadwalDokter.namadokter | uppercase}}</strong><br>
+                                    <small class="text-muted">POLIKLINIK {{jadwalDokter.namasubspesialis | uppercase}}</small>
                                 </div>
                             </div>
                             <hr>

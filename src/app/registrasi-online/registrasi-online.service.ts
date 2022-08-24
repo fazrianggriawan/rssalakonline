@@ -128,6 +128,8 @@ export class RegistrasiOnlineService {
             .subscribe(data => {
                 if (data.metadata.code == 200) {
                     this.dataJadwalDokter.next(data.response);
+                }else{
+                    this.errorMessageService.message('Tidak ada jadwal dokter pada tanggal '+this.dateHuman(tglKunjungan));
                 }
             })
     }

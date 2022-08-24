@@ -17,6 +17,8 @@ export class JenisKunjunganComponent implements OnInit {
     jnsKunjungan: string = '';
     jumlahSepRujukan: string = '';
 
+    subPasien: any;
+
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private router: Router
@@ -26,8 +28,14 @@ export class JenisKunjunganComponent implements OnInit {
         this.registrasiOnlineService.getSessionPasien();
         this.registrasiOnlineService.dataRujukan.subscribe(data => this.dataRujukan = data)
         this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.handleJumlahSepRujukan(data))
-        this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
+        this.subPasien = this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.getRujukan();
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subPasien.unsubscribe();
     }
 
     handlePasien(data: any){

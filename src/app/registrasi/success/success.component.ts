@@ -36,6 +36,7 @@ export class SuccessComponent implements OnInit {
         sessionStorage.removeItem('peserta');
         sessionStorage.removeItem('rujukan');
         sessionStorage.removeItem('suratKontrol');
+        sessionStorage.removeItem('pasien');
     }
 
     captureImage(){

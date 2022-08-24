@@ -34,7 +34,7 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.getSessionRujukan();
         this.registrasiOnlineService.getSessionJadwalDokter();
         this.registrasiOnlineService.getSessionJenisPembayaran();
-        this.registrasiOnlineService.pasien.subscribe(data => this.pasien = data)
+        this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.rujukan.subscribe(data => this.rujukan = data)
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.suratKontrol = data)
         this.registrasiOnlineService.jadwalDokter.subscribe(data => this.jadwalDokter = data)
@@ -44,6 +44,14 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
         this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.captureImage();
+    }
+
+    handlePasien(data:any){
+        if( data ){
+            this.pasien = data;
+        }else{
+            this.router.navigateByUrl('/')
+        }
     }
 
     captureImage(){
