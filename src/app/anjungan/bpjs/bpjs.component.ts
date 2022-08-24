@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 import { ErrorMessageService } from 'src/app/services/error-message.service';
@@ -10,7 +10,7 @@ import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/vi
     templateUrl: './bpjs.component.html',
     styleUrls: ['./bpjs.component.css']
 })
-export class BpjsComponent implements OnInit {
+export class BpjsComponent implements OnInit, OnDestroy {
 
     @ViewChild('search', { static: false }) searchElement!: ElementRef;
 
@@ -19,6 +19,10 @@ export class BpjsComponent implements OnInit {
     jadwalDokter: any;
     rujukan: any;
     nomorBpjs: any;
+
+    subDataPasien: any;
+    subPeserta: any;
+    subKey: any;
 
     constructor(
         private router: Router,
@@ -31,8 +35,18 @@ export class BpjsComponent implements OnInit {
     ngOnInit(): void {
         this.onBlur();
         this.registrasiOnlineService.refreshForm();
-        this.keyboardService.value.subscribe(data => this.nomorBpjs = data)
+        this.subKey = this.keyboardService.value.subscribe(data => this.nomorBpjs = data)
         this.keyboardService.enterAction.subscribe(data => { if (data) this.getPeserta(this.nomorBpjs) })
+        this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data )
+        this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subDataPasien.unsubscribe();
+        this.subPeserta.unsubscribe();
+        this.subKey.unsubscribe();
     }
 
     handlePasien(data: any) {
@@ -40,7 +54,6 @@ export class BpjsComponent implements OnInit {
             this.pasien = data;
             if (this.pasien.noaskes) {
                 this.anjunganService.getPeserta(this.pasien.noaskes)
-                this.anjunganService.peserta.subscribe(data => this.peserta = data )
             }else{
                 this.errorMessageService.message('Nomor BPJS anda belum terinput.')
                 this.keyboardService.clearAction();
@@ -62,7 +75,6 @@ export class BpjsComponent implements OnInit {
             }else{
                 this.registrasiOnlineService.getPesertaBpjs(value.padStart(13, '0'));
             }
-            this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
         }
     }
 

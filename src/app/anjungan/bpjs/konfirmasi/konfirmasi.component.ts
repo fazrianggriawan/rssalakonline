@@ -238,7 +238,7 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     done(){
-        sessionStorage.clear();
+        // sessionStorage.clear();
         this.router.navigateByUrl('anjungan');
     }
 

@@ -25,9 +25,16 @@ export class RujukanComponent implements OnInit {
     ngOnInit(): void {
         this.loadingService.status.subscribe(data => this.loading = data)
         this.registrasiOnlineService.dataRujukan.subscribe(data => this.handleDataRujukan(data));
-        this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.rujukan.jumlahSep = data)
+        this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.handleJumlahSep(data))
         this.getRujukan();
     }
+
+    handleJumlahSep(data: any) {
+        if( this.rujukan ){
+            this.rujukan.jumlahSep = data
+        }
+    }
+
 
     hitungTotalRujukanAktif(i: number){
         this.totalRujukanAktif = this.totalRujukanAktif + 1;

@@ -108,11 +108,13 @@
     </div>
 
     <div>
-        <iframe src="./" id="iframePrintSep" frameborder="0" width="300px" height="300px;" hidden></iframe>
-        <iframe src="./" id="iframePrintBooking" frameborder="0" width="300px" height="300px;" hidden></iframe>
+        <iframe src="" id="iframePrintSep" frameborder="0" width="300px" height="300px;" hidden></iframe>
+        <iframe src="" id="iframePrintBooking" frameborder="0" width="300px" height="300px;" hidden></iframe>
     </div>
 </div>
 
-<div (click)="home()" class="border-bottom text-secondary clickable" pRipple style="position: absolute; top: 100px; left: 10px; padding: 20px 30px;">
+<div (click)="back()" class="border-bottom text-secondary clickable" pRipple style="position: absolute; top: 100px; left: 10px; padding: 20px 30px;">
     <span class="bi bi-chevron-left"></span>&nbsp; KEMBALI
 </div>
+
+<app-error-handle></app-error-handle>

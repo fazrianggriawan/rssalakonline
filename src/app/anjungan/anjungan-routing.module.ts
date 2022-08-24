@@ -7,13 +7,15 @@ import { KonfirmasiComponent } from './bpjs/konfirmasi/konfirmasi.component';
 import { RujukanComponent } from './bpjs/rujukan/rujukan.component';
 import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online.component';
 
+let moduleName : string = 'anjungan';
+
 const routes: Routes = [
     { path: '', component: AnjunganComponent },
-    { path: 'anjungan/registrasi-online', component: RegistrasiOnlineComponent },
-    { path: 'anjungan/bpjs', component: BpjsComponent },
-    { path: 'anjungan/bpjs/rujukan', component: RujukanComponent },
-    { path: 'anjungan/bpjs/jadwalDokter', component: JadwalDokterComponent },
-    { path: 'anjungan/bpjs/konfirmasi', component: KonfirmasiComponent },
+    { path: moduleName+'/registrasi-online', component: RegistrasiOnlineComponent },
+    { path: moduleName+'/bpjs', component: BpjsComponent },
+    { path: moduleName+'/bpjs/rujukan', component: RujukanComponent },
+    { path: moduleName+'/bpjs/jadwalDokter', component: JadwalDokterComponent },
+    { path: moduleName+'/bpjs/konfirmasi', component: KonfirmasiComponent },
 ];
 
 @NgModule({

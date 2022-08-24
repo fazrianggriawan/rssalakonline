@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { config } from 'src/app/config';
+import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 import { AnjunganService } from '../anjungan.service';
 import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
 
@@ -22,58 +23,78 @@ export class RegistrasiOnlineComponent implements OnInit {
     peserta: any = '';
     sep: any = '';
 
+    subSep : any;
+    subRegistrasi : any;
+    subPeserta : any;
+
     constructor(
         private keyboardService: VirtualKeyboardService,
         public anjunganService: AnjunganService,
-        private router: Router
+        private router: Router,
+        private registrasiOnlineService: RegistrasiOnlineService
     ) { }
 
     ngOnInit(): void {
+        this.reset();
         this.keyboardService.getValue().subscribe(data => this.kodeBooking = data)
-        this.anjunganService.registrasiOnline.subscribe(data => this.handleDataBooking(data))
-        this.anjunganService.peserta.subscribe(data => this.peserta = data);
-        this.anjunganService.sep.subscribe(data => {
+        this.subRegistrasi = this.anjunganService.registrasiOnline.subscribe(data => this.handleDataBooking(data))
+        this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data);
+        this.subSep = this.anjunganService.sep.subscribe(data => {
+            this.sep = data;
             if( data ){
-                this.sep = data;
                 this.printAnjungan(this.sep.noSep, this.registrasi.booking_code);
+                this.registrasiOnlineService.checkin(this.registrasi);
             }
         })
 
         this.keyboardService.getEnterAction()
             .subscribe(data => {
                 if (data)
-                    this.anjunganService.getBookingCode(this.kodeBooking);
+                    this.getDataBooking(this.kodeBooking);
             })
         this.onBlur();
     }
 
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subPeserta.unsubscribe();
+        this.subRegistrasi.unsubscribe();
+        this.subSep.unsubscribe();
+    }
+
     handleDataBooking(data: any) {
-        this.reset();
+        this.registrasi = data;
         if (data) {
-            this.registrasi = data;
             this.rujukan = JSON.parse(data.rujukan);
             this.jadwalDokter = JSON.parse(data.jadwalDokter);
             this.pasien = JSON.parse(data.pasien);
             this.suratKontrol = JSON.parse(data.suratKontrol);
-
             this.anjunganService.getPeserta(this.pasien.noaskes);
         }
     }
 
     reset() {
         this.kodeBooking = '';
-        this.registrasi = '';
         this.rujukan = '';
         this.pasien = '';
         this.suratKontrol = '';
-        this.sep = '';
+        this.anjunganService.sep.next('');
+        this.anjunganService.peserta.next('');
+        this.anjunganService.registrasiOnline.next('')
+
         this.onBlur();
+    }
+
+    getDataBooking(kodeBooking: string){
+        this.reset();
+        this.anjunganService.getBookingCode(kodeBooking);
     }
 
 
     listenKey(event: KeyboardEvent) {
         if (event.key == 'Enter') {
-            this.anjunganService.getBookingCode(this.kodeBooking);
+            this.getDataBooking(this.kodeBooking);
         }
     }
 
@@ -147,16 +168,17 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.createSep();
     }
 
-    home() {
-        this.reset();
-        window.location.replace(config.host + 'registrasi/#/anjungan');
+    printAnjungan(noSep:string, bookingCode:string) {
+        if( noSep && bookingCode ){
+            (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + noSep + '/' + bookingCode);
+            (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + bookingCode);
+            this.reset();
+        }
     }
 
-
-    printAnjungan(noSep:string, bookingCode:string) {
-        (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + noSep + '/' + bookingCode);
-        (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + bookingCode);
+    back() {
         this.reset();
+        this.router.navigateByUrl('/anjungan');
     }
 
 

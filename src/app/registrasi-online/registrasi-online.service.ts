@@ -281,7 +281,7 @@ export class RegistrasiOnlineService {
     }
 
     clearAllSession() {
-        sessionStorage.clear();
+        // sessionStorage.clear();
     }
 
     refreshForm() {
