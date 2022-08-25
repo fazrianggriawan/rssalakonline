@@ -42,7 +42,7 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.subSep = this.anjunganService.sep.subscribe(data => {
             this.sep = data;
             if( data ){
-                this.printAnjungan(this.sep.noSep, this.registrasi.booking_code);
+                this.printAnjungan();
                 this.registrasiOnlineService.checkin(this.registrasi);
             }
         })
@@ -168,10 +168,11 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.createSep();
     }
 
-    printAnjungan(noSep:string, bookingCode:string) {
-        if( noSep && bookingCode ){
-            (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + noSep + '/' + bookingCode);
-            (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + bookingCode);
+    printAnjungan() {
+
+        if( this.sep.noSep && this.registrasi.booking_code ){
+            (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.registrasi.booking_code);
+            (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + this.registrasi.booking_code);
             this.reset();
         }
     }

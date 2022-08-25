@@ -14,6 +14,8 @@ import { ToastModule } from 'primeng/toast';
 import { NumpadComponent } from './shared/components/virtual-keyboard/numpad/numpad.component';
 import { QwertyComponent } from './shared/components/virtual-keyboard/qwerty/qwerty.component';
 import { ErrorHandleComponent } from './shared/components/error-handle/error-handle.component';
+import { QrCodeModule } from 'ng-qrcode';
+import { NomorAntrianComponent } from './nomor-antrian/nomor-antrian.component';
 
 
 @NgModule({
@@ -26,14 +28,16 @@ import { ErrorHandleComponent } from './shared/components/error-handle/error-han
     RujukanComponent,
     JadwalDokterComponent,
     KonfirmasiComponent,
-    ErrorHandleComponent
+    ErrorHandleComponent,
+    NomorAntrianComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     RippleModule,
     ToastModule,
-    AnjunganRoutingModule
+    AnjunganRoutingModule,
+    QrCodeModule
   ],
   exports: [
     NumpadComponent

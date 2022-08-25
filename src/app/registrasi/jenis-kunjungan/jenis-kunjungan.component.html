@@ -43,7 +43,9 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="Jenis Kunjungan" class="text-muted">Surat Rujukan</label>
+                        <label for="Jenis Kunjungan" class="text-muted">
+                            Surat Rujukan <i *ngIf="!rujukan" class="bi bi-exclamation-circle-fill text-danger"></i>
+                        </label>
                         <div class="p-3 bg-light rounded border mb-3 clickable" *ngIf="rujukan" >
                             <div class="row">
                                 <div class="col-12">
@@ -91,8 +93,8 @@
                                 <button *ngIf="rujukan" class="btn btn-secondary" type="button" (click)="dialogDataRujukan=true">Ganti Rujukan</button>
                             </div>
                         </div>
-                        <div class="d-grid gap-2 mb-3" *ngIf="!rujukan">
-                            <button class="btn btn-outline-primary pt-3 pb-3" type="button" (click)="dialogDataRujukan=true">Pilih Surat Rujukan</button>
+                        <div class="d-grid gap-2 mb-3 mt-1" *ngIf="!rujukan">
+                            <button class="btn btn-primary pt-3 pb-3" type="button" (click)="dialogDataRujukan=true">Pilih Surat Rujukan</button>
                         </div>
                         <div class="d-grid gap-2 mb-4 mt-4">
                             <button [disabled]="!rujukan" class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>

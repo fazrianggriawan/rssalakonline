@@ -32,13 +32,14 @@
             <h1 class="p-4">PESERTA <br/>BPJS</h1>
             <p class="ps-4 pe-4 pt-1">Pasien BPJS yang telah memiliki nomor rekam medis.</p>
         </div>
-        <!-- <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-tunai" (click)="router.navigateByUrl('tunai')" pRipple>
-            <h1 class="p-4">TUNAI / UMUM / ASURANSI</h1>
-            <p class="ps-4 pe-4 pt-1">Pasien dengan pembayaran pribadi atau Asuransi non BPJS.</p>
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-pasien-baru" (click)="router.navigateByUrl('anjungan/nomor-antrian')" pRipple>
+            <h1 class="p-4">NOMOR <br>ANTRIAN</h1>
+            <p class="ps-4 pe-4 pt-1">Mengambil Nomor Antrian Loket Pendaftaran.</p>
         </div>
-        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-pasien-baru" (click)="router.navigateByUrl('pasienBaru')" pRipple>
-            <h1 class="p-4">PASIEN BARU</h1>
-            <p class="ps-4 pe-4 pt-1">Pengunjung baru yang belum memiliki nomor rekam medis.</p>
-        </div> -->
+        <div class="col-sm-5 col-lg-4 m-2 text-center">
+            <div>Link Registrasi Online</div>
+            <div><qr-code value="http://rssalakbogor.co.id/registrasi" size="180" [margin]="2" errorCorrectionLevel="M"></qr-code></div>
+            <div>www.rssalakbogor.co.id/registrasi</div>
+        </div>
     </div>
 </div>

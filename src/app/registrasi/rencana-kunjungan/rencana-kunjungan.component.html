@@ -51,10 +51,12 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="Jenis Kunjungan" class="text-muted">Jadwal Dokter</label>
+                        <label for="Jenis Kunjungan" class="text-muted">
+                            Jadwal Dokter <i *ngIf="!jadwalDokter" class="bi bi-exclamation-circle-fill text-danger"></i>
+                        </label>
 
-                        <div class="d-grid gap-2" *ngIf="!jadwalDokter">
-                            <button [disabled]="!dataJadwalDokter" class="btn btn-outline-primary" type="button" (click)="dialogDataJadwalDokter=true">Pilih Jadwal Dokter</button>
+                        <div class="d-grid gap-2 mt-1" *ngIf="!jadwalDokter">
+                            <button [disabled]="!dataJadwalDokter" class="btn btn-primary pt-3 pb-3" type="button" (click)="dialogDataJadwalDokter=true">Pilih Jadwal Dokter</button>
                         </div>
 
                         <div *ngIf="jadwalDokter" class="p-3 item-rujukan bg-light rounded border mb-3" >

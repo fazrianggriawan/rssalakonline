@@ -22,7 +22,10 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        console.log('kepanggil nih registrasi online')
+        if (location.protocol == 'https:') {
+            location.replace(`http:${location.href.substring(location.protocol.length)}`);
+        }
+
         this.clearData();
         this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data));
         this.registrasiOnlineService.peserta.subscribe(data => this.handleDataPeserta(data))
@@ -61,8 +64,7 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
         this.statusPeserta = '';
         this.registrasiOnlineService.dataPasien.next('');
         this.registrasiOnlineService.peserta.next('');
-        console.log('kepanggil nih')
-        // sessionStorage.clear();
+        sessionStorage.clear();
     }
 
     next() {
