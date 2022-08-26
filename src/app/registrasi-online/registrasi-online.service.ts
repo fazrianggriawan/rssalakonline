@@ -10,7 +10,8 @@ import { ErrorMessageService } from '../services/error-message.service';
 export class RegistrasiOnlineService {
 
     dataPasien = new BehaviorSubject<any>('');
-    dataRujukan = new BehaviorSubject<any>('');
+    dataRujukanFaskes = new BehaviorSubject<any>('');
+    dataRujukanRs = new BehaviorSubject<any>('');
     dataJadwalDokter = new BehaviorSubject<any>('');
     dataPoliklinik = new BehaviorSubject<any>('');
     dataHistorySep = new BehaviorSubject<any>('');
@@ -88,27 +89,25 @@ export class RegistrasiOnlineService {
                         dataRujukan.push(element);
                     });
 
-                    this.dataRujukan.next(dataRujukan)
+                    this.dataRujukanFaskes.next(dataRujukan)
                 }
             })
 
         this.http.get<any>(config.api_vclaim('rujukan/rs/nomorKartu/' + noKartuBPJS))
             .subscribe(data => {
                 if (data.metaData.code == '200') {
-                    let dataRujukanRs: any = [];
+                    let dataRujukan: any = [];
                     data.response.rujukan.forEach((element: any) => {
                         element.asalFaskes = {
                             kode: data.response.asalFaskes,
                             nama: 'antarRs',
                             jenisKunjungan: 4
                         }
-                        dataRujukanRs.push(element);
+                        dataRujukan.push(element);
                     });
 
-                    let dataRujukan = this.dataRujukan.value;
-                    dataRujukan.push(dataRujukanRs)
+                    this.dataRujukanRs.next(dataRujukan)
 
-                    this.dataRujukan.next(dataRujukan);
                 }
             })
     }
@@ -233,7 +232,7 @@ export class RegistrasiOnlineService {
                 if(data.code == 200){
                     this.checkinStatus.next(true);
                 }else {
-                    this.errorMessageService.message('Gagal untuk checkin');
+                    // this.errorMessageService.message('Gagal untuk checkin');
                     this.checkinStatus.next(false);
                 }
             })
@@ -289,7 +288,8 @@ export class RegistrasiOnlineService {
         this.dataBooking.next('');
         this.jumlahSepRujukan.next('');
         this.dataBooking.next('');
-        this.dataRujukan.next('');
+        this.dataRujukanFaskes.next('');
+        this.dataRujukanRs.next('');
         this.dataJadwalDokter.next('');
         this.sep.next('');
         this.saveStatus.next(false);

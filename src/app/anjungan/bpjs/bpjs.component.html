@@ -81,13 +81,13 @@
                             <div class="">
                                 <div class="text-muted">STATUS PESERTA</div>
                                 <div class="p-2 bg-light rounded border">
-                                    <span *ngIf="peserta">{{peserta.statusPeserta.keterangan | uppercase}}</span> &nbsp;
+                                    <span>{{peserta.statusPeserta.keterangan | uppercase}}</span> &nbsp;
                                 </div>
                             </div>
                             <div class="mt-3 ">
                                 <div class="text-muted">JENIS PESERTA</div>
                                 <div class="p-2 bg-light rounded border">
-                                    <span *ngIf="peserta">{{peserta.jenisPeserta.keterangan | uppercase}}</span> &nbsp;
+                                    <span>{{peserta.jenisPeserta.keterangan | uppercase}}</span> &nbsp;
                                 </div>
                             </div>
                         </div>
@@ -96,11 +96,26 @@
                     <div class="mt-3 ">
                         <div class="text-muted">ASAL FASKES</div>
                         <div class="p-2 bg-light rounded border">
-                            <span *ngIf="peserta">{{peserta.provUmum.nmProvider | uppercase}}</span> &nbsp;
+                            <span>{{peserta.provUmum.nmProvider | uppercase}}</span> &nbsp;
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="peserta">
+                    <div class="row mt-3" *ngIf="sep">
+                        <div class="col">
+                            <div class="alert alert-warning text-center">
+                                SEP Hari ini sudah terbit <br>
+                                POLIKLINIK {{sep.poli}} <br>
+                                Nomor SEP : {{sep.noSep}} <br>
+
+                                <div class="d-grid gap-2 mt-3">
+                                    <button (click)="next()" class="btn fs-5 btn-primary p-3" type="button" [disabled]="peserta.statusPeserta.kode != '0'"><i class="bi bi-printer"></i> CETAK SEP</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="!sep">
                         <div class="col">
                             <div class="mt-3">
                                 <p class="alert alert-danger text-center" *ngIf="peserta.statusPeserta.kode != '0'">

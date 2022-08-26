@@ -10,12 +10,13 @@ import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-on
 export class JenisKunjunganComponent implements OnInit {
 
     pasien: any;
-    dataRujukan: any;
+    dataRujukan: any[] = [];
     dialogDataRujukan: boolean = false;
     rujukan: any;
     jnsPembayaran: string = '';
     jnsKunjungan: string = '';
     jumlahSepRujukan: string = '';
+    totalRujukanAktif: number = 0;
 
     subPasien: any;
 
@@ -26,7 +27,8 @@ export class JenisKunjunganComponent implements OnInit {
 
     ngOnInit(): void {
         this.registrasiOnlineService.getSessionPasien();
-        this.registrasiOnlineService.dataRujukan.subscribe(data => this.dataRujukan = data)
+        this.registrasiOnlineService.dataRujukanFaskes.subscribe(data => this.handleDataRujukan(data))
+        this.registrasiOnlineService.dataRujukanRs.subscribe(data => this.handleDataRujukan(data))
         this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.handleJumlahSepRujukan(data))
         this.subPasien = this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.getRujukan();
@@ -36,6 +38,14 @@ export class JenisKunjunganComponent implements OnInit {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
         this.subPasien.unsubscribe();
+    }
+
+    handleDataRujukan(data: any){
+        if(data){
+            data.forEach((item:any) => {
+                this.dataRujukan.push(item)
+            });
+        }
     }
 
     handlePasien(data: any){

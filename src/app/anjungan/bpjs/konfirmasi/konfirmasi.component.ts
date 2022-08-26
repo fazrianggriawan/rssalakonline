@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { config } from 'src/app/config';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
+import { ErrorMessageService } from 'src/app/services/error-message.service';
 
 @Component({
     selector: 'app-konfirmasi',
     templateUrl: './konfirmasi.component.html',
     styleUrls: ['./konfirmasi.component.css']
 })
-export class KonfirmasiComponent implements OnInit {
+export class KonfirmasiComponent implements OnInit, OnDestroy {
 
     pasien: any;
     peserta: any;
@@ -21,9 +22,12 @@ export class KonfirmasiComponent implements OnInit {
     dataBooking: any;
     success: boolean  = false;
 
+    subSep : any;
+
     constructor(
         private router: Router,
-        public registrasiOnlineService: RegistrasiOnlineService
+        public registrasiOnlineService: RegistrasiOnlineService,
+        private errorMessage: ErrorMessageService
     ) { }
 
     ngOnInit(): void {
@@ -32,6 +36,21 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.dataSuratKontrol.subscribe(data => this.handleDataSuratKontrol(data))
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.handleCreateSuratKontrol(data))
         this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
+
+        this.subSep = this.registrasiOnlineService.sep.subscribe(data => {
+            if(data){
+                this.sep = data;
+                this.save();
+            }else{
+                this.sep = '';
+            }
+        })
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subSep.unsubscribe();
     }
 
     handleDataBooking(data: any){
@@ -88,12 +107,20 @@ export class KonfirmasiComponent implements OnInit {
                 if (element.noRujukan == this.rujukan.noKunjungan) {
                     sepRujukan.push(element);
                 }
+                this.checkSepToday(element);
             });
             if (sepRujukan.length > 0) {
                 this.lastSep = sepRujukan[0];
             }
         }
         this.registrasiOnlineService.getDataSuratKontrol(this.pasien.noaskes);
+    }
+
+    checkSepToday(data: any) {
+        let today = this.registrasiOnlineService.reformatDate(new Date());
+        if( data.tglSep == today ){
+            this.sep = data;
+        }
     }
 
     handleCreateSuratKontrol(data: any) {
@@ -110,18 +137,22 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     daftar() {
-        if (parseInt(this.rujukan.jumlahSep) == 0) {
-            // Rujukan Baru
-            this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
-            this.createSep();
-        } else {
-            if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
-                // Rencana Kontrol
-                this.createSuratKontrol();
-            }else{
-                // Rujukan Internal
-                this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+        if( this.sep ){
+            this.save();
+        }else{
+            if (parseInt(this.rujukan.jumlahSep) == 0) {
+                // Rujukan Baru
+                this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
                 this.createSep();
+            } else {
+                if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
+                    // Rencana Kontrol
+                    this.createSuratKontrol();
+                }else{
+                    // Rujukan Internal
+                    this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+                    this.createSep();
+                }
             }
         }
     }
@@ -199,14 +230,6 @@ export class KonfirmasiComponent implements OnInit {
 
         this.registrasiOnlineService.createSep(data);
 
-        this.registrasiOnlineService.sep.subscribe(data => {
-            if(data){
-                this.sep = data;
-                this.save();
-            }else{
-                this.sep = '';
-            }
-        })
     }
 
     save() {

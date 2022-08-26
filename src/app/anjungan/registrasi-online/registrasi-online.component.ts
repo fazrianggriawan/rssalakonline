@@ -37,8 +37,10 @@ export class RegistrasiOnlineComponent implements OnInit {
     ngOnInit(): void {
         this.reset();
         this.keyboardService.getValue().subscribe(data => this.kodeBooking = data)
+        this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.subRegistrasi = this.anjunganService.registrasiOnline.subscribe(data => this.handleDataBooking(data))
         this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data);
+        this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
         this.subSep = this.anjunganService.sep.subscribe(data => {
             this.sep = data;
             if( data ){
@@ -61,6 +63,18 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.subPeserta.unsubscribe();
         this.subRegistrasi.unsubscribe();
         this.subSep.unsubscribe();
+    }
+
+    handleHistorySep(data: any) {
+        this.sep = '';
+        if (data) {
+            let today = this.registrasiOnlineService.reformatDate(new Date());
+            data.forEach((item: any) => {
+                if( data.tglSep == today ){
+                    this.sep = item;
+                }
+            });
+        }
     }
 
     handleDataBooking(data: any) {
@@ -141,6 +155,19 @@ export class RegistrasiOnlineComponent implements OnInit {
             tlp: this.rujukan.peserta.mr.noTelepon
         }
 
+        if( this.registrasi.jns_kunjungan == '1' ){
+            // Rujukan Baru
+            data.tujuanKunj = '0'
+            data.flagProcedure = ''
+        }
+
+        if( this.registrasi.jns_kunjungan == '2' ){
+            // Rujukan Internal
+            data.tujuanKunj = '0'
+            data.flagProcedure = ''
+            data.assessmentPel = '1'
+        }
+
         if (this.registrasi.jns_kunjungan == '3') {
             // Tujuan Kontrol
             data.tujuanKunj = '2'
@@ -148,24 +175,17 @@ export class RegistrasiOnlineComponent implements OnInit {
             data.assessmentPel = '5'
             data.skdp.noSuratKontrol = this.suratKontrol.noSuratKontrol;
             data.skdp.kodeDokter = this.jadwalDokter.kodedokter;
-        } else {
-            // Rujukan Baru
-            data.tujuanKunj = '0'
-            data.flagProcedure = ''
-        }
-
-        if (this.jadwalDokter.kodepoli != this.rujukan.poliRujukan.kode) {
-            // Rujukan Internal
-            data.tujuanKunj = '0'
-            data.flagProcedure = ''
-            data.assessmentPel = '1'
         }
 
         this.anjunganService.createSep(data);
     }
 
     checkIn() {
-        this.createSep();
+        if( this.sep ){
+            this.registrasiOnlineService.sep.next(this.sep);
+        }else{
+            this.createSep();
+        }
     }
 
     printAnjungan() {

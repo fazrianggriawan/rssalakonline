@@ -10,7 +10,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 export class RujukanComponent implements OnInit {
 
-    dataRujukan: any;
+    dataRujukan: any[] = [];
+    dataRujukanFaskes: any;
+    dataRujukanRs: any;
     selectedRujukan: any;
     rujukan: any;
     loading: boolean = false;
@@ -24,7 +26,8 @@ export class RujukanComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadingService.status.subscribe(data => this.loading = data)
-        this.registrasiOnlineService.dataRujukan.subscribe(data => this.handleDataRujukan(data));
+        this.registrasiOnlineService.dataRujukanFaskes.subscribe(data => this.handleDataRujukan(data));
+        this.registrasiOnlineService.dataRujukanRs.subscribe(data => this.handleDataRujukan(data));
         this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.handleJumlahSep(data))
         this.getRujukan();
     }
@@ -35,30 +38,28 @@ export class RujukanComponent implements OnInit {
         }
     }
 
-
-    hitungTotalRujukanAktif(i: number){
-        this.totalRujukanAktif = this.totalRujukanAktif + 1;
-    }
-
     getRujukan() {
-        this.dataRujukan = '';
+        this.dataRujukan = [];
+        this.dataRujukanFaskes = '';
+        this.dataRujukanRs = '';
         this.totalRujukanAktif = 0;
-        this.registrasiOnlineService.dataRujukan.next('');
+        this.registrasiOnlineService.dataRujukanFaskes.next('');
+        this.registrasiOnlineService.dataRujukanRs.next('');
         let pasien : any = sessionStorage.getItem('pasien');
         this.registrasiOnlineService.getDataRujukan(JSON.parse(pasien).noaskes);
     }
 
     handleDataRujukan(data: any){
         if(data){
-            this.dataRujukan = data;
+            this.dataRujukanFaskes = data;
             data.forEach((item:any) => {
+                this.dataRujukan.push(item);
                 if( this.registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0 ){
                     this.totalRujukanAktif++;
                 }
             });
         }
     }
-
 
     selectRujukan(data: any){
         this.selectedRujukan = data.noKunjungan;
@@ -67,7 +68,8 @@ export class RujukanComponent implements OnInit {
     }
 
     clearData() {
-        this.registrasiOnlineService.dataRujukan.next('');
+        this.registrasiOnlineService.dataRujukanFaskes.next('');
+        this.registrasiOnlineService.dataRujukanRs.next('');
         this.registrasiOnlineService.jumlahSepRujukan.next('');
         this.selectedRujukan = '';
         this.rujukan = '';

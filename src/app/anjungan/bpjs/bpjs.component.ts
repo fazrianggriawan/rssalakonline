@@ -19,10 +19,12 @@ export class BpjsComponent implements OnInit, OnDestroy {
     jadwalDokter: any;
     rujukan: any;
     nomorBpjs: any;
+    sep: any;
 
     subDataPasien: any;
     subPeserta: any;
     subKey: any;
+    subSep: any;
 
     constructor(
         private router: Router,
@@ -39,6 +41,8 @@ export class BpjsComponent implements OnInit, OnDestroy {
         this.keyboardService.enterAction.subscribe(data => { if (data) this.getPeserta(this.nomorBpjs) })
         this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data )
         this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
+        // this.subSep = this.registrasiOnlineService.sep.subscribe(data => this.handleSep(data))
+        this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
     }
 
     ngOnDestroy(): void {
@@ -47,6 +51,7 @@ export class BpjsComponent implements OnInit, OnDestroy {
         this.subDataPasien.unsubscribe();
         this.subPeserta.unsubscribe();
         this.subKey.unsubscribe();
+        this.subSep.unsubscribe();
     }
 
     handlePasien(data: any) {
@@ -54,10 +59,22 @@ export class BpjsComponent implements OnInit, OnDestroy {
             this.pasien = data;
             if (this.pasien.noaskes) {
                 this.anjunganService.getPeserta(this.pasien.noaskes)
+                this.registrasiOnlineService.getHistorySep(this.pasien.noaskes)
             }else{
                 this.errorMessageService.message('Nomor BPJS anda belum terinput.')
                 this.keyboardService.clearAction();
             }
+        }
+    }
+
+    handleHistorySep(data: any) {
+        if(data){
+            let today = this.registrasiOnlineService.reformatDate(new Date());
+            data.forEach((item: any) => {
+                if( item.tglSep == today ){
+                    this.sep = item;
+                }
+            });
         }
     }
 
