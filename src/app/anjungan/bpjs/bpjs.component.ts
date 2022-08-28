@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { config } from 'src/app/config';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 import { ErrorMessageService } from 'src/app/services/error-message.service';
 import { AnjunganService } from '../anjungan.service';
@@ -24,7 +25,6 @@ export class BpjsComponent implements OnInit, OnDestroy {
     subDataPasien: any;
     subPeserta: any;
     subKey: any;
-    subSep: any;
 
     constructor(
         private router: Router,
@@ -41,7 +41,6 @@ export class BpjsComponent implements OnInit, OnDestroy {
         this.keyboardService.enterAction.subscribe(data => { if (data) this.getPeserta(this.nomorBpjs) })
         this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data )
         this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
-        // this.subSep = this.registrasiOnlineService.sep.subscribe(data => this.handleSep(data))
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
     }
 
@@ -51,12 +50,12 @@ export class BpjsComponent implements OnInit, OnDestroy {
         this.subDataPasien.unsubscribe();
         this.subPeserta.unsubscribe();
         this.subKey.unsubscribe();
-        this.subSep.unsubscribe();
     }
 
     handlePasien(data: any) {
         if (data) {
             this.pasien = data;
+            this.sep = '';
             if (this.pasien.noaskes) {
                 this.anjunganService.getPeserta(this.pasien.noaskes)
                 this.registrasiOnlineService.getHistorySep(this.pasien.noaskes)
@@ -126,6 +125,10 @@ export class BpjsComponent implements OnInit, OnDestroy {
             this.reset();
             this.router.navigateByUrl('anjungan/bpjs/rujukan');
         }
+    }
+
+    printSep(noSep: string){
+        (<HTMLIFrameElement>document.getElementById('iframePrintSepOnly')).src = config.api_vclaim('sep/print/anjunganSepOnly/' + noSep );
     }
 
 

@@ -42,13 +42,13 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
         this.registrasiOnlineService.createSuratKontrolStatus.subscribe(data => this.handleCreateSuratKontrol(data) )
         this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
-        this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.captureImage();
     }
 
     handlePasien(data:any){
         if( data ){
             this.pasien = data;
+            this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         }else{
             this.router.navigateByUrl('/')
         }

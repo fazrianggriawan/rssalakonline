@@ -93,7 +93,10 @@ export class RencanaKunjunganComponent implements OnInit, OnDestroy {
 
     getJadwalDokter() {
         if (this.tujuanPoli && this.tglKunjungan) {
-            this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
+            setTimeout(() => {
+                console.log(this.tglKunjungan);
+                this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
+            }, 250);
         }
     }
 

@@ -23,6 +23,7 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     success: boolean  = false;
 
     subSep : any;
+    subHistorySep : any;
 
     constructor(
         private router: Router,
@@ -32,10 +33,11 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getSessionData();
-        this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
+        this.subHistorySep = this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
         this.registrasiOnlineService.dataSuratKontrol.subscribe(data => this.handleDataSuratKontrol(data))
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.handleCreateSuratKontrol(data))
         this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
+        this.registrasiOnlineService.getDataSuratKontrol(this.pasien.noaskes);
 
         this.subSep = this.registrasiOnlineService.sep.subscribe(data => {
             if(data){
@@ -51,6 +53,7 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
         this.subSep.unsubscribe();
+        this.subHistorySep.unsubscribe();
     }
 
     handleDataBooking(data: any){
@@ -113,7 +116,6 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
                 this.lastSep = sepRujukan[0];
             }
         }
-        this.registrasiOnlineService.getDataSuratKontrol(this.pasien.noaskes);
     }
 
     checkSepToday(data: any) {

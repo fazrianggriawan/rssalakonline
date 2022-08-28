@@ -30,6 +30,7 @@ export class RegistrasiOnlineService {
     sep = new BehaviorSubject<any>('');
     checkinStatus = new BehaviorSubject<boolean>(false);
     dataAntrian = new BehaviorSubject<any>('');
+    registrasiAndroid = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
@@ -56,6 +57,17 @@ export class RegistrasiOnlineService {
                     this.dataPasien.next(data.data)
                 }else{
                     this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                }
+            })
+    }
+
+    getDataBookingAndroid(kodeBooking: string){
+        this.http.get<any>(config.api_simrs('online/get/bookingAndroid?key=' + kodeBooking))
+            .subscribe(data => {
+                if (data.data.noreg) {
+                    this.registrasiAndroid.next(data.data)
+                }else{
+                    this.errorMessageService.message('Data Registrasi Online Tidak Ditemukan');
                 }
             })
     }

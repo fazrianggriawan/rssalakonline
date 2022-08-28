@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { config } from 'src/app/config';
+import { ErrorMessageService } from '../services/error-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,11 +10,13 @@ import { config } from 'src/app/config';
 export class AnjunganService {
 
     registrasiOnline = new BehaviorSubject<any>('');
+    registrasiOnlineAndroid = new BehaviorSubject<any>('');
     peserta = new BehaviorSubject<any>('');
     sep = new BehaviorSubject<any>('');
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private errorMessage: ErrorMessageService
     ) { }
 
     getBookingCode(bookingCode: string) {
@@ -21,6 +24,19 @@ export class AnjunganService {
             .subscribe(data => {
                 if (data.code == 200) {
                     this.registrasiOnline.next(data.data)
+                }else{
+                    this.errorMessage.message('Data tidak ditemukan.')
+                }
+            });
+    }
+
+    getBookingDariAndroid(bookingCode: string) {
+        this.http.get<any>(config.api_vclaim('antrian/kodeBookingAndroid/' + bookingCode))
+            .subscribe(data => {
+                if (data.code == 200) {
+                    this.registrasiOnlineAndroid.next(data.data)
+                }else{
+                    this.errorMessage.message('Data tidak ditemukan.')
                 }
             });
     }

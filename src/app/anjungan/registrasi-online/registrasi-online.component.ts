@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { config } from 'src/app/config';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
@@ -10,7 +10,7 @@ import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/vi
     templateUrl: './registrasi-online.component.html',
     styleUrls: ['./registrasi-online.component.css']
 })
-export class RegistrasiOnlineComponent implements OnInit {
+export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
 
     @ViewChild('search', { static: false }) searchElement!: ElementRef;
 
@@ -22,10 +22,14 @@ export class RegistrasiOnlineComponent implements OnInit {
     suratKontrol: any = '';
     peserta: any = '';
     sep: any = '';
+    registrasiAndroid: any = '';
 
     subSep : any;
     subRegistrasi : any;
     subPeserta : any;
+    subEnter : any;
+    subRegistrasiAndroid: any;
+    subDataPasien: any;
 
     constructor(
         private keyboardService: VirtualKeyboardService,
@@ -37,22 +41,25 @@ export class RegistrasiOnlineComponent implements OnInit {
     ngOnInit(): void {
         this.reset();
         this.keyboardService.getValue().subscribe(data => this.kodeBooking = data)
-        this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         this.subRegistrasi = this.anjunganService.registrasiOnline.subscribe(data => this.handleDataBooking(data))
         this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data);
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
+        this.subRegistrasiAndroid = this.registrasiOnlineService.registrasiAndroid.subscribe(data => this.handleRegistrasiAndroid(data))
+        this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data))
+
         this.subSep = this.anjunganService.sep.subscribe(data => {
             this.sep = data;
             if( data ){
                 this.printAnjungan();
-                this.registrasiOnlineService.checkin(this.registrasi);
+                // this.registrasiOnlineService.checkin(this.registrasi);
             }
         })
 
-        this.keyboardService.getEnterAction()
+        this.subEnter = this.keyboardService.enterAction
             .subscribe(data => {
-                if (data)
-                    this.getDataBooking(this.kodeBooking);
+                if (data){
+                    this.getDataBooking(this.kodeBooking)
+                }
             })
         this.onBlur();
     }
@@ -63,6 +70,10 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.subPeserta.unsubscribe();
         this.subRegistrasi.unsubscribe();
         this.subSep.unsubscribe();
+        this.subEnter.unsubscribe();
+        this.subDataPasien.unsubscribe();
+        this.subRegistrasiAndroid.unsubscribe();
+        this.keyboardService.clearAction()
     }
 
     handleHistorySep(data: any) {
@@ -70,10 +81,16 @@ export class RegistrasiOnlineComponent implements OnInit {
         if (data) {
             let today = this.registrasiOnlineService.reformatDate(new Date());
             data.forEach((item: any) => {
-                if( data.tglSep == today ){
+                if( item.tglSep == today ){
                     this.sep = item;
                 }
             });
+        }
+    }
+
+    handlePasien(data: any){
+        if(data.noaskes){
+            this.registrasiOnlineService.getHistorySep(data.noaskes)
         }
     }
 
@@ -88,6 +105,16 @@ export class RegistrasiOnlineComponent implements OnInit {
         }
     }
 
+    handleRegistrasiAndroid(data: any){
+        if( data ){
+            this.registrasiAndroid = data;
+            this.pasien = { alamat: data.alamat }
+            this.registrasi = { nama: data.nama, booking_code: data.noreg, noAntrian: data.antrian }
+            this.registrasiOnlineService.getPasienByRm(data.norekmed);
+        }
+
+    }
+
     reset() {
         this.kodeBooking = '';
         this.rujukan = '';
@@ -96,15 +123,22 @@ export class RegistrasiOnlineComponent implements OnInit {
         this.anjunganService.sep.next('');
         this.anjunganService.peserta.next('');
         this.anjunganService.registrasiOnline.next('')
+        this.registrasiOnlineService.registrasiAndroid.next('')
+        this.registrasiOnlineService.dataPasien.next('');
+        this.keyboardService.enterAction.next(false);
 
         this.onBlur();
     }
 
     getDataBooking(kodeBooking: string){
         this.reset();
-        this.anjunganService.getBookingCode(kodeBooking);
+        let isnum = /^\d+$/.test(kodeBooking.trim());
+        if(isnum){
+            this.registrasiOnlineService.getDataBookingAndroid(kodeBooking);
+        }else{
+            this.anjunganService.getBookingCode(kodeBooking);
+        }
     }
-
 
     listenKey(event: KeyboardEvent) {
         if (event.key == 'Enter') {
@@ -181,15 +215,18 @@ export class RegistrasiOnlineComponent implements OnInit {
     }
 
     checkIn() {
-        if( this.sep ){
-            this.registrasiOnlineService.sep.next(this.sep);
+        if( this.registrasiAndroid ){
+            this.printAntrianRegistrasiAndroid(this.registrasiAndroid.antrian);
         }else{
-            this.createSep();
+            if( this.sep ){
+                this.registrasiOnlineService.sep.next(this.sep);
+            }else{
+                this.createSep();
+            }
         }
     }
 
     printAnjungan() {
-
         if( this.sep.noSep && this.registrasi.booking_code ){
             (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.registrasi.booking_code);
             (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + this.registrasi.booking_code);
@@ -200,6 +237,14 @@ export class RegistrasiOnlineComponent implements OnInit {
     back() {
         this.reset();
         this.router.navigateByUrl('/anjungan');
+    }
+
+    printSep(noSep: string){
+        (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjunganSepOnly/' + noSep );
+    }
+
+    printAntrianRegistrasiAndroid(noAntrian: string){
+        (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('print/anjungan/nomor_antrian/android/' + noAntrian );
     }
 
 

@@ -57,8 +57,15 @@
                                 [ngClass]="{'selected-rujukan': item.noKunjungan == selectedRujukan}">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="bold">POLIKLINIK {{item.poliRujukan.nama}}</div>
-                                        <small class="text-muted">Nomor : </small> {{item.noKunjungan}}
+                                        <div class="badge bg-primary" style="font-weight: 500; position: absolute; top: 10px; right: 10px;" *ngIf="rujukan && rujukan.noKunjungan == item.noKunjungan">
+
+                                            <ng-container *ngIf="rujukan.jumlahSep > 0"> Rencana <br>Kontrol</ng-container>
+                                            <ng-container *ngIf="rujukan.jumlahSep < 1"> Rujukan <br>Baru</ng-container>
+
+                                        </div>
+                                        {{item.noKunjungan}}
+                                        <div class="bold">{{item.poliRujukan.nama | uppercase}}</div>
+
                                     </div>
                                 </div>
                                 <hr class="mt-1 mb-1 p-0">
@@ -73,9 +80,9 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="text-center bg-white mt-2 rounded border">
-                                            <small>Masa Berlaku Sampai:<br/>{{ registrasiOnlineService.dateHuman(registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).expired) }} ({{registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired}} Hari Lagi)</small>
+                                    <div class="col" style="font-size: 14px;">
+                                        <div class="bg-white border rounded text-center mt-1">
+                                            <small>Berlaku Sampai: {{ registrasiOnlineService.dateHuman(registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).expired) }} ({{registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired}} Hari)</small>
                                         </div>
                                     </div>
                                 </div>
