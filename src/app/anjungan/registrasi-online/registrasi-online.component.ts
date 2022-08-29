@@ -102,6 +102,7 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
             this.pasien = JSON.parse(data.pasien);
             this.suratKontrol = JSON.parse(data.suratKontrol);
             this.anjunganService.getPeserta(this.pasien.noaskes);
+            this.registrasiOnlineService.getHistorySep(this.pasien.noaskes);
         }
     }
 
@@ -120,6 +121,8 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         this.rujukan = '';
         this.pasien = '';
         this.suratKontrol = '';
+        this.jadwalDokter = '';
+        this.registrasiAndroid = '';
         this.anjunganService.sep.next('');
         this.anjunganService.peserta.next('');
         this.anjunganService.registrasiOnline.next('')
@@ -241,6 +244,9 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
 
     printSep(noSep: string){
         (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjunganSepOnly/' + noSep );
+        if( this.registrasiAndroid ){
+            this.printAntrianRegistrasiAndroid(this.registrasiAndroid.antrian);
+        }
     }
 
     printAntrianRegistrasiAndroid(noAntrian: string){
