@@ -1,0 +1,138 @@
+<div style="position: fixed; height: 100%; width: 100%; overflow: hidden">
+    <div class="row justify-content-center p-3 bg-dark text-white">
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-sm-2 col-md-2 text-end d-none d-md-block">
+                    <img src="assets/hesti.png" alt="Logo Salak" style="height: 50px;">
+                </div>
+                <div class="col-sm-10 col-md-7 d-none d-md-block">
+                    <h1 class="fs-3 mb-0">RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h1>
+                    <div>PELAYANAN MANDIRI TERINTEGRASI</div>
+                </div>
+                <div class="col-md-2 d-none d-md-block">
+                    <!-- <img src="assets/hesti.png" alt="Logo Salak" height="50px">
+                    <img src="assets/kodam.png" alt="Logo Salak" height="50px"> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!peserta">
+        <div class="row justify-content-center">
+            <h1 class="fs-3 text-center p-3">REGISTRASI PASIEN BPJS</h1>
+            <div class="col-md-5 text-center">
+                <input
+                    #search
+                    type="text"
+                    style="text-transform: uppercase;"
+                    (keydown)="listenKey($event)"
+                    (blur)="onBlur()"
+                    [(ngModel)]="nomorBpjs"
+                    value="{{nomorBpjs}}"
+                    maxlength="15"
+                    class="form-control p-2 fs-1 text-center text-white bg-success">
+
+                <p class="text-muted mt-2"> No. Rekam Medis atau BPJS</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center">
+                <app-numpad></app-numpad>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3" *ngIf="peserta">
+        <div class="col-md-8">
+            <div class="row border">
+                <div class="col-3 text-white p-4 bg-primary" style="position: relative;">
+                    <div style="line-height: 2rem; font-size: 2rem; font-weight: 500;">
+                        DATA <br>
+                        PASIEN
+                    </div>
+                    <div class="d-grid gap-2" style="position: absolute; bottom: 27px; width: 80%;">
+                        <button class="btn p-3 btn-outline-light" (click)="reset()"><i class="bi bi-chevron-left"></i>&nbsp; KEMBALI</button>
+                    </div>
+                </div>
+                <div class="col p-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="fs-4 bold">{{pasien.nama}}</div>
+                            <div>{{pasien.alamat}}</div>
+                            <hr class="mt-2 mb-2">
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col">
+                            <small class="text-muted">NO. RM</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{pasien.norekmed}}</div>
+                        </div>
+                        <div class="col">
+                            <small class="text-muted">NO. BPJS</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{pasien.noaskes}}</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col">
+                            <small class="text-muted">JNS. KELAMIN</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{pasien.kelamin | uppercase}}</div>
+                        </div>
+                        <div class="col">
+                            <small class="text-muted">STATUS PESERTA</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{peserta.statusPeserta.keterangan | uppercase}}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <small class="text-muted">NO. TELEPON</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{pasien.tlp | uppercase}}</div>
+                        </div>
+                        <div class="col">
+                            <small class="text-muted">ASAL FASKES</small>
+                            <div class="w-100 p-1 bg-light rounded border">{{peserta.provUmum.nmProvider | uppercase}}</div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="sep">
+                        <div class="col">
+                            <div class="alert alert-warning text-center">
+                                <i class="bi bi-check-lg"></i> SEP Hari ini sudah terbit <br>
+                                {{sep.namaPeserta | uppercase}} <br>
+                                POLIKLINIK {{sep.poli | uppercase}} <br>
+                                Nomor SEP : {{sep.noSep}} <br>
+
+                                <div class="d-grid gap-2 mt-3">
+                                    <button (click)="printSep(sep.noSep)" class="btn fs-5 btn-primary p-3" type="button" [disabled]="!sep.noSep"><i class="bi bi-printer"></i> CETAK SEP</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="!sep">
+                        <div class="col">
+                            <div class="mt-3">
+                                <p class="alert alert-danger text-center" *ngIf="peserta.statusPeserta.kode != '0'">
+                                    PESERTA TIDAK DAPAT DILAYANI : {{peserta.statusPeserta.keterangan | uppercase}}
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <button (click)="next()" class="btn fs-5 btn-success p-3" type="button" [disabled]="peserta.statusPeserta.kode != '0'">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div (click)="home()" class="border-bottom text-secondary clickable" pRipple style="position: absolute; top: 100px; left: 10px; padding: 20px 30px;">
+        <span class="bi bi-chevron-left"></span>&nbsp; KEMBALI
+    </div>
+</div>
+
+<iframe src="" id="iframePrintSepOnly" frameborder="0" width="300px" height="300px;" hidden></iframe>
+
+<app-error-handle></app-error-handle>

@@ -1,0 +1,96 @@
+<div class="container-fluid p-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-7 col-sm-12" #screen>
+            <div class="text-center">
+                <img src="assets/hesti.png" height="62px" class="mb-3">
+                <h4>RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h4>
+            </div>
+
+            <div class="border p-5 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;">
+                <h5 align="center" class="mb-4">Registrasi Online<br>Rawat Jalan</h5>
+                <hr>
+                <div class="p-3 bg-white border rounded">
+                    <div>
+                        <small class="text-muted">Data Pasien</small>
+                        <div class="bold">{{pasien.nama | uppercase}}</div>
+                        <div>
+                            {{pasien.kelamin}}
+                        </div>
+                        <div>{{pasien.alamat}}</div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <small class="text-muted">No. Rekam Medis</small>
+                                <div>{{pasien.norekmed}}</div>
+                            </div>
+                            <div class="col">
+                                <small class="text-muted">No. BPJS</small>
+                                <div>{{pasien.noaskes}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="mb-3" *ngIf="rujukan">
+                            <small for="Jenis Kunjungan" class="text-muted">Surat Rujukan</small>
+                            <div class="p-3 bg-light rounded border mb-3 clickable">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <small class="text-muted">No. Surat Rujukan : </small>{{rujukan.noKunjungan}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <small for="Jenis Kunjungan" class="text-muted">Tanggal Kunjungan</small><br>
+                            <div class="p-3 bg-light rounded border mb-3 clickable">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        {{registrasiOnlineService.dateHuman(jadwalDokter.tglKunjungan)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <small for="Jenis Kunjungan" class="text-muted">Jadwal Dokter</small>
+
+                            <div *ngIf="jadwalDokter" class="p-3 item-rujukan bg-light rounded border mb-3" >
+                                <div class="row">
+                                    <div class="col-12">
+                                        <small>POLIKLINIK {{jadwalDokter.namapoli | uppercase}}</small><br>
+                                        <small><strong>{{jadwalDokter.namadokter | uppercase}}</strong></small>
+                                    </div>
+                                </div>
+                                <hr class="m-0 mt-1 mb-1">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Hari</small>
+                                        <div><span>{{jadwalDokter.namahari}}</span></div>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Jam Praktek</small>
+                                        <div><span>{{jadwalDokter.jadwal}}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mb-4 mt-4">
+                            <button class="btn btn-primary" type="button" (click)="daftar()">Daftar</button>
+                        </div>
+                        <div class="row">
+                            <div class="col mt-3">
+                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/registrasi/rencana-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="position: fixed; bottom: 0; width: 100%; left: 0; z-index: -1;">
+    <svg width="100%" height="100%" id="svg" viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg" class="transition duration-300 ease-in-out delay-150"><defs><linearGradient id="gradient" x1="0%" y1="51%" x2="100%" y2="49%"><stop offset="5%" stop-color="#ff690088"></stop><stop offset="95%" stop-color="#00d08488"></stop></linearGradient></defs><path d="M 0,600 C 0,600 0,200 0,200 C 126.64114832535887,231.5311004784689 253.28229665071774,263.0622009569378 341,240 C 428.71770334928226,216.9377990430622 477.51196172248797,139.2822966507177 568,143 C 658.488038277512,146.7177033492823 790.66985645933,231.80861244019138 896,244 C 1001.33014354067,256.1913875598086 1079.8086124401914,195.48325358851676 1166,176 C 1252.1913875598086,156.51674641148324 1346.0956937799042,178.25837320574163 1440,200 C 1440,200 1440,600 1440,600 Z" stroke="none" stroke-width="0" fill="url(#gradient)" class="transition-all duration-300 ease-in-out delay-150 path-0"></path><defs><linearGradient id="gradient" x1="0%" y1="51%" x2="100%" y2="49%"><stop offset="5%" stop-color="#ff6900ff"></stop><stop offset="95%" stop-color="#00d084ff"></stop></linearGradient></defs><path d="M 0,600 C 0,600 0,400 0,400 C 67.75119617224877,435.07177033492826 135.50239234449754,470.14354066985646 235,468 C 334.49760765550246,465.85645933014354 465.7416267942584,426.49760765550246 575,391 C 684.2583732057416,355.50239234449754 771.5311004784689,323.86602870813397 860,345 C 948.4688995215311,366.13397129186603 1038.1339712918661,440.0382775119617 1135,458 C 1231.8660287081339,475.9617224880383 1335.933014354067,437.98086124401914 1440,400 C 1440,400 1440,600 1440,600 Z" stroke="none" stroke-width="0" fill="url(#gradient)" class="transition-all duration-300 ease-in-out delay-150 path-1"></path></svg>
+</div>
+
+
+<app-error-handle></app-error-handle>

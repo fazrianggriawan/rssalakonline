@@ -1,0 +1,129 @@
+<div style="position: fixed; height: 100%; width: 100%; overflow: hidden">
+    <div class="row justify-content-center p-3 bg-dark text-white">
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-sm-2 col-md-2 text-end d-none d-md-block">
+                    <img src="assets/hesti.png" alt="Logo Salak" style="height: 50px;">
+                </div>
+                <div class="col-sm-10 col-md-7 d-none d-md-block">
+                    <h1 class="fs-3 mb-0">RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h1>
+                    <div>PELAYANAN MANDIRI TERINTEGRASI</div>
+                </div>
+                <div class="col-md-2 d-none d-md-block">
+                    <!-- <img src="assets/hesti.png" alt="Logo Salak" height="50px">
+                    <img src="assets/kodam.png" alt="Logo Salak" height="50px"> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-8" *ngIf="!gantiPoli">
+            <div class="row border">
+                <div class="col-3 text-white p-4 bg-primary" style="position: relative;">
+                    <div style="line-height: 2rem; font-size: 2rem; font-weight: 500;">
+                        JADWAL <br>
+                        DOKTER
+                    </div>
+                    <div class="d-grid gap-2" style="position: absolute; bottom: 27px; width: 80%;">
+                        <button class="btn p-3 btn-outline-light" (click)="back()"><i class="bi bi-chevron-left"></i>&nbsp; KEMBALI</button>
+                    </div>
+                </div>
+                <div class="col p-3">
+                    <div class="row m-0 border rounded">
+                        <div class="col-auto bg-gray-800 text-muted p-3">POLIKLINIK TUJUAN :</div>
+                        <div class="col pt-3 pb-3 pr-3 pl-0">{{namaPoliTujuan | uppercase}}</div>
+                        <div class="col-auto p-0">
+                            <button class="btn btn-light p-3 m-0" pRipple (click)="gantiPoli = true"><i class="bi bi-pencil-square"></i>&nbsp; GANTI POLIKLINIK</button>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="dataJadwalDokter.length == 0 && !loading">
+                        <div class="col p-2">
+                            <div class="text-secondary text-center mt-4">
+                                <h1><i class="bi bi-exclamation-circle"></i></h1>
+                                <div style="font-size: 1.2rem;">
+                                    Layanan tidak dapat dilanjutkan. <br>
+                                    <div>
+                                        Tidak ada jadwal dokter hari ini.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0 mt-3">
+                        <ng-container *ngFor="let item of dataJadwalDokter; let i = index" >
+                            <div class="col-5 p-3 bg-light rounded border m-2 clickable"
+                                pRipple
+                                (click)="selectJadwal(item)"
+                                [ngClass]="{'selected-item': item.kodedokter == selectedJadwalDokter}">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>{{item.namadokter | uppercase}}</strong>
+                                        <br>
+                                        <small>POLIKLINIK {{item.namapoli | uppercase}}</small>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="text-muted">Hari</div>
+                                        <div><span>{{item.namahari}}</span></div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="text-muted">Jam Praktek</div>
+                                        <div><span>{{item.jadwal}}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- <div *ngIf="dataJadwalDokter.length == 0">
+                            <div class="text-center m-0">TIDAK ADA JADWAL DOKTER</div>
+                        </div> -->
+                    </div>
+                    <div class="row m-0">
+                        <div class="col p-2">
+                            <div class="mt-3">
+                                <div class="d-grid gap-2">
+                                    <button [disabled]="!selectedJadwalDokter || dataJadwalDokter.length == 0 " (click)="next()" class="btn fs-5 btn-success p-3" type="button">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-11" *ngIf="gantiPoli">
+            <div class="row border">
+                <div class="col-auto text-white p-4 bg-primary" style="position: relative;">
+                    <div style="line-height: 2rem; font-size: 2rem; font-weight: 500;">
+                        DATA <br>
+                        POLIKLINIK
+                    </div>
+                    <div class="d-grid gap-2" style="position: absolute; bottom: 27px; width: 80%;">
+                        <button class="btn p-3 btn-outline-light" (click)="gantiPoli = false"><i class="bi bi-chevron-left"></i>&nbsp; KEMBALI</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row p-3">
+                        <ng-container *ngFor="let item of dataPoli; let i = index" >
+                            <div
+                                class="col-2 p-3 selected-item rounded border m-2 clickable"
+                                pRipple
+                                (click)="selectGantiPoli(item)">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <small>POLIKLINIK</small><br>
+                                        <strong>{{item.ket | uppercase}}</strong>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
