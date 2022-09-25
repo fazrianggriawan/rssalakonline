@@ -17,12 +17,15 @@ export class AntrianComponent implements OnInit {
     dataNextCall: any = {};
     lastCall: any = {};
     dataCalled: any = [];
+    tanggal: any;
 
     constructor(
         private registrasiOnlineService: RegistrasiOnlineService
     ) { }
 
     ngOnInit(): void {
+
+        this.tanggal = new Date();
 
         this.getDataPoli();
         this.registrasiOnlineService.dataAntrian.subscribe(data => this.handleDataAntrian(data))
@@ -44,7 +47,7 @@ export class AntrianComponent implements OnInit {
     }
 
     getAntrian(jadwalDokter: string) {
-        this.registrasiOnlineService.getAntrianByJadwal(jadwalDokter, this.selectedPoli, this.registrasiOnlineService.reformatDate(new Date()))
+        this.registrasiOnlineService.getAntrianByJadwal(jadwalDokter, this.selectedPoli, this.registrasiOnlineService.reformatDate(this.tanggal))
     }
 
     handleDataAntrian(data: any){
@@ -82,7 +85,7 @@ export class AntrianComponent implements OnInit {
         if( data ){
             this.dataJadwalPraktek = [];
             this.selectedJadwal = '';
-            this.registrasiOnlineService.getJadwalDokter(data, this.registrasiOnlineService.reformatDate(new Date()))
+            this.registrasiOnlineService.getJadwalDokter(data, this.registrasiOnlineService.reformatDate(this.tanggal))
 
             this.registrasiOnlineService.dataJadwalDokter.subscribe(data => {
                 if( data ){

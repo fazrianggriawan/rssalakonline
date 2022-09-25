@@ -27,6 +27,7 @@
     "howler": "^2.2.3",
     "ng-qrcode": "^6.0.0",
     "ngx-audio-player": "^11.0.4",
+    "ngx-capture": "^0.12.2",
     "ngx-howler": "^11.0.0",
     "primeflex": "^3.1.2",
     "primeicons": "^5.0.0",

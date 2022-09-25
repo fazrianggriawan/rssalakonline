@@ -5,6 +5,7 @@ import { CallerRoutingModule } from './caller-routing.module';
 import { AntrianComponent } from './antrian/antrian.component';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { TableModule } from 'primeng/table';
         CommonModule,
         CallerRoutingModule,
         FormsModule,
-        TableModule
+        TableModule,
+        CalendarModule
     ]
 })
 export class CallerModule { }

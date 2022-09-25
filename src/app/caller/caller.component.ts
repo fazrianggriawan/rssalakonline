@@ -82,6 +82,7 @@ export class CallerComponent implements OnInit {
 
     public getJadwalDokter() {
         if (this.selectedPoli){
+            console.log('hallo')
             this.jadwalDokterService.cariJadwalDokter(this.selectedPoli);
             this.antrianService.dataAntrian.next('');
         }

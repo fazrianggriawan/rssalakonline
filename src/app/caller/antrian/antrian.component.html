@@ -41,6 +41,12 @@
                 </div>
                 <div class="col-12 mt-2">
                     <div class=" row pb-3">
+                        <div class="col-auto">
+                            Tanggal :
+                            <div>
+                                <p-calendar [(ngModel)]="tanggal" dateFormat="dd-mm-yy"></p-calendar>
+                            </div>
+                        </div>
                         <div class="col-4">
                             Poliklinik :
                             <select class="form-select" [(ngModel)]="selectedPoli" (ngModelChange)="getJadwalDokter($event)">
@@ -50,7 +56,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-8">
+                        <div class="col">
                             Dokter :
                             <select class="form-select" [(ngModel)]="selectedJadwal" (ngModelChange)="getAntrian($event)">
                                 <option selected></option>
