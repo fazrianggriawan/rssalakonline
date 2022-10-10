@@ -24,15 +24,11 @@ export class CallerComponent implements OnInit {
 
     constructor(
         private antrianService: AntrianService,
-        private registrasiService: RegistrasiService,
         private masterService: MasterService,
         private jadwalDokterService: JadwalDokterService
     ) { }
 
     ngOnInit(): void {
-        // this.antrianService.getPoliBpjs();
-        // this.antrianService.dataPoli.subscribe(res => { this.dataPoli = res });
-        // this.registrasiService.jadwalDokter.subscribe(res => { this.dataJadwalPraktek = res; })
         this.antrianService.getDataAntrian().subscribe(data => this.dataAntrian = data);
         this.masterService.getPoliBpjs().subscribe(data => this.dataPoli =  data);
         this.jadwalDokterService.getDataJadwalDokter().subscribe(data => this.dataJadwalPraktek = data);
@@ -45,39 +41,6 @@ export class CallerComponent implements OnInit {
             jadwal: this.selectedJadwal
         }
         this.antrianService.filterAntrian(data);
-
-        return false;
-
-        //this.antrianService.getAntrian(data);
-
-        this.antrianService.dataAntrian.subscribe(data => {
-            this.dataAntrian = [];
-            this.dataCalled = [];
-            this.lastCall = {};
-            this.nextCall = '';
-
-            if (data.length > 0) {
-                let dataAntrian: any[] = data;
-                let lastIdxCalled: any = '';
-                dataAntrian.forEach((element, index) => {
-                    if (element.call_time) {
-                        this.dataCalled.push(element);
-                        lastIdxCalled = index;
-                    } else {
-                        this.dataAntrian.push(element);
-                    }
-                });
-
-                if (this.dataCalled[lastIdxCalled]) {
-                    this.lastCall = this.dataCalled[lastIdxCalled];
-                }
-
-                if (this.dataAntrian[0]) {
-                    this.nextCall = this.dataAntrian[0].prefix_antrian + '-' + this.dataAntrian[0].no_antrian;
-                    this.dataNextCall = this.dataAntrian[0];
-                }
-            }
-        })
     }
 
     public getJadwalDokter() {
@@ -149,6 +112,8 @@ export class CallerComponent implements OnInit {
             //When the audio object completes it's playback, call the callback
             //provided
             audio.addEventListener('ended', callback);
+        }else{
+            console.log('play');
         }
     }
 
@@ -165,6 +130,7 @@ export class CallerComponent implements OnInit {
         //without running a callback after
         if (index + 1 === sounds.length) {
             this.play(sounds[index], null);
+            console.log('play');
         } else {
             //Else, play the sound, and when the playing is complete
             //increment index by one and play the sound in the

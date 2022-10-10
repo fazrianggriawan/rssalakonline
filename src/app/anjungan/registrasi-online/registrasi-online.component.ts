@@ -51,7 +51,7 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
             this.sep = data;
             if( data ){
                 this.printAnjungan();
-                // this.registrasiOnlineService.checkin(this.registrasi);
+                this.registrasiOnlineService.checkin(this.registrasi);
             }
         })
 
