@@ -1,76 +1,9 @@
-<style type="text/styelsheet">
-
-    .panel-dashboard{
-        background: black;
-        height: 100%;
-        width: 100%;
-        position: fixed;
-        overflow-y: hidden;
-        overflow-x: hidden;
-    }
-
-    .table-dashboard tr th{
-        background: #457539 !important;
-        color: white;
-        border-bottom: 2px solid black;
-        border-top: 0;
-        padding: 10px;
-    }
-    .table-dashboard tr{
-        color: white;
-        background: #232323;
-        font-size: 1.8rem;
-    }
-
-    .table-dashboard tr td{
-        border: none;
-        padding-top: 1.9%;
-        padding-bottom: 1.9%;
-    }
-
-    .table-dashboard tr:nth-child(even){
-        background: black;
-    }
-
-    .text-orange{
-        color: orange;
-    }
-
-    .highlight{
-        background: rgb(3 145 245 / 16%);
-    }
-
-    .header-antrian{
-        background: #60a94d;
-        color: white;
-        padding: 20px 30px;
-    }
-
-    .header-antrian h1{
-        font-size: 2rem;
-    }
-
-    .caller{
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        background: rgb(77 141 61);
-        text-align: center;
-        z-index: 999;
-        top: 0;
-        padding-top: 40%;
-        background: rgb(56,148,6);
-        background: linear-gradient(356deg, rgb(190 230 30) 6%, rgb(255 242 80) 98%);
-    }
-
-
-</style>
-<div class="container-fluid panel-dashboard">
+<div class="panel-dashboard">
     <div class="row header-antrian text-center">
         <h1>
-            RS SALAK BOGOR - ANTRIAN RAWAT JALAN
+            ANTRIAN RAWAT JALAN
         </h1>
-        <h3><i class="bi bi-clock-history"></i> {{info_antrian.tanggal}} - {{info_antrian.jadwal}}</h3>
+        <h3 *ngIf="info_antrian"><i class="bi bi-clock-history"></i> {{info_antrian.tanggal}} - {{info_antrian.jadwal}}</h3>
     </div>
     <div class="row table-dashboard">
         <div class="col p-0">
@@ -92,15 +25,15 @@
                         <td class="text-orange">
                             {{item.poli.nama_poli}}
                         </td>
-                        <td class="highlight text-center">
-                            <div *ngIf="item.called">{{item.called.prefix_antrian}}-{{item.called.no_antrian}}</div>
+                        <td class="highlight">
+                            <div *ngIf="item.called[0]">{{item.called[0].prefix_antrian}}-{{item.called[0].no_antrian}}</div>
+                            <div *ngIf="!item.called[0]">-</div>
                         </td>
-                        <td class="text-center" style="color: silver;">
-                            <div *ngIf="item.waiting">
-                                {{item.waiting.prefix_antrian}}-{{item.waiting.no_antrian}}
-                            </div>
+                        <td style="color: silver;">
+                            <div *ngIf="item.waiting[0]">{{item.waiting[0].prefix_antrian}}-{{item.waiting[0].no_antrian}}</div>
+                            <div *ngIf="!item.waiting[0]">-</div>
                         </td>
-                        <td class="text-center" style="color: silver;">
+                        <td style="color: silver;">
                             <div *ngIf="item.waiting.estimasi && item.called.estimasi">{{ item.called.estimasi }}</div>
                             <div *ngIf="!item.called.estimasi && item.waiting.estimasi">{{ item.waiting.estimasi }}</div>
                             <div *ngIf="item.called.estimasi && !item.waiting.estimasi">-</div>
@@ -112,20 +45,30 @@
     </div>
 </div>
 
-<div class="container-fluid callera">
-    <div class="row">
-        <div class="col">
-            <div style="font-size: 5rem;
-    font-weight: bold;
-    margin: 3%;">NO. ANTRIAN</div>
-            <div style="padding: 0%;
-    font-size: 12rem;
-    background: #fefefe;
-    margin: 3% 5%;
-    font-weight: bold;
-    border-radius: 9rem;">A1-11</div>
-            <div style="font-size: 4rem; font-weight: bold; margin-bottom: 4rem;">POLIKLINIK<br>REHABILITASI MEDIK</div>
-            <div style="font-size: 3rem;">dr. Ferry Hadinata, Sp.A</div>
+<div class="caller" hidden>
+    <div class="shadow-lg" style="position: absolute; top: 0; left: 0; width: 100%; font-size: 3.5vw;
+    padding: 2vw; color: white; font-weight: 500; background-color: rgba(0,0,0,0.3);">
+        <div class="row justify-content-center m-3">
+            <div class="col-auto">
+                <img [src]="'assets/logo.png'" alt="LOGO" height="100vw">
+            </div>
+            <div class="col-auto text-start">
+                <div>RS. SALAK BOGOR</div>
+                <div style="margin-top: -1vw; font-size: 2.75vw;">ANTRIAN RAWAT JALAN</div>
+            </div>
+        </div>
+    </div>
+    <div style="position: absolute; top: 30%; left: 20%; z-index: 0; line-height: unset;">
+        <div class="angka bg-white rounded-circle shadow-lg">
+            <div class="text-muted mb-0" style="font-size: 3vw;">NO. ANTRIAN</div>
+            <div style="margin-top: -2vw;">B7-01</div>
+            <div class="text-muted mb-0" style="font-size: 2vw;">POLIKLINIK ANAK</div>
+        </div>
+        <div>
+            <div class="circle" style="animation-delay: 0s"></div>
+            <div class="circle" style="animation-delay: 1s"></div>
+            <div class="circle" style="animation-delay: 2s"></div>
+            <div class="circle" style="animation-delay: 3s"></div>
         </div>
     </div>
 </div>

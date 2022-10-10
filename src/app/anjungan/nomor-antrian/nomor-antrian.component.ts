@@ -18,7 +18,7 @@ export class NomorAntrianComponent implements OnInit {
         tunai: '0'
     }
 
-    defaultAntrian : string  = '11';
+    defaultAntrian : string  = '1';
     defaultAntrianTni : string  = '1';
 
     today = new Date();
@@ -26,7 +26,8 @@ export class NomorAntrianComponent implements OnInit {
     constructor(
         public router: Router,
         private registrasiOnlineService: RegistrasiOnlineService,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
+        private anjunganService: AnjunganService
     ) { }
 
     ngOnInit(): void {
@@ -69,21 +70,27 @@ export class NomorAntrianComponent implements OnInit {
     }
 
     getAntrianTni() {
-        this.printAntrian('tni', this.antrian.tni)
+        this.printAntrian('tni', 'A'+this.antrian.tni.padStart(3, '0'))
+        this.anjunganService.saveNomorAntrian({jnsPasien: '3', noAntrian: this.antrian.tni.padStart(3, '0')})
+
         let antrian : number = parseInt(this.antrian.tni) + 1;
         this.antrian.tni = antrian.toString();
         localStorage.setItem('tni', this.antrian.tni);
     }
 
     getAntrianBpjs() {
-        this.printAntrian('bpjs', this.antrian.bpjs)
+        this.printAntrian('bpjs', 'B'+this.antrian.bpjs.padStart(3, '0'))
+        this.anjunganService.saveNomorAntrian({jnsPasien: '1', noAntrian: this.antrian.bpjs.padStart(3, '0')})
+
         let antrian : number = parseInt(this.antrian.bpjs) + 1;
         this.antrian.bpjs = antrian.toString();
         localStorage.setItem('bpjs', this.antrian.bpjs);
     }
 
     getAntrianTunai() {
-        this.printAntrian('tunai', this.antrian.tunai)
+        this.printAntrian('tunai', 'C'+this.antrian.tunai.padStart(3, '0'))
+        this.anjunganService.saveNomorAntrian({jnsPasien: '2', noAntrian: this.antrian.tunai.padStart(3, '0')})
+
         let antrian : number = parseInt(this.antrian.tunai) + 1;
         this.antrian.tunai = antrian.toString();
         localStorage.setItem('tunai', this.antrian.tunai);
@@ -96,7 +103,6 @@ export class NomorAntrianComponent implements OnInit {
             this.loadingService.status.next(false);
         }, 500);
     }
-
 
     back() {
         this.router.navigateByUrl('/anjungan');

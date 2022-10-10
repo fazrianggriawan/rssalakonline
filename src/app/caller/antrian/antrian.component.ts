@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
+import { AntrianService } from 'src/app/services/antrian.service';
 
 @Component({
     selector: 'app-antrian',
@@ -13,14 +14,20 @@ export class AntrianComponent implements OnInit {
     public dataJadwalPraktek: any[] = [];
     selectedPoli: any = {};
     selectedJadwal: any = {};
+    selectedLoket: any;
     nextCall: string = '';
     dataNextCall: any = {};
     lastCall: any = {};
     dataCalled: any = [];
     tanggal: any;
+    dataLoket: any = [];
+
+    waitingCall: boolean = true;
 
     constructor(
-        private registrasiOnlineService: RegistrasiOnlineService
+        private registrasiOnlineService: RegistrasiOnlineService,
+        private antrianS: AntrianService
+
     ) { }
 
     ngOnInit(): void {
@@ -30,13 +37,14 @@ export class AntrianComponent implements OnInit {
         this.getDataPoli();
         this.registrasiOnlineService.dataAntrian.subscribe(data => this.handleDataAntrian(data))
 
-        // this.antrianService.getPoliBpjs();
-        // this.antrianService.dataPoli.subscribe(res => { this.dataPoli = res });
-        // this.registrasiService.jadwalDokter.subscribe(res => { this.dataJadwalPraktek = res; })
-        // this.antrianService.getDataAntrian().subscribe(data => this.dataAntrian = data);
-        // this.masterService.getPoliBpjs().subscribe(data => this.dataPoli = data);
-        // this.jadwalDokterService.getDataJadwalDokter().subscribe(data => this.dataJadwalPraktek = data);
-        // this.masterService.getAllPoliBpjs();
+        this.dataLoket = [1,2,3,4,5,6,7,8,9,10];
+
+        setInterval(() => {
+            if( this.waitingCall == true ){
+                this.callNext();
+            }
+        }, 2000)
+
     }
 
     getDataPoli() {
@@ -47,6 +55,7 @@ export class AntrianComponent implements OnInit {
     }
 
     getAntrian(jadwalDokter: string) {
+        this.dataAntrian = [];
         this.registrasiOnlineService.getAntrianByJadwal(jadwalDokter, this.selectedPoli, this.registrasiOnlineService.reformatDate(this.tanggal))
     }
 
@@ -98,23 +107,29 @@ export class AntrianComponent implements OnInit {
 
     callNext() {
         if (this.nextCall == '') {
-            alert('Tidak ada data dalam antrian');
+            // alert('Tidak ada data dalam antrian');
         } else {
-            if (confirm('Yakin ingin memanggil ?')) {
-                this.caller(this.dataAntrian[0]);
+            this.waitingCall = false;
+            this.caller(this.dataAntrian[0]);
 
-                let data = {
-                    id_antrian: this.dataAntrian[0].id,
-                    kodebooking: this.dataAntrian[0].booking_code
-                };
+            // if (confirm('Yakin ingin memanggil ?')) {
+            //     this.caller(this.dataAntrian[0]);
 
-                // this.antrianService.callAntrian(data).subscribe(data => {
-                //     if (data.code == '200') {
-                //         this.antrianService.updateWaktuAntrian({ taskid: 4, kodebooking: this.dataAntrian[0].booking_code })
-                //         this.getAntrian();
-                //     }
-                // })
-            }
+            //     this.waitingCall = false;
+
+            //     let data = {
+            //         id_antrian: this.dataAntrian[0].id,
+            //         kodebooking: this.dataAntrian[0].booking_code,
+            //         loket: this.selectedLoket
+            //     };
+
+            //     // this.antrianS.callAntrian(data).subscribe(data => {
+            //     //     if (data.code == '200') {
+            //     //         this.antrianS.updateWaktuAntrian({ taskid: 4, kodebooking: this.dataAntrian[0].booking_code })
+            //     //         this.getAntrian(this.selectedJadwal);
+            //     //     }
+            //     // })
+            // }
         }
     }
 
@@ -125,26 +140,26 @@ export class AntrianComponent implements OnInit {
     }
 
     caller(dataAntrian: any) {
-        // let s = this.antrianService.terbilang(dataAntrian.no_antrian).trim();
-        // let as = s.split(' ');
+        let s = this.antrianS.terbilang(dataAntrian.no_antrian).trim();
+        let as = s.split(' ');
 
-        // let letPrefix = dataAntrian.prefix_antrian.substring(0, 1);
-        // let noPrefix = this.antrianService.terbilang(dataAntrian.prefix_antrian.substring(1, 2)).trim();
+        let letPrefix = dataAntrian.prefix_antrian.substring(0, 1);
+        let noPrefix = this.antrianS.terbilang(dataAntrian.prefix_antrian.substring(1, 2)).trim();
 
-        // let array: HTMLAudioElement[] = [];
-        // array.push(new Audio("./assets/audio/nomor_antrian.mp3"));
+        let array: HTMLAudioElement[] = [];
+        array.push(new Audio("./assets/audio/nomor_antrian.mp3"));
 
-        // array.push(new Audio("./assets/audio/" + letPrefix.toLowerCase() + ".mp3"));
-        // array.push(new Audio("./assets/audio/" + noPrefix + ".mp3"));
+        array.push(new Audio("./assets/audio/" + letPrefix.toLowerCase() + ".mp3"));
+        array.push(new Audio("./assets/audio/" + noPrefix + ".mp3"));
 
 
-        // as.forEach((element: string) => {
-        //     array.push(new Audio("./assets/audio/" + element + ".mp3"));
-        // });
-        // array.push(new Audio("./assets/audio/silahkan.mp3"));
+        as.forEach((element: string) => {
+            array.push(new Audio("./assets/audio/" + element + ".mp3"));
+        });
+        array.push(new Audio("./assets/audio/silahkan.mp3"));
 
-        // array.push(new Audio("./assets/audio/poli_anak.mp3"));
-        // this.play_sound_queue(array);
+        array.push(new Audio("./assets/audio/poli_anak.mp3"));
+        this.play_sound_queue(array);
     }
 
     recall() {
@@ -172,12 +187,15 @@ export class AntrianComponent implements OnInit {
         //If the index is the last of the table, play the sound
         //without running a callback after
         if (index + 1 === sounds.length) {
-            this.play(sounds[index], null);
+            this.play(sounds[index], () => {
+                this.waitingCall = true;
+            });
         } else {
             //Else, play the sound, and when the playing is complete
             //increment index by one and play the sound in the
             //indexth position of the array
             this.play(sounds[index], () => {
+                this.waitingCall = false;
                 index++;
                 this.recursive_play(index, sounds);
             });

@@ -6,6 +6,7 @@ import { AntrianComponent } from './antrian/antrian.component';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
+import { SharedModule } from 'primeng/api';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CalendarModule } from 'primeng/calendar';
         CallerRoutingModule,
         FormsModule,
         TableModule,
-        CalendarModule
+        CalendarModule,
+        SharedModule
     ]
 })
 export class CallerModule { }

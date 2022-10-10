@@ -50,6 +50,13 @@ export class AnjunganService {
             })
     }
 
+    saveNomorAntrian(data: any){
+        this.http.post<any>( config.api_vclaim('antrian/saveNomorAntrian'), data )
+            .subscribe(data => {
+                console.log(data);
+            })
+    }
+
     createSep(data: any) {
         this.sep.next('');
         this.http.post<any>(config.api_vclaim('sep/save'), data)
