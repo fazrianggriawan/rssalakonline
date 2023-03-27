@@ -14,7 +14,8 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
     peserta: any;
     nomorPasien: string = '';
     statusPeserta: string = '';
-
+    dataSesiKunjungan: any[] = [];
+    sesiKunjungan: any;
     subDataPasien : any;
 
     constructor(
@@ -31,6 +32,15 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
         this.clearData();
         this.subDataPasien = this.registrasiOnlineService.dataPasien.subscribe(data => this.handlePasien(data));
         this.registrasiOnlineService.peserta.subscribe(data => this.handleDataPeserta(data))
+        this.initMaster();
+    }
+
+    initMaster() {
+        this.dataSesiKunjungan = [
+            { id: '1', name: 'Sesi 1 - 07:00 s.d. 09:00', start: '07:00', end: '09:00' },
+            { id: '2', name: 'Sesi 2 - 09:00 s.d. 11:00', start: '09:00', end: '11:00' },
+            { id: '3', name: 'Sesi 3 - 11:00 s.d. 12:00', start: '11:00', end: '12:00' },
+        ]
     }
 
     ngOnDestroy(): void {
@@ -84,6 +94,7 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
     next() {
         let pasien = JSON.stringify(this.pasien);
         let peserta = JSON.stringify(this.peserta);
+        let sesi = JSON.stringify(this.sesiKunjungan);
 
         sessionStorage.setItem('pasien', pasien);
         sessionStorage.setItem('peserta', peserta);
@@ -91,6 +102,11 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
         this.pasien = '';
 
         this.router.navigateByUrl('registrasi/jenis-kunjungan')
+    }
+
+    onChangeSesi(e: any){
+        let obj : any = this.dataSesiKunjungan.find((o: any) => o.id === e);
+        this.sesiKunjungan = obj;
     }
 
 }
