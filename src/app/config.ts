@@ -1,10 +1,9 @@
-let host = 'http://rstambon.co.id/';
-// let host = 'http://localhost/';
-let hostSimrs = 'http://36.94.176.218/';
+let host = 'http://rspadonline.bertek.co.id/rspad/';
+let hostSimrs = host;
 
 export const config = {
-    api: function (url: string) { return host + 'bihealth_api/index.php/' + url },
-    api_vclaim: function (url: string) { return host + 'bihealth_vclaim/public/' + url },
-    api_simrs: function (url: string) { return hostSimrs + 'bihealth_api/vclaim/index.php/' + url },
+    api: function (url: string) { return host + 'bihealth-service/index.php/' + url },
+    api_vclaim: function (url: string) { return host + 'bihealth-vclaim/public/index.php/' + url },
+    api_simrs: function (url: string) { return hostSimrs + 'bihealth-service/vclaim/index.php/' + url },
     host: host
 }

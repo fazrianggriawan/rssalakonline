@@ -1,1 +1,1 @@
-ng build --deploy-url=./ --base-href=./ --configuration production
+ng build --deploy-url=./ --base-href=./ --output-path=../app_online --configuration production

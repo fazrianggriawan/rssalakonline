@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from '../registrasi-online/registrasi-online.service';
+import { ErrorMessageService } from '../services/error-message.service';
 
 @Component({
     selector: 'app-registrasi',
@@ -18,7 +19,8 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
 
     constructor(
         private registrasiOnlineService: RegistrasiOnlineService,
-        private router: Router
+        private router: Router,
+        private errorMessageService: ErrorMessageService
     ) { }
 
     ngOnInit(): void {
@@ -53,10 +55,22 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
 
     getPasien() {
         this.clearData();
-        if (this.nomorPasien.length > 10) {
-            this.registrasiOnlineService.getPesertaBpjs(this.nomorPasien);
-        } else {
-            this.registrasiOnlineService.getPasienByRm(this.nomorPasien);
+        if (this.nomorPasien.length > 3) {
+            this.registrasiOnlineService.getPasien(this.nomorPasien)
+                .subscribe(data => {
+                    data.norekmed = data.KODE;
+                    data.noaskes = data.NOASKES;
+                    data.nama = data.NAMA;
+                    data.kelamin = data.KELAMIN;
+                    data.alamat = data.ALAMAT1;
+                    data.tlp = data.TELP;
+                    if( data.noaskes != null ){
+                        this.registrasiOnlineService.dataPasien.next(data);
+                    }else{
+                        this.errorMessageService.message('No.Kartu BPJS Tidak Ditemukan');
+                    }
+
+                })
         }
     }
 

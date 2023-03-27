@@ -1,28 +1,29 @@
-<div class="container-fluid p-3">
+
+<div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-lg-4 col-md-7 col-sm-12">
-            <div class="text-center">
-                <img src="assets/hesti.png" height="62px" class="mb-3">
-                <h4>RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h4>
-            </div>
-
-            <div class="border p-5 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;">
-                <h5 align="center" class="mb-4">Registrasi Online<br>Rawat Jalan</h5>
-                <hr>
+            <h5 class="text-white text-center mt-3">
+                PELAYANAN ONLINE<br>
+                TERINTEGRASI
+            </h5>
+            <div class="p-4 bg-gray-100 shadow mt-4" style="background-color: white; border-radius: 15px;">
+                <div class="text-center mt-3 mb-3">
+                    <img src="assets/logo.png" width="70%" class="mb-3">
+                </div>
                 <div *ngIf="!pasien">
-                    <div class="text-center">No. Rekam Medis atau No. BPJS</div>
                     <div class="mb-3">
-                        <input type="text" [(ngModel)]="nomorPasien" class="form-control text-center" id="exampleFormControlInput1" maxlength="16">
+                        <input type="text" [(ngModel)]="nomorPasien" placeholder="No. Rekam Medis / BPJS / NIK" class="form-control text-center shadow-sm" maxlength="16">
                     </div>
                     <div class="d-grid gap-2 mb-4">
-                        <button class="btn btn-primary" type="button" (click)="getPasien()">Lanjutkan</button>
+                        <button class="btn btn-md btn-success" type="button" (click)="getPasien()">Lanjutkan</button>
                     </div>
                 </div>
                 <div *ngIf="pasien">
                     <small class="text-muted">Data Pasien</small>
                     <div class="bold">{{pasien.nama | uppercase}}</div>
                     <div>
-                        {{pasien.kelamin}}
+                        <span *ngIf="pasien.kelamin == 'L'">LAKI-LAKI</span>
+                        <span *ngIf="pasien.kelamin == 'P'">PEREMPUAN</span>
                     </div>
                     <div>{{pasien.alamat}}</div>
                     <hr>

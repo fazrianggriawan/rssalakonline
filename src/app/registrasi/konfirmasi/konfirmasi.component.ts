@@ -97,8 +97,18 @@ export class KonfirmasiComponent implements OnInit {
 
             sessionStorage.setItem('booking', JSON.stringify(data));
 
+            this.saveToSimrs();
+
             this.router.navigateByUrl('/registrasi/success');
         }
+    }
+
+    saveToSimrs() {
+        let data  = {};
+        this.registrasiOnlineService.saveToSimrs(data)
+            .subscribe(data => {
+
+            })
     }
 
     createSuratKontrol() {
@@ -140,7 +150,12 @@ export class KonfirmasiComponent implements OnInit {
             jenisKunjungan: this.jenisKunjungan
         }
 
-        this.registrasiOnlineService.save(data);
+        this.registrasiOnlineService.saveToSimrs(data)
+            .subscribe(data => {
+                data.antrian = data;
+                this.registrasiOnlineService.save(data);
+            })
+
     }
 
 }

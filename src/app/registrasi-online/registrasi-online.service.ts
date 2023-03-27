@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { config } from '../config';
 import { ErrorMessageService } from '../services/error-message.service';
 
@@ -36,6 +36,22 @@ export class RegistrasiOnlineService {
         private http: HttpClient,
         private errorMessageService: ErrorMessageService
     ) { }
+
+    getPasien(key: String): Observable<any>{
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/get_pasien/'+key))
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    subject.next(data.data)
+                }else{
+                    this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                }
+            })
+
+        return subject;
+
+    }
 
     getPesertaBpjs(key: string) {
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
@@ -122,6 +138,19 @@ export class RegistrasiOnlineService {
 
                 }
             })
+    }
+
+    getJumlahSepByRujukan(nomorRujukan: string, asalRujukan: any): Observable<any>{
+        let subject = new Subject;
+            this.http.get<any>(config.api_vclaim('rujukan/jumlahSep/nomorRujukan/' + nomorRujukan + '/jnsPelayanan/'+asalRujukan))
+                .subscribe(data => {
+                    if (data.metaData.code == '200') {
+                        subject.next(data.response.jumlahSEP);
+                    }else{
+                        subject.next(false);
+                    }
+                })
+        return subject;
     }
 
     getJumlahSepRujukan(nomorRujukan: string) {
@@ -323,4 +352,31 @@ export class RegistrasiOnlineService {
     trimRekmed(noRekmed: string){
         return noRekmed.substr(-6)
     }
+
+    saveToSimrs(data: any) : Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('booking/save_to_simrs'), data)
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    subject.next(data.data);
+                }
+            })
+
+        return subject;
+    }
+
+    saveAfterSep(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('booking/save_after_sep'), data)
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    subject.next(data.data);
+                }
+            })
+
+        return subject;
+    }
+
 }

@@ -2,14 +2,17 @@
     <div class="row justify-content-center">
         <div class="col-lg-4 col-md-7 col-sm-12">
             <div class="p-3" #screen>
-                <div class="text-center">
-                    <img src="assets/hesti.png" height="62px" class="mb-3">
-                    <h4>RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h4>
-                </div>
-
                 <div class="border p-3 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;" *ngIf="booking">
-                    <h5 align="center" class="mb-4">Registrasi Online<br>Rawat Jalan</h5>
-                    <hr>
+                    <div class="text-center">
+                        <img src="assets/logo.png" height="65px">
+                        <h5 class="mt-3">
+                            RSPAD GATOT SOEBROTO
+                        </h5>
+                        <h6 class="mt-3 mb-3">
+                            PELAYANAN ONLINE<br>
+                            TERINTEGRASI
+                        </h6>
+                    </div>
                     <div class="mt-3">
                         <div class="text-center mb-2">
                             NOMOR ANTRIAN
@@ -63,10 +66,10 @@
 
             <div class="p-3 pt-0">
                 <div class="d-grid mb-5">
-                    <a class="btn btn-primary" download="Registrasi-Online-RS-Salak-{{booking.kodeBooking}}.jpg" href="{{imageCapture}}" title="ImageName">
+                    <a class="btn btn-primary" download="Registrasi-Online-{{booking.kodeBooking}}.jpg" href="{{imageCapture}}" title="ImageName">
                         <i class="bi bi-cloud-download"></i>&nbsp; Download
                     </a>
-                    <p class="text-center p-0 mt-0 mt-1"><i><small>Silahkan download untuk menyimpan bukti registrasi.</small></i></p>
+                    <p class="text-center text-white p-0 mt-0 mt-1"><i><small>Silahkan download untuk menyimpan bukti registrasi.</small></i></p>
                 </div>
             </div>
         </div>
