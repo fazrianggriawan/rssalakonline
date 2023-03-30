@@ -31,6 +31,7 @@ export class RegistrasiOnlineService {
     checkinStatus = new BehaviorSubject<boolean>(false);
     dataAntrian = new BehaviorSubject<any>('');
     registrasiAndroid = new BehaviorSubject<any>('');
+    sesi = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
@@ -217,6 +218,11 @@ export class RegistrasiOnlineService {
         this.jenisPembayaran.next(data);
     }
 
+    getSessionSesi() {
+        let data: any = sessionStorage.getItem('sesi');
+        this.sesi.next(JSON.parse(data));
+    }
+
     getSessionBooking() {
         let data: any = sessionStorage.getItem('booking');
         this.dataBooking.next(JSON.parse(data));
@@ -252,6 +258,20 @@ export class RegistrasiOnlineService {
                     this.suratKontrol.next('')
                 }
             })
+    }
+
+    saveBooking(data: any): Observable<any>{
+        let subject = new Subject;
+        this.http.post<any>(config.api_vclaim('antrian/save'), data)
+            .subscribe(data => {
+                if (data.metadata.code == 200) {
+                    subject.next(data.response);
+                }else{
+                    this.errorMessageService.message(data.metadata.message);
+                    subject.next(false);
+                }
+            })
+        return subject;
     }
 
     save(data: any) {
@@ -356,10 +376,13 @@ export class RegistrasiOnlineService {
     saveToSimrs(data: any) : Observable<any> {
         let subject = new Subject;
 
-        this.http.post<any>(config.api('booking/save_to_simrs'), data)
-            .subscribe(data => {
-                if( data.code == 200 ){
-                    subject.next(data.data);
+        this.http.post<any>(config.api('online/save_to_simrs'), data)
+            .subscribe(res => {
+                if( res.code == 200 ){
+                    subject.next(res.data);
+                }else{
+                    subject.next(false);
+                    this.errorMessageService.message(res.message);
                 }
             })
 
@@ -369,10 +392,13 @@ export class RegistrasiOnlineService {
     saveAfterSep(data: any): Observable<any> {
         let subject = new Subject;
 
-        this.http.post<any>(config.api('booking/save_after_sep'), data)
+        this.http.post<any>(config.api('online/save_after_sep'), data)
             .subscribe(data => {
                 if( data.code == 200 ){
-                    subject.next(data.data);
+                    subject.next(data);
+                }else{
+                    subject.next(false);
+                    this.errorMessageService.message(data.message);
                 }
             })
 

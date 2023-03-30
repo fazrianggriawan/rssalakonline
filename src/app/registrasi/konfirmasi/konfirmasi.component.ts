@@ -22,6 +22,7 @@ export class KonfirmasiComponent implements OnInit {
     jenisKunjungan: any;
     dataBooking: any;
     imageCapture: any;
+    sesi: any;
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
@@ -34,11 +35,13 @@ export class KonfirmasiComponent implements OnInit {
         this.registrasiOnlineService.getSessionRujukan();
         this.registrasiOnlineService.getSessionJadwalDokter();
         this.registrasiOnlineService.getSessionJenisPembayaran();
+        this.registrasiOnlineService.getSessionSesi();
         this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.rujukan.subscribe(data => this.rujukan = data)
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.suratKontrol = data)
         this.registrasiOnlineService.jadwalDokter.subscribe(data => this.jadwalDokter = data)
         this.registrasiOnlineService.jenisPembayaran.subscribe(data => this.jenisPembayaran = data)
+        this.registrasiOnlineService.sesi.subscribe(data => this.sesi = data)
         this.registrasiOnlineService.dataHistorySep.subscribe(data => this.handleHistorySep(data))
         this.registrasiOnlineService.createSuratKontrolStatus.subscribe(data => this.handleCreateSuratKontrol(data) )
         this.registrasiOnlineService.dataBooking.subscribe(data => this.handleDataBooking(data))
@@ -147,16 +150,18 @@ export class KonfirmasiComponent implements OnInit {
             suratKontrol: this.suratKontrol,
             jadwalDokter: this.jadwalDokter,
             jenisPembayaran: this.jenisPembayaran,
-            jenisKunjungan: this.jenisKunjungan
+            jenisKunjungan: this.jenisKunjungan,
+            sesi: this.sesi,
+            simrs: null
         }
 
-        this.registrasiOnlineService.save(data);
-
-        // this.registrasiOnlineService.saveToSimrs(data)
-        //     .subscribe(data => {
-        //         data.antrian = data;
-        //         this.registrasiOnlineService.save(data);
-        //     })
+        this.registrasiOnlineService.saveToSimrs(data)
+            .subscribe(res => {
+                if( res ){
+                    data.simrs = res;
+                    this.registrasiOnlineService.save(data);
+                }
+            })
 
     }
 

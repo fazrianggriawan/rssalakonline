@@ -1,4 +1,5 @@
 let host = 'http://rspadonline.bertek.co.id/rspad/';
+// let host = 'http://localhost/';
 let hostSimrs = host;
 
 export const config = {

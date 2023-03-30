@@ -94,10 +94,11 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
     next() {
         let pasien = JSON.stringify(this.pasien);
         let peserta = JSON.stringify(this.peserta);
-        let sesi = JSON.stringify(this.sesiKunjungan);
+        // let sesi = JSON.stringify(this.sesiKunjungan);
 
         sessionStorage.setItem('pasien', pasien);
         sessionStorage.setItem('peserta', peserta);
+        // sessionStorage.setItem('sesi', sesi);
 
         this.pasien = '';
 
@@ -106,7 +107,7 @@ export class RegistrasiComponent implements OnInit, OnDestroy {
 
     onChangeSesi(e: any){
         let obj : any = this.dataSesiKunjungan.find((o: any) => o.id === e);
-        this.sesiKunjungan = obj;
+        sessionStorage.setItem('sesi', JSON.stringify(obj));
     }
 
 }
