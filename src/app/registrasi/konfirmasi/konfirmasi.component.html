@@ -13,8 +13,9 @@
                     <div>
                         <small class="text-muted">Data Pasien</small>
                         <div class="bold">{{pasien.nama | uppercase}}</div>
-                        <div>
-                            {{pasien.kelamin}}
+                        <div class="mt-1">
+                            <span *ngIf="pasien.kelamin == 'P'">PEREMPUAN</span>
+                            <span *ngIf="pasien.kelamin == 'L'">LAKI-LAKI</span>
                         </div>
                         <div>{{pasien.alamat}}</div>
                         <hr>
@@ -69,6 +70,18 @@
                                     <div class="col-6">
                                         <small class="text-muted">Jam Praktek</small>
                                         <div><span>{{jadwalDokter.jadwal}}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <small for="Jenis Kunjungan" class="text-muted">Sesi Kunjungan</small><br>
+                            <div class="p-3 bg-warning rounded border mb-3 clickable">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <div class="bold">{{sesi.name | uppercase}}</div>
+                                        <div>Mohon untuk datang antara jam tersebut.</div>
+                                        <div>Untuk melakukan proses Check-In dan Pembuatan SEP.</div>
                                     </div>
                                 </div>
                             </div>

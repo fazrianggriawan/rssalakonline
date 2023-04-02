@@ -69,17 +69,15 @@ export class KonfirmasiComponent implements OnInit {
 
     }
 
-    handleHistorySep(data: any) {
+    handleHistorySep(data: any[]) {
         this.lastSep = '';
+
         if (data) {
-            let sepRujukan: any = [];
-            data.forEach((element: any) => {
-                if (element.noRujukan == this.rujukan.noKunjungan) {
-                    sepRujukan.push(element);
-                }
-            });
-            if( sepRujukan.length > 0 ){
-                this.lastSep = sepRujukan[0];
+
+            let obj : any = data.find((o: any) => o.poli.toUpperCase().replace(/^\s+|\s+$/gm,'') === this.jadwalDokter.namasubspesialis.toUpperCase().replace(/^\s+|\s+$/gm,'') && o.noRujukan === this.rujukan.noKunjungan);
+
+            if( obj ){
+                this.lastSep = obj;
             }
         }
     }
@@ -100,18 +98,8 @@ export class KonfirmasiComponent implements OnInit {
 
             sessionStorage.setItem('booking', JSON.stringify(data));
 
-            // this.saveToSimrs();
-
             this.router.navigateByUrl('/registrasi/success');
         }
-    }
-
-    saveToSimrs() {
-        let data  = {};
-        this.registrasiOnlineService.saveToSimrs(data)
-            .subscribe(data => {
-
-            })
     }
 
     createSuratKontrol() {

@@ -34,7 +34,11 @@
             <h1 class="p-4">NOMOR <br>ANTRIAN</h1>
             <p class="ps-4 pe-4 pt-1">Mengambil Nomor Antrian Loket Pendaftaran.</p>
         </div>
-        <div class="col-sm-5 col-lg-4 m-2 text-center">
+        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-online" (click)="router.navigateByUrl('anjungan/esep')" pRipple>
+            <h1 class="p-4">E-SEP <br>DEMO</h1>
+            <p class="ps-4 pe-4 pt-1">Pembuatan E-SEP dengan fingerprint.</p>
+        </div>
+        <div class="col-sm-5 col-lg-4 m-2 text-center" hidden>
             <div>Link Registrasi Online</div>
             <div><qr-code value="http://rspad.bertek.co.id" size="180" [margin]="2" errorCorrectionLevel="M"></qr-code></div>
             <div>http://rspad.bertek.co.id</div>

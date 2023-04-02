@@ -12,8 +12,9 @@
                 <div>
                     <small class="text-muted">Data Pasien</small>
                     <div class="bold">{{pasien.nama | uppercase}}</div>
-                    <div>
-                        {{pasien.kelamin}}
+                    <div class="mt-1">
+                        <span *ngIf="pasien.kelamin == 'P'">PEREMPUAN</span>
+                        <span *ngIf="pasien.kelamin == 'L'">LAKI-LAKI</span>
                     </div>
                     <div>{{pasien.alamat}}</div>
                     <hr>

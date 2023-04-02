@@ -14,6 +14,7 @@ export class SuccessComponent implements OnInit {
 
     booking: any;
     imageCapture: any;
+    sesi: any;
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
@@ -22,7 +23,9 @@ export class SuccessComponent implements OnInit {
 
     ngOnInit(): void {
         let booking : any = sessionStorage.getItem('booking');
+        let sesi : any = sessionStorage.getItem('sesi');
         this.booking = JSON.parse(booking);
+        this.sesi = JSON.parse(sesi);
         this.captureImage();
         this.clearData();
     }

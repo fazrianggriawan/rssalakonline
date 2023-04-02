@@ -41,9 +41,13 @@
                                 <div>{{registrasiOnlineService.dateHuman(booking.tanggalperiksa)}}</div>
                             </div>
                             <div>
+                                <small class="text-muted">Poliklinik :</small>
+                                <div>{{booking.namapoli | uppercase}}</div>
+                            </div>
+                            <div>
                                 <small class="text-muted">Jadwal Dokter :</small>
                                 <div>{{booking.namadokter}}</div>
-                                <div>{{booking.jadwal}}</div>
+                                <div>{{booking.jampraktek}}</div>
                                 <div></div>
                             </div>
                             <hr>
@@ -59,17 +63,25 @@
                                 <small class="text-muted">No. Surat Rujukan :</small>
                                 <div>{{booking.noRujukan}}</div>
                             </div>
+                            <div>
+                                <small class="text-muted">Sesi Kunjungan :</small>
+                                <div class="bg-warning text-center p-3 rounded-2">
+                                    <div class="bold">{{sesi.name | uppercase}}</div>
+                                    <div>Mohon untuk datang antara jam tersebut.</div>
+                                    <div>Untuk melakukan proses Check-In dan Pembuatan SEP.</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-3 pt-0">
-                <div class="d-grid mb-5">
+            <div class="p-3 bg-light rounded w-100 shadow" style="position: fixed; bottom: 0; left: 0;">
+                <div class="d-grid">
                     <a class="btn btn-primary" download="Registrasi-Online-{{booking.kodeBooking}}.jpg" href="{{imageCapture}}" title="ImageName">
                         <i class="bi bi-cloud-download"></i>&nbsp; Download
                     </a>
-                    <p class="text-center text-white p-0 mt-0 mt-1"><i><small>Silahkan download untuk menyimpan bukti registrasi.</small></i></p>
+                    <p class="text-center text-black p-0 mt-0 mt-1"><i><small>Silahkan download untuk menyimpan bukti registrasi.</small></i></p>
                 </div>
             </div>
         </div>

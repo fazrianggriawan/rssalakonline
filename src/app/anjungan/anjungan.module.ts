@@ -16,6 +16,7 @@ import { QwertyComponent } from './shared/components/virtual-keyboard/qwerty/qwe
 import { ErrorHandleComponent } from './shared/components/error-handle/error-handle.component';
 import { QrCodeModule } from 'ng-qrcode';
 import { NomorAntrianComponent } from './nomor-antrian/nomor-antrian.component';
+import { EsepComponent } from './esep/esep.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { NomorAntrianComponent } from './nomor-antrian/nomor-antrian.component';
     JadwalDokterComponent,
     KonfirmasiComponent,
     ErrorHandleComponent,
-    NomorAntrianComponent
+    NomorAntrianComponent,
+    EsepComponent
   ],
   imports: [
     CommonModule,

@@ -398,7 +398,7 @@ export class RegistrasiOnlineService {
                     subject.next(data);
                 }else{
                     subject.next(false);
-                    this.errorMessageService.message(data.message);
+                    // this.errorMessageService.message(data.message);
                 }
             })
 

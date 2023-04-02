@@ -2,15 +2,16 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { Router } from '@angular/router';
 import { config } from 'src/app/config';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
+import { AppService } from 'src/app/services/app.service';
 import { AnjunganService } from '../anjungan.service';
 import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
 
 @Component({
-    selector: 'app-registrasi-online',
-    templateUrl: './registrasi-online.component.html',
-    styleUrls: ['./registrasi-online.component.css']
+    selector: 'app-esep',
+    templateUrl: './esep.component.html',
+    styleUrls: ['./esep.component.css']
 })
-export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
+export class EsepComponent implements OnInit, OnDestroy {
 
     @ViewChild('search', { static: false }) searchElement!: ElementRef;
 
@@ -30,12 +31,15 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
     subEnter: any;
     subRegistrasiAndroid: any;
     subDataPasien: any;
+    interval: any;
+    showListenFingerprint: any;
 
     constructor(
         private keyboardService: VirtualKeyboardService,
         public anjunganService: AnjunganService,
         private router: Router,
-        private registrasiOnlineService: RegistrasiOnlineService
+        private registrasiOnlineService: RegistrasiOnlineService,
+        private appService: AppService
     ) { }
 
     ngOnInit(): void {
@@ -82,7 +86,8 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         this.subEnter.unsubscribe();
         this.subDataPasien.unsubscribe();
         this.subRegistrasiAndroid.unsubscribe();
-        this.keyboardService.clearAction()
+        this.keyboardService.clearAction();
+        window.clearInterval(this.interval);
     }
 
     handleHistorySep(data: any) {
@@ -138,19 +143,21 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         this.registrasiOnlineService.registrasiAndroid.next('')
         this.registrasiOnlineService.dataPasien.next('');
         this.keyboardService.enterAction.next(false);
+        this.showListenFingerprint = false;
 
         this.onBlur();
     }
 
     getDataBooking(kodeBooking: string) {
-        this.anjunganService.validasiSesiKunjungan(kodeBooking)
-            .subscribe(data => {
-                if( data ){
-                    this.reset();
-                    let isnum = /^\d+$/.test(kodeBooking.trim());
-                    this.anjunganService.getBookingCode(kodeBooking);
-                }
-            })
+        this.anjunganService.getBookingCode(kodeBooking);
+        // this.anjunganService.validasiSesiKunjungan(kodeBooking)
+        //     .subscribe(data => {
+        //         if( data ){
+        //             this.reset();
+        //             let isnum = /^\d+$/.test(kodeBooking.trim());
+        //             this.anjunganService.getBookingCode(kodeBooking);
+        //         }
+        //     })
     }
 
     listenKey(event: KeyboardEvent) {
@@ -227,7 +234,7 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         this.anjunganService.createSep(data);
     }
 
-    validasiSesiKunjungan(){
+    validasiSesiKunjungan() {
 
     }
 
@@ -245,10 +252,10 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
 
     validasiData() {
         // validasi surat kontrol
-        if( this.suratKontrol ){
+        if (this.suratKontrol) {
             this.anjunganService.getSuratKontrol(this.suratKontrol.noSuratKontrol)
                 .subscribe(data => {
-                    if(data){
+                    if (data) {
                         this.createSep();
                     }
                 })
@@ -279,5 +286,39 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('print/anjungan/nomor_antrian/android/' + noAntrian);
     }
 
+    scanFingerPrint(nomor_kartu_bpjs: any) {
+        this.anjunganService.sendToFingerPrint(nomor_kartu_bpjs)
+            .subscribe(data => {
+                if (data) {
+                    this.goListenerFingerPrint();
+                }
+            })
+    }
+
+    goListenerFingerPrint() {
+        this.showListenFingerprint = true;
+        if (!this.interval) {
+            this.interval = window.setInterval(() => {
+                this.listenFingerPrint();
+            }, 3000);
+        }
+    }
+
+    listenFingerPrint() {
+        let tanggal = this.appService.reformatDate(new Date());
+        this.anjunganService.getFingerPrint(this.registrasi.no_kartu_bpjs, tanggal)
+            .subscribe(data => {
+                if (data) {
+                    this.onHideListenerFingerPrint();
+                    this.createSep();
+                }
+            })
+    }
+
+    onHideListenerFingerPrint() {
+        this.showListenFingerprint = false;
+        window.clearInterval(this.interval);
+        this.interval = null;
+    }
 
 }
