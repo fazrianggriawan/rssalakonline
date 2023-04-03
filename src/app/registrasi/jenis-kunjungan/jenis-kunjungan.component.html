@@ -91,18 +91,18 @@
                                 <small>Masa berlaku rujukan sudah <br> habis sejak : <strong>{{registrasiOnlineService.dateHuman(rujukan.expired)}}</strong></small>
                             </div>
                             <div class="d-grid gap-2 mt-3">
-                                <button *ngIf="rujukan" class="btn btn-secondary" type="button" (click)="dialogDataRujukan=true">Ganti Rujukan</button>
+                                <button *ngIf="rujukan" class="btn btn-secondary  pt-3 pb-3" type="button" (click)="dialogDataRujukan=true">Ganti Rujukan</button>
                             </div>
                         </div>
                         <div class="d-grid gap-2 mb-3 mt-1" *ngIf="!rujukan">
                             <button class="btn btn-primary pt-3 pb-3" type="button" (click)="dialogDataRujukan=true">Pilih Surat Rujukan</button>
                         </div>
                         <div class="d-grid gap-2 mb-4 mt-4">
-                            <button [disabled]="!rujukan" class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>
+                            <button [disabled]="!rujukan" class="btn btn-primary  pt-3 pb-3" type="button" (click)="next()">Lanjutkan</button>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                                <button class="btn btn-sm btn-outline-secondary pt-2 pb-2" [routerLink]="'/'"> <i class="bi bi-chevron-left"></i> Kembali</button>
                             </div>
                         </div>
                     </div>

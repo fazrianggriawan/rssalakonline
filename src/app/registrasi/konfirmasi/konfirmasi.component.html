@@ -39,7 +39,9 @@
                                         <small class="text-muted">No. Surat Rujukan</small>
                                         <div>{{rujukan.noKunjungan}}</div>
                                         <small class="text-muted">Poli Perujuk</small>
-                                        <div>{{rujukan.poliRujukan.nama}}</div>
+                                        <div><small>{{rujukan.poliRujukan.nama | uppercase}}</small></div>
+                                        <small class="text-muted">Asal Rujukan</small>
+                                        <div><small>{{rujukan.provPerujuk.nama | uppercase}}</small></div>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +62,8 @@
                             <div *ngIf="jadwalDokter" class="p-3 item-rujukan bg-light rounded border mb-3" >
                                 <div class="row">
                                     <div class="col-12">
-                                        <small>POLIKLINIK {{jadwalDokter.namasubspesialis | uppercase}}</small><br>
-                                        <small><strong>{{jadwalDokter.namadokter | uppercase}}</strong></small>
+                                        <strong>{{jadwalDokter.namadokter | uppercase}}</strong>
+                                        <div><small>POLIKLINIK {{jadwalDokter.namasubspesialis | uppercase}}</small></div>
                                     </div>
                                 </div>
                                 <hr class="m-0 mt-1 mb-1">
@@ -91,11 +93,11 @@
                             </div>
                         </div>
                         <div class="d-grid gap-2 mb-4 mt-4">
-                            <button class="btn btn-primary" type="button" (click)="daftar()">Daftar</button>
+                            <button class="btn btn-primary pt-3 pb-3" type="button" (click)="daftar()">Daftar</button>
                         </div>
                         <div class="row">
-                            <div class="col mt-3">
-                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/registrasi/rencana-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                            <div class="col">
+                                <button class="btn btn-sm btn-outline-secondary pt-2 pb-2" [routerLink]="'/registrasi/rencana-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
                             </div>
                         </div>
                     </div>

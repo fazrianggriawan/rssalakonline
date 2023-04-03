@@ -35,7 +35,12 @@
                         <div class="p-3 bg-light rounded border mb-3 clickable">
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    <small class="text-muted">No. Surat Rujukan : </small>{{rujukan.noKunjungan}}
+                                    <small class="text-muted">No. Surat Rujukan</small>
+                                    <div>{{rujukan.noKunjungan}}</div>
+                                    <small class="text-muted">Poli Perujuk</small>
+                                    <div><small>{{rujukan.poliRujukan.nama | uppercase}}</small></div>
+                                    <small class="text-muted">Asal Rujukan</small>
+                                    <div><small>{{rujukan.provPerujuk.nama | uppercase}}</small></div>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +53,7 @@
                         <label for="Jenis Kunjungan" class="text-muted">Tujuan Poliklinik</label>
                         <select class="form-select" [(ngModel)]="tujuanPoli" (change)="changePoliklinik()" aria-label="Default select example">
                             <option value=""></option>
-                            <option value="{{item.kode}}" *ngFor="let item of dataPoliklinik">{{item.ket | uppercase}}</option>
+                            <option value="{{item.kode_subspesialis}}" *ngFor="let item of dataPoliklinik">{{item.ket | uppercase}}</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -79,16 +84,16 @@
                                 </div>
                             </div>
                             <div class="d-grid gap-2 mt-3">
-                                <button class="btn btn-secondary" type="button" (click)="dialogDataJadwalDokter=true">Ganti Dokter</button>
+                                <button class="btn btn-secondary pt-3 pb-3" type="button" (click)="dialogDataJadwalDokter=true">Ganti Dokter</button>
                             </div>
                         </div>
                     </div>
                     <div class="d-grid gap-2 mb-4 mt-4">
-                        <button [disabled]="!jadwalDokter" class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>
+                        <button [disabled]="!jadwalDokter" class="btn btn-primary pt-3 pb-3" type="button" (click)="next()">Lanjutkan</button>
                     </div>
                     <div class="row">
-                        <div class="col mt-3">
-                            <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/registrasi/jenis-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                        <div class="col">
+                            <button class="btn btn-sm btn-outline-secondary pt-2 pb-2" [routerLink]="'/registrasi/jenis-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
                         </div>
                     </div>
                 </div>

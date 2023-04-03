@@ -95,7 +95,9 @@ export class RencanaKunjunganComponent implements OnInit, OnDestroy {
     getJadwalDokter() {
         if (this.tujuanPoli && this.tglKunjungan) {
             setTimeout(() => {
-                this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
+                let obj : any = this.dataPoliklinik.find((o: any) => o.kode_subspesialis.toUpperCase().replace(/^\s+|\s+$/gm,'') === this.tujuanPoli.toUpperCase().replace(/^\s+|\s+$/gm,''));
+
+                this.registrasiOnlineService.getJadwalDokter(obj.kode, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
             }, 250);
         }
     }

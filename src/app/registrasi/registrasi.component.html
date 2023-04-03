@@ -15,7 +15,7 @@
                         <input type="text" [(ngModel)]="nomorPasien" placeholder="No. Rekam Medis / BPJS / NIK" class="form-control text-center shadow-sm" maxlength="16">
                     </div>
                     <div class="d-grid gap-2 mb-4">
-                        <button class="btn btn-md btn-success" type="button" (click)="getPasien()">Lanjutkan</button>
+                        <button class="btn btn-md btn-success pt-3 pb-3" type="button" (click)="getPasien()">Lanjutkan</button>
                     </div>
                 </div>
                 <div *ngIf="pasien">
@@ -57,9 +57,13 @@
                         <div>Untuk melakukan proses Check-In dan Pembuatan SEP.</div>
                     </div>
                     <div class="d-grid gap-2 mb-4 mt-4">
-                        <button [disabled]="!peserta || statusPeserta != '0' || !sesiKunjungan" class="btn btn-primary" type="button" (click)="next()">Lanjutkan</button>
+                        <button [disabled]="!peserta || statusPeserta != '0' || !sesiKunjungan" class="btn btn-primary pt-3 pb-3" type="button" (click)="next()">Lanjutkan</button>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary" (click)="pasien=''"><i class="bi bi-chevron-left mr-1"></i> Kembali</button>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-sm btn-outline-secondary pt-2 pb-2" (click)="pasien=''"><i class="bi bi-chevron-left mr-1"></i> Kembali</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
