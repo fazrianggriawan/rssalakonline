@@ -10,12 +10,13 @@ import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-on
 export class RencanaKunjunganComponent implements OnInit, OnDestroy {
 
     today = new Date();
+    nextDay = new Date(this.today.getTime() + 86400000) ;
     endDate: any;
     pasien: any;
     dialogDataJadwalDokter: boolean = false;
     dataPoliklinik: any;
     rujukan: any;
-    tglKunjungan = new Date();
+    tglKunjungan = new Date(this.today.getTime() + 86400000);
     tujuanPoli: string = '';
     dataJadwalDokter: any;
     jadwalDokter: any;
@@ -54,7 +55,7 @@ export class RencanaKunjunganComponent implements OnInit, OnDestroy {
         if(data){
             this.tglKunjungan = new Date(data.tglKunjungan);
         }else{
-            this.tglKunjungan =  new Date();
+            this.tglKunjungan = new Date(this.today.getTime() + 86400000);
         }
     }
 
@@ -94,7 +95,6 @@ export class RencanaKunjunganComponent implements OnInit, OnDestroy {
     getJadwalDokter() {
         if (this.tujuanPoli && this.tglKunjungan) {
             setTimeout(() => {
-                console.log(this.tglKunjungan);
                 this.registrasiOnlineService.getJadwalDokter(this.tujuanPoli, this.registrasiOnlineService.reformatDate(this.tglKunjungan));
             }, 250);
         }

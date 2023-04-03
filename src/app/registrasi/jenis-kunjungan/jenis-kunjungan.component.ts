@@ -51,13 +51,32 @@ export class JenisKunjunganComponent implements OnInit {
     handlePasien(data: any){
         if(data){
             this.pasien = data;
-            this.registrasiOnlineService.getDataRujukan(this.pasien.noaskes);
+            this.getDataRujukan();
+            // this.registrasiOnlineService.getDataRujukan(this.pasien.noaskes);
             if( this.pasien.noaskes ){
                 this.jnsPembayaran = 'bpjs';
             }
         }else{
             this.router.navigateByUrl('/');
         }
+    }
+
+    getDataRujukan(){
+        this.registrasiOnlineService.getListRujukan(this.pasien.noaskes, 'faskes')
+            .subscribe(data => {
+                if( data ){
+                    this.dataRujukan = data;
+                }else{
+                    this.registrasiOnlineService.getListRujukan(this.pasien.noaskes, 'rs')
+                        .subscribe(data2 => {
+                            if( data2 ){
+                                data2.forEach((element: any) => {
+                                    this.dataRujukan.push(element);
+                                });
+                            }
+                        })
+                }
+            })
     }
 
     getRujukan() {

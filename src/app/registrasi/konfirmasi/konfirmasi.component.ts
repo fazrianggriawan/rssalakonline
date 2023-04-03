@@ -23,6 +23,7 @@ export class KonfirmasiComponent implements OnInit {
     dataBooking: any;
     imageCapture: any;
     sesi: any;
+    peserta: any;
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
@@ -32,12 +33,14 @@ export class KonfirmasiComponent implements OnInit {
 
     ngOnInit(): void {
         this.registrasiOnlineService.getSessionPasien();
+        this.registrasiOnlineService.getSessionPeserta();
         this.registrasiOnlineService.getSessionRujukan();
         this.registrasiOnlineService.getSessionJadwalDokter();
         this.registrasiOnlineService.getSessionJenisPembayaran();
         this.registrasiOnlineService.getSessionSesi();
         this.registrasiOnlineService.pasien.subscribe(data => this.handlePasien(data))
         this.registrasiOnlineService.rujukan.subscribe(data => this.rujukan = data)
+        this.registrasiOnlineService.peserta.subscribe(data => this.peserta = data)
         this.registrasiOnlineService.suratKontrol.subscribe(data => this.suratKontrol = data)
         this.registrasiOnlineService.jadwalDokter.subscribe(data => this.jadwalDokter = data)
         this.registrasiOnlineService.jenisPembayaran.subscribe(data => this.jenisPembayaran = data)
@@ -79,6 +82,7 @@ export class KonfirmasiComponent implements OnInit {
             if( obj ){
                 this.lastSep = obj;
             }
+
         }
     }
 
@@ -103,20 +107,51 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     createSuratKontrol() {
+        this.registrasiOnlineService.getListSuratKontrol(this.pasien.noaskes, this.jadwalDokter.tglKunjungan)
+            .subscribe(data => {
+                if( data ){
+                    let obj : any = data.list.find((o: any) => o.tglRencanaKontrol.replace(/^\s+|\s+$/gm,'') === this.jadwalDokter.tglKunjungan.replace(/^\s+|\s+$/gm,''));
+                    if( obj ) {
+                        this.registrasiOnlineService.getSuratKontrol(obj.noSuratKontrol)
+                            .subscribe(data => {
+                                if( data ){
+                                    let suratKontrol = {
+                                        noSuratKontrol: data.noSuratKontrol,
+                                        tglRencanaKontrol: data.tglRencanaKontrol,
+                                        namaDokter: data.namaDokter,
+                                        noKartu: data.sep.peserta.noKartu,
+                                        nama: data.sep.peserta.nama,
+                                        kelamin: (data.sep.peserta.kelamin.toUpperCase() == 'P') ? 'PEREMPUAN' : 'LAKI-LAKI',
+                                        tglLahir: data.sep.peserta.tglLahir,
+                                        namaDiagnosa: data.sep.diagnosa,
+                                    }
+                                    sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
+                                    this.suratKontrol = suratKontrol;
+                                    this.save();
+                                }
+                            })
+                    }else{
+                        this.newSuratKontrol();
+                    }
+                }else{
+                    this.newSuratKontrol();
+                }
+            })
+    }
+
+    newSuratKontrol(){
         let data = {
             noSep: this.lastSep.noSep,
             dokter: this.jadwalDokter.kodedokter,
-            poli: this.jadwalDokter.kodepoli,
+            poli: this.jadwalDokter.kodesubspesialis,
             tgl: this.jadwalDokter.tglKunjungan
         }
-
         this.registrasiOnlineService.createSuratKontrol(data);
-
     }
 
     daftar() {
         if( parseInt(this.rujukan.jumlahSep) > 0 ){
-            if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli ){
+            if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodesubspesialis ){
                 // Kontrol Kembali
                 this.createSuratKontrol();
             }else{
@@ -151,6 +186,10 @@ export class KonfirmasiComponent implements OnInit {
                 }
             })
 
+    }
+
+    toHome(){
+        this.router.navigateByUrl('');
     }
 
 }

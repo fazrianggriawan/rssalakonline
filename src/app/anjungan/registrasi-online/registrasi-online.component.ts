@@ -50,9 +50,9 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         this.subSep = this.anjunganService.sep.subscribe(data => {
             this.sep = data;
             if (data) {
-                this.printAnjungan();
                 this.afterSep(this.registrasi.booking_code);
                 this.registrasiOnlineService.checkin(this.registrasi);
+                this.printAnjungan();
             }
         })
 
@@ -69,7 +69,7 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
         let data = { kode_booking: kode_booking }
         this.registrasiOnlineService.saveAfterSep(data)
             .subscribe(data => {
-                console.log(data)
+                // console.log(data)
             })
     }
 
@@ -169,6 +169,7 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
 
     createSep() {
         let data = {
+            kode_booking: this.registrasi.booking_code,
             noKartu: this.rujukan.peserta.noKartu,
             tglSep: '2022-07-21',
             jnsPelayanan: '2',
@@ -252,15 +253,21 @@ export class RegistrasiOnlineComponent implements OnInit, OnDestroy {
                         this.createSep();
                     }
                 })
+        }else{
+            this.createSep();
         }
     }
 
     printAnjungan() {
         if (this.sep.noSep && this.registrasi.booking_code) {
-            (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.registrasi.booking_code);
+            // (<HTMLIFrameElement>document.getElementById('iframePrintSep')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.registrasi.booking_code);
             (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + this.registrasi.booking_code);
             this.reset();
         }
+    }
+
+    printRegistrasi() {
+        (<HTMLIFrameElement>document.getElementById('iframePrintBooking')).src = config.api_vclaim('sep/print/booking/' + this.registrasi.booking_code);
     }
 
     back() {

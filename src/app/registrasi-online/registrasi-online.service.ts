@@ -104,6 +104,32 @@ export class RegistrasiOnlineService {
             })
     }
 
+    getListRujukan(noKartuBPJS: any, rujukanDari: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api_vclaim('rujukan/'+rujukanDari+'/nomorKartu/' + noKartuBPJS))
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    let dataRujukan: any = [];
+                    data.response.rujukan.forEach((element: any) => {
+                        element.asalFaskes = {
+                            kode: data.response.asalFaskes,
+                            nama: 'fktp',
+                            jenisKunjungan: 1
+                        }
+                        dataRujukan.push(element);
+                    });
+
+                    subject.next(dataRujukan);
+                }else{
+                    subject.next(false);
+                }
+            })
+
+        return subject;
+    }
+
+
     getDataRujukan(noKartuBPJS: string) {
         this.http.get<any>(config.api_vclaim('rujukan/faskes/nomorKartu/' + noKartuBPJS))
             .subscribe(data => {
@@ -203,6 +229,11 @@ export class RegistrasiOnlineService {
         this.pasien.next(JSON.parse(data));
     }
 
+    getSessionPeserta() {
+        let data: any = sessionStorage.getItem('peserta');
+        this.peserta.next(JSON.parse(data));
+    }
+
     getSessionRujukan() {
         let data: any = sessionStorage.getItem('rujukan');
         this.rujukan.next(JSON.parse(data));
@@ -243,6 +274,20 @@ export class RegistrasiOnlineService {
                     this.dataSuratKontrol.next(data.response.list);
                 }
             })
+    }
+
+    getListSuratKontrol(noKartuBPJS: string, tanggal: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>( config.api_vclaim('suratKontrol/byPeserta/nomorKartu/'+noKartuBPJS+'/bulan/'+tanggal+'/filter/'+2) )
+            .subscribe(data => {
+                if( data.metaData.code == '200' ){
+                    subject.next(data.response);
+                }else{
+                    subject.next(data.response);
+                }
+            })
+        return subject;
     }
 
     createSuratKontrol(data: any) {
@@ -399,6 +444,21 @@ export class RegistrasiOnlineService {
                 }else{
                     subject.next(false);
                     // this.errorMessageService.message(data.message);
+                }
+            })
+
+        return subject;
+    }
+
+    getSuratKontrol(noSuratKontrol: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api_vclaim('suratKontrol/get/'+noSuratKontrol))
+            .subscribe(data => {
+                if( data.metaData.code == 200 ){
+                    subject.next(data.response);
+                }else{
+                    subject.next(false);
                 }
             })
 

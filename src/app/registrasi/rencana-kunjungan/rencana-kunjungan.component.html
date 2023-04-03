@@ -42,7 +42,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="Jenis Kunjungan" class="text-muted">Tanggal Kunjungan</label>
-                        <p-calendar (ngModelChange)="changePoliklinik()" [inline]="true" [(ngModel)]="tglKunjungan" [style]="{width: '100%'}" [minDate]="today" [maxDate]="endDate"></p-calendar>
+                        <p-calendar (ngModelChange)="changePoliklinik()" [inline]="true" [(ngModel)]="tglKunjungan" [style]="{width: '100%'}" [minDate]="nextDay" [maxDate]="endDate"></p-calendar>
                     </div>
                     <div class="mb-3">
                         <label for="Jenis Kunjungan" class="text-muted">Tujuan Poliklinik</label>
@@ -107,9 +107,10 @@
             <div class="row">
                 <div class="col-12">
                     <strong>{{item.namadokter | uppercase}}</strong>
+                    <div><small>{{item.namasubspesialis | uppercase}}</small></div>
                 </div>
             </div>
-            <hr>
+            <hr class="mt-2 mb-1">
             <div class="row">
                 <div class="col-6">
                     <small class="text-muted">Hari</small>
