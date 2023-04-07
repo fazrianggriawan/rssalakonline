@@ -426,8 +426,16 @@ export class RegistrasiOnlineService {
                 if( res.code == 200 ){
                     subject.next(res.data);
                 }else{
+                    let position = res.message.toUpperCase().search("SUDAH TERDAFTAR");
+                    if( position > 0 ){
+                        let html = '<hr/><div>Kode Booking</div><h4 class="text-black">'+res.data.data.token+'</h4><a href="./#/registrasi/view-booking/'+res.data.data.token+'" target="_blank" class="btn btn-primary">Lihat Data Booking <i class="bi bi-box-arrow-up-right"></i></a>';
+                        this.errorMessageService.message(res.message + html);
+                    }else{
+                        this.errorMessageService.message(res.message);
+                    }
+
                     subject.next(false);
-                    this.errorMessageService.message(res.message);
+
                 }
             })
 
@@ -443,7 +451,6 @@ export class RegistrasiOnlineService {
                     subject.next(data);
                 }else{
                     subject.next(false);
-                    // this.errorMessageService.message(data.message);
                 }
             })
 
@@ -463,6 +470,67 @@ export class RegistrasiOnlineService {
             })
 
         return subject;
+    }
+
+    getDataBooking(kode_booking: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/get_booking/'+kode_booking))
+            .subscribe(data => {
+                subject.next(data.data);
+            })
+
+        return subject;
+    }
+
+    updateSuratKontrol(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_vclaim('suratKontrol/update'), data)
+            .subscribe(res => {
+                if( res.metaData.code == '200' || res.metaData.code == '203'){
+                    subject.next(true);
+                }else{
+                    this.errorMessageService.message(res.metaData.message);
+                }
+            })
+
+        return subject;
+    }
+
+    validasiRegistrasi(id_pasien: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/validasi_registrasi/'+id_pasien))
+            .subscribe(data => {
+                if( data.code == 200){
+                    subject.next(data.data);
+                }else{
+                    this.errorMessageService.message(data.message);
+                }
+            })
+
+        return subject;
+    }
+
+    batalkanKunjungan(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('online/batal_kunjungan'), data)
+            .subscribe(data => {
+                if( data.code == 200){
+                    subject.next(data.data);
+                    this.errorMessageService.message(data.message);
+                }else{
+                    this.errorMessageService.message(data.message);
+                }
+            })
+
+        return subject;
+    }
+
+    deleteSuratKontrol(noSuratKontrol: any) {
+        this.http.get<any>(config.api_vclaim('suratKontrol/delete/noSuratKontrol/'+noSuratKontrol)).subscribe();
     }
 
 }

@@ -330,3 +330,15 @@ body {
 h4{
     color: white !important;
 }
+
+.p-confirm-dialog .p-dialog-content{
+    background-color: var(--gray-100);
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+    font-size: 1rem;
+}
+
+.p-component-overlay{
+    background-color: rgba(255, 255, 255, 0.9);
+}

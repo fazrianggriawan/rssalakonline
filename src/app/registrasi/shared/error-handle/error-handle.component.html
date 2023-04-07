@@ -4,9 +4,7 @@
             <div class="text-center">
                 <i class="bi bi-exclamation-circle" style="font-size: 2rem"></i>
                 <h4>{{message.summary}}</h4>
-                <div>
-                    <div>{{message.detail}}</div>
-                </div>
+                <div [innerHTML]="message.detail"></div>
             </div>
         </div>
     </ng-template>

@@ -88,7 +88,6 @@ export class KonfirmasiComponent implements OnInit {
 
     handleCreateSuratKontrol(status: boolean){
         if( status ){
-            this.jenisKunjungan = { kode: 3, nama: 'kontrolKembali' };
             this.save();
         }
     }
@@ -107,34 +106,59 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     createSuratKontrol() {
+        this.jenisKunjungan = { kode: 3, nama: 'kontrolKembali' };
+
         this.registrasiOnlineService.getListSuratKontrol(this.pasien.noaskes, this.jadwalDokter.tglKunjungan)
             .subscribe(data => {
                 if( data ){
-                    let obj : any = data.list.find((o: any) => o.tglRencanaKontrol.replace(/^\s+|\s+$/gm,'') === this.jadwalDokter.tglKunjungan.replace(/^\s+|\s+$/gm,''));
+                    let obj : any = data.list.find((o: any) => o.poliTujuan.replace(/^\s+|\s+$/gm,'') === this.jadwalDokter.kodesubspesialis.replace(/^\s+|\s+$/gm,'') && o.terbitSEP.replace(/^\s+|\s+$/gm,'').toUpperCase() === 'BELUM');
                     if( obj ) {
-                        this.registrasiOnlineService.getSuratKontrol(obj.noSuratKontrol)
-                            .subscribe(data => {
-                                if( data ){
-                                    let suratKontrol = {
-                                        noSuratKontrol: data.noSuratKontrol,
-                                        tglRencanaKontrol: data.tglRencanaKontrol,
-                                        namaDokter: data.namaDokter,
-                                        noKartu: data.sep.peserta.noKartu,
-                                        nama: data.sep.peserta.nama,
-                                        kelamin: (data.sep.peserta.kelamin.toUpperCase() == 'P') ? 'PEREMPUAN' : 'LAKI-LAKI',
-                                        tglLahir: data.sep.peserta.tglLahir,
-                                        namaDiagnosa: data.sep.diagnosa,
-                                    }
-                                    sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
-                                    this.suratKontrol = suratKontrol;
-                                    this.save();
-                                }
-                            })
+                        this.updateSuratKontrol(obj);
                     }else{
                         this.newSuratKontrol();
                     }
                 }else{
                     this.newSuratKontrol();
+                }
+            })
+    }
+
+    updateSuratKontrol(suratKontrol: any) {
+
+        let data = {
+            noSuratKontrol: suratKontrol.noSuratKontrol,
+            noSep: suratKontrol.noSepAsalKontrol,
+            dokter: this.jadwalDokter.kodedokter,
+            poli: this.jadwalDokter.kodesubspesialis,
+            tgl: this.jadwalDokter.tglKunjungan
+        }
+
+        this.registrasiOnlineService.updateSuratKontrol(data)
+            .subscribe(data => {
+                if( data ){
+                    this.getSuratKontrol(suratKontrol);
+                }
+            })
+    }
+
+    getSuratKontrol(suratKontrol: any) {
+        this.registrasiOnlineService.getSuratKontrol(suratKontrol.noSuratKontrol)
+            .subscribe(data => {
+                if( data ){
+                    let suratKontrol = {
+                        noSuratKontrol: data.noSuratKontrol,
+                        tglRencanaKontrol: data.tglRencanaKontrol,
+                        namaDokter: data.namaDokter,
+                        noKartu: data.sep.peserta.noKartu,
+                        nama: data.sep.peserta.nama,
+                        kelamin: (data.sep.peserta.kelamin.toUpperCase() == 'P') ? 'PEREMPUAN' : 'LAKI-LAKI',
+                        tglLahir: data.sep.peserta.tglLahir,
+                        namaDiagnosa: data.sep.diagnosa,
+                    }
+                    sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
+                    this.suratKontrol = suratKontrol;
+
+                    this.save();
                 }
             })
     }
@@ -150,20 +174,25 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     daftar() {
-        if( parseInt(this.rujukan.jumlahSep) > 0 ){
-            if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodesubspesialis ){
-                // Kontrol Kembali
-                this.createSuratKontrol();
-            }else{
-                // Rujukan Internal
-                this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
-                this.save();
-            }
-        }else{
-            // Rujukan Baru
-            this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
-            this.save();
-        }
+        this.registrasiOnlineService.validasiRegistrasi(this.pasien.id_pasien)
+            .subscribe(data => {
+                if( data ){
+                    if( parseInt(this.rujukan.jumlahSep) > 0 ){
+                        if( this.rujukan.poliRujukan.kode == this.jadwalDokter.kodesubspesialis ){
+                            // Kontrol Kembali
+                            this.createSuratKontrol();
+                        }else{
+                            // Rujukan Internal
+                            this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+                            this.save();
+                        }
+                    }else{
+                        // Rujukan Baru
+                        this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
+                        this.save();
+                    }
+                }
+            })
     }
 
     save() {

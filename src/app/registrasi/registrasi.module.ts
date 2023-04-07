@@ -11,9 +11,11 @@ import { SuccessComponent } from './success/success.component';
 import { QrCodeModule } from 'ng-qrcode';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { ErrorHandleComponent } from './shared/error-handle/error-handle.component';
 import { ToastModule } from 'primeng/toast';
+import { ViewBookingComponent } from './view-booking/view-booking.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { ToastModule } from 'primeng/toast';
     KonfirmasiComponent,
     SuccessComponent,
     LoadingComponent,
-    ErrorHandleComponent
+    ErrorHandleComponent,
+    ViewBookingComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +35,8 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     RegistrasiRoutingModule,
     QrCodeModule,
-    ToastModule
+    ToastModule,
+    ConfirmDialogModule
   ]
 })
 export class RegistrasiModule { }

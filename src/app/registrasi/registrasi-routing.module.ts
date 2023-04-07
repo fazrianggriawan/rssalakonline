@@ -5,6 +5,7 @@ import { KonfirmasiComponent } from './konfirmasi/konfirmasi.component';
 import { RegistrasiComponent } from './registrasi.component';
 import { RencanaKunjunganComponent } from './rencana-kunjungan/rencana-kunjungan.component';
 import { SuccessComponent } from './success/success.component';
+import { ViewBookingComponent } from './view-booking/view-booking.component';
 
 const moduleName: string = 'registrasi'
 
@@ -14,6 +15,7 @@ const routes: Routes = [
     { path: moduleName+'/rencana-kunjungan', component: RencanaKunjunganComponent },
     { path: moduleName+'/konfirmasi', component: KonfirmasiComponent },
     { path: moduleName+'/success', component: SuccessComponent },
+    { path: moduleName+'/view-booking/:kode_booking', component: ViewBookingComponent },
 ];
 
 @NgModule({
