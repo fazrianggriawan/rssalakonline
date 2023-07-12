@@ -1,20 +1,21 @@
 <div class="container-fluid p-3">
     <div class="row justify-content-center">
         <div class="col-lg-4 col-md-7 col-sm-12" #screen>
-            <div class="text-center">
-                <img src="assets/hesti.png" height="62px" class="mb-3">
-                <h4>RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h4>
+            <div class="text-center" (click)="toHome()">
+                <img src="assets/logo.png" height="62px" class="mb-3">
+                <h4>RUMAH SAKIT dr. AK GANI PALEMBANG</h4>
             </div>
 
-            <div class="border p-5 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;">
+            <div class="border p-4 bg-gray-100 mt-4" style="background-color: #f4f5f8; border-radius: 15px;">
                 <h5 align="center" class="mb-4">Registrasi Online<br>Rawat Jalan</h5>
                 <hr>
                 <div class="p-3 bg-white border rounded">
                     <div>
                         <small class="text-muted">Data Pasien</small>
                         <div class="bold">{{pasien.nama | uppercase}}</div>
-                        <div>
-                            {{pasien.kelamin}}
+                        <div class="mt-1">
+                            <span *ngIf="pasien.kelamin == 'P'">PEREMPUAN</span>
+                            <span *ngIf="pasien.kelamin == 'L'">LAKI-LAKI</span>
                         </div>
                         <div>{{pasien.alamat}}</div>
                         <hr>
@@ -35,12 +36,17 @@
                             <div class="p-3 bg-light rounded border mb-3 clickable">
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <small class="text-muted">No. Surat Rujukan : </small>{{rujukan.noKunjungan}}
+                                        <small class="text-muted">No. Surat Rujukan</small>
+                                        <div>{{rujukan.noKunjungan}}</div>
+                                        <small class="text-muted">Poli Perujuk</small>
+                                        <div>{{rujukan.poliRujukan.nama | uppercase}}</div>
+                                        <small class="text-muted">Asal Rujukan</small>
+                                        <div>{{rujukan.provPerujuk.nama | uppercase}}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 d-none">
                             <small for="Jenis Kunjungan" class="text-muted">Tanggal Kunjungan</small><br>
                             <div class="p-3 bg-light rounded border mb-3 clickable">
                                 <div class="row">
@@ -56,8 +62,8 @@
                             <div *ngIf="jadwalDokter" class="p-3 item-rujukan bg-light rounded border mb-3" >
                                 <div class="row">
                                     <div class="col-12">
-                                        <small>POLIKLINIK {{jadwalDokter.namapoli | uppercase}}</small><br>
-                                        <small><strong>{{jadwalDokter.namadokter | uppercase}}</strong></small>
+                                        <strong>{{jadwalDokter.namadokter | uppercase}}</strong>
+                                        <div><small>POLIKLINIK {{jadwalDokter.namasubspesialis | uppercase}}</small></div>
                                     </div>
                                 </div>
                                 <hr class="m-0 mt-1 mb-1">
@@ -65,6 +71,7 @@
                                     <div class="col-6">
                                         <small class="text-muted">Hari</small>
                                         <div><span>{{jadwalDokter.namahari}}</span></div>
+                                        <div>{{registrasiOnlineService.dateHuman(jadwalDokter.tglKunjungan)}}</div>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Jam Praktek</small>
@@ -73,12 +80,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <small for="Jenis Kunjungan" class="text-muted">Sesi Kunjungan</small><br>
+                            <div class="p-3 bg-warning rounded border mb-3 clickable">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <div class="bold">{{sesi.name | uppercase}}</div>
+                                        <div>Mohon untuk datang antara jam tersebut.</div>
+                                        <div>Untuk melakukan proses Check-In dan Pembuatan SEP.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-grid gap-2 mb-4 mt-4">
-                            <button class="btn btn-primary" type="button" (click)="daftar()">Daftar</button>
+                            <button class="btn btn-primary pt-3 pb-3" type="button" (click)="daftar()">Daftar</button>
                         </div>
                         <div class="row">
-                            <div class="col mt-3">
-                                <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/registrasi/rencana-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
+                            <div class="col">
+                                <button class="btn btn-sm btn-outline-secondary pt-2 pb-2" [routerLink]="'/registrasi/rencana-kunjungan'"> <i class="bi bi-chevron-left"></i> Kembali</button>
                             </div>
                         </div>
                     </div>

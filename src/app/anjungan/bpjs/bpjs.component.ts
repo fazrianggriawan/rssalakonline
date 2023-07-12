@@ -86,11 +86,15 @@ export class BpjsComponent implements OnInit, OnDestroy {
     getPeserta(value: string) {
         if (value) {
             this.clearDataPasien();
-            if( value.length == 6 ){
-                this.registrasiOnlineService.getPasienByRm(value);
-            }else{
-                this.registrasiOnlineService.getPesertaBpjs(value.padStart(13, '0'));
-            }
+
+            this.registrasiOnlineService.getPasien(value)
+                .subscribe(data => {
+                    if( data.noaskes != null ){
+                        this.registrasiOnlineService.dataPasien.next(data);
+                    }else{
+                        this.errorMessageService.message('No.Kartu BPJS Tidak Ditemukan');
+                    }
+                })
         }
     }
 

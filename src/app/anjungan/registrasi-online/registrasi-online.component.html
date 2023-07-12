@@ -1,29 +1,29 @@
-<div style="position: fixed; height: 100%; width: 100%; overflow: hidden">
+<div class="bg-white" style="position: fixed; height: 100%; width: 100%; overflow: hidden">
     <div class="row justify-content-center p-3 bg-dark text-white">
         <div class="col-md-10">
             <div class="row">
-                <div class="col-sm-2 col-md-2 text-end d-none d-md-block" hidden>
-                    <img src="assets/hesti.png" alt="Logo Salak" style="height: 50px;">
+                <div class="col-auto text-end d-none d-md-block" hidden>
+                    <img src="assets/logo.png" alt="Logo" style="height: 50px;">
                 </div>
-                <div class="col-sm-10 col-md-7 d-none d-md-block">
-                    <h1 class="fs-3 mb-0">RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h1>
-                    <div>PELAYANAN MANDIRI TERINTEGRASI</div>
+                <div class="col d-none d-md-block">
+                    <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
+                    <div>PELAYANAN ONLINE TERINTEGRASI</div>
                 </div>
                 <div class="col-md-2 d-none d-md-block">
-                    <!-- <img src="assets/hesti.png" alt="Logo Salak" height="50px">
-                    <img src="assets/kodam.png" alt="Logo Salak" height="50px"> -->
+                    <!-- <img src="assets/logo.png" alt="Logo" height="50px">
+                    <img src="assets/kodam.png" alt="Logo" height="50px"> -->
                 </div>
             </div>
         </div>
         <!-- <div class="d-block d-md-none">
             <div class="col-sm-12 p-3 pb-0 mb-0">
-                <img src="assets/logo.png" alt="Logo Salak" height="50px"> &nbsp;
-                <img src="assets/hesti.png" alt="Logo Salak" height="50px">
-                <img src="assets/kodam.png" alt="Logo Salak" height="50px">
+                <img src="assets/logo.png" alt="Logo" height="50px"> &nbsp;
+                <img src="assets/logo.png" alt="Logo" height="50px">
+                <img src="assets/kodam.png" alt="Logo" height="50px">
             </div>
             <div class="col-sm-12 p-3 pt-0 pb-0">
                 <h1 class="mb-0 pb-0 pt-2">RS SALAK BOGOR</h1>
-                <h2 class="mt-0 pt-0 display-6">PELAYANAN MANDIRI TERINTEGRASI</h2>
+                <h2 class="mt-0 pt-0 display-6">PELAYANAN ONLINE TERINTEGRASI</h2>
             </div>
         </div> -->
     </div>
@@ -109,7 +109,8 @@
                                     POLIKLINIK {{sep.poli | uppercase}} <br>
                                     Nomor SEP : {{sep.noSep}} <br>
                                     <div class="d-grid gap-2 mt-3">
-                                        <button (click)="printSep(sep.noSep)" class="btn fs-5 btn-primary p-3" type="button" [disabled]="!sep.noSep"><i class="bi bi-printer"></i> CETAK SEP</button>
+                                        <button hidden (click)="printSep(sep.noSep)" class="btn fs-5 btn-primary p-3" type="button" [disabled]="!sep.noSep"><i class="bi bi-printer"></i> CETAK SEP</button>
+                                        <button (click)="printRegistrasi()" class="btn fs-5 btn-success p-3" type="button" [disabled]="!registrasi.booking_code"><i class="bi bi-printer me-1"></i> CETAK TIKET REGISTRASI</button>
                                     </div>
                                 </div>
                             </div>
@@ -126,14 +127,14 @@
         </div>
     </div>
 
-    <div>
+    <div hidden>
         <iframe src="" id="iframePrintSep" frameborder="0" width="300px" height="300px;"></iframe>
         <iframe src="" id="iframePrintBooking" frameborder="0" width="300px" height="300px;"></iframe>
     </div>
 </div>
 
 <div *ngIf="sep && registrasi && !registrasiAndroid" style="position: fixed; bottom: 50px; right: 10px; padding: 20px;">
-    <button (click)="printAnjungan()" class="btn" pRipple><i class="bi bi-printer"></i> Print Ulang</button>
+    <button hidden (click)="printAnjungan()" class="btn" pRipple><i class="bi bi-printer"></i> Print Ulang</button>
 </div>
 
 <div (click)="back()" class="border-bottom text-secondary clickable" pRipple style="position: absolute; top: 100px; left: 10px; padding: 20px 30px;">

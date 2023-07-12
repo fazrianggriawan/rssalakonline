@@ -1,24 +1,24 @@
-<div style="position: fixed; height: 100%; width: 100%; overflow: hidden">
+<div class="bg-white">
     <div class="row justify-content-center p-3 bg-dark text-white">
         <div class="col-md-10">
             <div class="row">
-                <div class="col-sm-2 col-md-2 text-end d-none d-md-block">
-                    <img src="assets/hesti.png" alt="Logo Salak" style="height: 50px;">
+                <div class="col-auto text-end d-none d-md-block">
+                    <img src="assets/logo.png" alt="Logo" style="height: 50px;">
                 </div>
-                <div class="col-sm-10 col-md-7 d-none d-md-block">
-                    <h1 class="fs-3 mb-0">RUMKIT TK II Prof. dr. J.A. LATUMETEN AMBON</h1>
-                    <div>PELAYANAN MANDIRI TERINTEGRASI</div>
+                <div class="col d-none d-md-block">
+                    <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
+                    <div>PELAYANAN ONLINE TERINTEGRASI</div>
                 </div>
                 <div class="col-md-2 d-none d-md-block">
-                    <!-- <img src="assets/hesti.png" alt="Logo Salak" height="50px">
-                    <img src="assets/kodam.png" alt="Logo Salak" height="50px"> -->
+                    <!-- <img src="assets/logo.png" alt="Logo" height="50px">
+                    <img src="assets/kodam.png" alt="Logo" height="50px"> -->
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row justify-content-center mt-3">
-        <div class="col-md-8" *ngIf="!gantiPoli">
+        <div class="col-md-10" *ngIf="!gantiPoli">
             <div class="row border">
                 <div class="col-3 text-white p-4 bg-primary" style="position: relative;">
                     <div style="line-height: 2rem; font-size: 2rem; font-weight: 500;">
@@ -30,6 +30,7 @@
                     </div>
                 </div>
                 <div class="col p-3">
+                    <h5>PILIH POLIKLINIK</h5>
                     <div class="row m-0 border rounded">
                         <div class="col-auto bg-gray-800 text-muted p-3">POLIKLINIK TUJUAN :</div>
                         <div class="col pt-3 pb-3 pr-3 pl-0">{{namaPoliTujuan | uppercase}}</div>
@@ -52,10 +53,10 @@
                     </div>
                     <div class="row m-0 mt-3">
                         <ng-container *ngFor="let item of dataJadwalDokter; let i = index" >
-                            <div class="col-5 p-3 bg-light rounded border m-2 clickable"
+                            <div class="col-5 p-3 rounded border m-2 clickable"
                                 pRipple
                                 (click)="selectJadwal(item)"
-                                [ngClass]="{'selected-item': item.kodedokter == selectedJadwalDokter}">
+                                [ngClass]="{'selected-rujukan': item.kodedokter == selectedJadwalDokter}">
                                 <div class="row">
                                     <div class="col-12">
                                         <strong>{{item.namadokter | uppercase}}</strong>

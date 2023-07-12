@@ -1,0 +1,9 @@
+.form-control{
+    border-color: #edeef1;
+    padding: 10px;
+}
+
+.form-control:focus{
+    border-color:  lightcoral;
+    background-color: white;
+}

@@ -64,7 +64,7 @@ export class AntrianService {
 
     public save(data: any) {
         this.loadingService.status.next(true);
-        this.http.post<any>(config.api_online('antrian/save'), data)
+        this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(res => {
                 if (res.code == 200) {
                     this.kodeBooking.next(res.data.kodebooking);
@@ -79,7 +79,7 @@ export class AntrianService {
 
     public filterAntrian(data: any) {
         this.loadingService.status.next(true);
-        this.http.post<any>(config.api_online('antrian/filterData'), data)
+        this.http.post<any>(config.api_vclaim('antrian/filterData'), data)
             .subscribe(res => {
                 this.dataAntrian.next(res.data);
                 this.loadingService.status.next(false);
@@ -87,12 +87,12 @@ export class AntrianService {
     }
 
     public getMasterPoliBpjs() {
-        this.http.get<any>(config.api_online('antrian/'))
+        this.http.get<any>(config.api_vclaim('antrian/'))
     }
 
     public cariBooking(kodeBooking: string) {
         this.loadingService.status.next(true);
-        this.http.get<any>(config.api_online('antrian/booking/kodeBooking/' + kodeBooking))
+        this.http.get<any>(config.api_vclaim('antrian/booking/kodeBooking/' + kodeBooking))
             .subscribe(res => {
                 if (res.code == 200) {
                     this.kodeBooking.next(res.data.noreg);

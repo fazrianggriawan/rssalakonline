@@ -2,12 +2,10 @@
 
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background-color: white;
 }
 
 .banner {
     background: url('assets/background_rs.png') no-repeat;
-    background-color: #f5f8fc;
     background-size: cover;
     /* max-height: 550px; */
 }
@@ -325,4 +323,25 @@ body {
 
 .btn-action-numpad {
     background: #ffd559;
+}
+
+h4{
+    color: white !important;
+}
+
+.p-confirm-dialog .p-dialog-content{
+    background-color: var(--gray-100);
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+    font-size: 1rem;
+}
+
+.p-component-overlay{
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.selected-rujukan{
+    background-color: #fffd98 !important;
+    border-color: #ffd898 !important;
 }

@@ -51,7 +51,8 @@ export class JenisKunjunganComponent implements OnInit {
     handlePasien(data: any){
         if(data){
             this.pasien = data;
-            this.registrasiOnlineService.getDataRujukan(this.pasien.noaskes);
+            this.getDataRujukan();
+            // this.registrasiOnlineService.getDataRujukan(this.pasien.noaskes);
             if( this.pasien.noaskes ){
                 this.jnsPembayaran = 'bpjs';
             }
@@ -60,13 +61,45 @@ export class JenisKunjunganComponent implements OnInit {
         }
     }
 
+    getDataRujukan(){
+        this.registrasiOnlineService.getListRujukan(this.pasien.noaskes, 'faskes')
+            .subscribe(data => {
+                if( data ){
+                    this.dataRujukan = data;
+                }else{
+                    this.registrasiOnlineService.getListRujukan(this.pasien.noaskes, 'rs')
+                        .subscribe(data2 => {
+                            if( data2 ){
+                                data2.forEach((element: any) => {
+                                    this.dataRujukan.push(element);
+                                });
+                            }
+                        })
+                }
+            })
+    }
+
     getRujukan() {
         let rujukan: any = sessionStorage.getItem('rujukan');
         if( rujukan ){
             this.rujukan = JSON.parse(rujukan);
-            this.registrasiOnlineService.getJumlahSepRujukan(this.rujukan.noKunjungan);
+            this.getJumlahSep(this.rujukan.noKunjungan, 1)
         }
     }
+
+    getJumlahSep(noKunjungan: any, asalRujukan: any) {
+        this.registrasiOnlineService.getJumlahSepByRujukan(noKunjungan, asalRujukan)
+            .subscribe(data => {
+                if( data ){
+                    this.registrasiOnlineService.jumlahSepRujukan.next(data)
+                }else{
+                    if( asalRujukan == 1 ){
+                        this.getJumlahSep(noKunjungan, 2)
+                    }
+                }
+            })
+    }
+
 
     handleJumlahSepRujukan(data: any){
         this.jumlahSepRujukan = data;
@@ -80,7 +113,8 @@ export class JenisKunjunganComponent implements OnInit {
     selectRujukan(rujukan: any) {
         this.rujukan = rujukan;
         this.dialogDataRujukan = false;
-        this.registrasiOnlineService.getJumlahSepRujukan(this.rujukan.noKunjungan);
+        this.getJumlahSep(this.rujukan.noKunjungan, 1);
+        // this.registrasiOnlineService.getJumlahSepRujukan(this.rujukan.noKunjungan);
 
         let tanggal = this.rujukan.tglKunjungan.split('-');
         let tglRujukan = new Date(tanggal[0], tanggal[1]-1, tanggal[2]);

@@ -1,0 +1,13 @@
+.waiting-fingerprint{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    overflow: hidden;
+    z-index: 99999;
+}
+
+.waiting-fingerprint h1{
+    font-size: 2rem;
+    margin-top: 32vh;
+}

@@ -5,6 +5,7 @@ import { BpjsComponent } from './bpjs/bpjs.component';
 import { JadwalDokterComponent } from './bpjs/jadwal-dokter/jadwal-dokter.component';
 import { KonfirmasiComponent } from './bpjs/konfirmasi/konfirmasi.component';
 import { RujukanComponent } from './bpjs/rujukan/rujukan.component';
+import { EsepComponent } from './esep/esep.component';
 import { NomorAntrianComponent } from './nomor-antrian/nomor-antrian.component';
 import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online.component';
 
@@ -18,6 +19,7 @@ const routes: Routes = [
     { path: moduleName+'/bpjs/rujukan', component: RujukanComponent },
     { path: moduleName+'/bpjs/jadwalDokter', component: JadwalDokterComponent },
     { path: moduleName+'/bpjs/konfirmasi', component: KonfirmasiComponent },
+    { path: moduleName+'/esep', component: EsepComponent },
 ];
 
 @NgModule({

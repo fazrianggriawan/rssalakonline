@@ -64,7 +64,21 @@ export class RujukanComponent implements OnInit {
     selectRujukan(data: any){
         this.selectedRujukan = data.noKunjungan;
         this.rujukan = data;
-        this.registrasiOnlineService.getJumlahSepRujukan(data.noKunjungan)
+
+        this.getJumlahSep(data.noKunjungan, 1);
+    }
+
+    getJumlahSep(noKunjungan: any, asalRujukan: any) {
+        this.registrasiOnlineService.getJumlahSepByRujukan(noKunjungan, asalRujukan)
+            .subscribe(data => {
+                if( data ){
+                    this.registrasiOnlineService.jumlahSepRujukan.next(data)
+                }else{
+                    if( asalRujukan == 1 ){
+                        this.getJumlahSep(noKunjungan, 2)
+                    }
+                }
+            })
     }
 
     clearData() {

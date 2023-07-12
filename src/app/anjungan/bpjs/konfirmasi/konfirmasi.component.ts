@@ -28,7 +28,7 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         public registrasiOnlineService: RegistrasiOnlineService,
-        private errorMessage: ErrorMessageService
+        private errorMessageService: ErrorMessageService
     ) { }
 
     ngOnInit(): void {
@@ -42,11 +42,24 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
         this.subSep = this.registrasiOnlineService.sep.subscribe(data => {
             if(data){
                 this.sep = data;
-                this.save();
+                this.updateSepRegistrasi(this.dataBooking.kodebooking, this.sep.noSep);
             }else{
                 this.sep = '';
             }
         })
+    }
+
+    updateSepRegistrasi(kodebooking: any, nosep: any) {
+        let data = {
+            kodebooking: kodebooking,
+            nosep:  nosep
+        }
+
+        this.registrasiOnlineService.updateSepRegistrasi(data)
+            .subscribe(data => {
+                this.success = true;
+                this.printAnjungan();
+            })
     }
 
     ngOnDestroy(): void {
@@ -139,24 +152,7 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     }
 
     daftar() {
-        if( this.sep ){
-            this.save();
-        }else{
-            if (parseInt(this.rujukan.jumlahSep) == 0) {
-                // Rujukan Baru
-                this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
-                this.createSep();
-            } else {
-                if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
-                    // Rencana Kontrol
-                    this.createSuratKontrol();
-                }else{
-                    // Rujukan Internal
-                    this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
-                    this.createSep();
-                }
-            }
-        }
+        this.save();
     }
 
     getAllSuratKontrol() {
@@ -258,7 +254,47 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
             jenisKunjungan: this.jenisKunjungan
         }
 
-        this.registrasiOnlineService.save(data);
+        let dataRegistrasi = {
+            nomorkartu : data.rujukan.peserta.noKartu,
+            nik : data.rujukan.peserta.nik,
+            nohp : data.rujukan.peserta.mr.noTelepon,
+            cara_bayar : 'BPJS',
+            status_pendaftaran : 'LAMA',
+            jenispasien : 'JKN',
+            kodepoli : data.jadwalDokter.kodepoli,
+            norm : data.pasien.norekmed,
+            tanggalperiksa : this.registrasiOnlineService.reformatDate(new Date()),
+            kodedokter : data.jadwalDokter.kodedokter.toString(),
+            namadokter : data.jadwalDokter.namadokter,
+            jampraktek : data.jadwalDokter.jadwal,
+            jeniskunjungan : data.jenisKunjungan.kode,
+            nomorreferensi : data.rujukan.noKunjungan
+        }
+
+        this.registrasiOnlineService.saveRegistrasi(dataRegistrasi)
+            .subscribe(data => {
+                if( data.metadata.code == 200 ){
+
+                    this.dataBooking = data.response;
+
+                    if (parseInt(this.rujukan.jumlahSep) == 0) {
+                        // Rujukan Baru
+                        this.jenisKunjungan = { kode: this.rujukan.asalFaskes.jenisKunjungan, nama: this.rujukan.asalFaskes.nama };
+                        this.createSep();
+                    } else {
+                        if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) {
+                            // Rencana Kontrol
+                            this.createSuratKontrol();
+                        }else{
+                            // Rujukan Internal
+                            this.jenisKunjungan = { kode: 2, nama: 'rujukanInternal' };
+                            this.createSep();
+                        }
+                    }
+                }else{
+                    this.errorMessageService.message(data.metadata.message);
+                }
+            })
 
     }
 
@@ -270,7 +306,7 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     printAnjungan() {
         if( this.dataBooking.kodebooking && this.sep.noSep ){
             (<HTMLIFrameElement>document.getElementById('iframePrintSepBpjs')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.kodebooking);
-            (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.kodebooking);
+            // (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.kodebooking);
         }
     }
 

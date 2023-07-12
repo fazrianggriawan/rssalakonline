@@ -1,10 +1,12 @@
-let host = 'http://rstambon.co.id/';
+let host = 'http://192.168.150.55/';
 // let host = 'http://localhost/';
-let hostSimrs = 'http://36.94.176.218/';
+let hostSimrs = host;
+let simrslama = 'http://192.168.150.204/jkn/';
 
 export const config = {
-    api: function (url: string) { return host + 'api/index.php/' + url },
-    api_vclaim: function (url: string) { return hostSimrs + 'vclaim/public/' + url },
-    api_simrs: function (url: string) { return hostSimrs + 'api/vclaim/index.php/' + url },
+    api: function (url: string) { return host + 'bihealth-service/index.php/' + url },
+    api_vclaim: function (url: string) { return host + 'bihealth-vclaim/public/index.php/' + url },
+    api_simrs: function (url: string) { return hostSimrs + 'bihealth-service/vclaim/index.php/' + url },
+    api_simrslama: function (url: string) { return simrslama + url },
     host: host
 }

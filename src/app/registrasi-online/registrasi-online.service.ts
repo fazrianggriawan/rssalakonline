@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { config } from '../config';
 import { ErrorMessageService } from '../services/error-message.service';
 
@@ -31,11 +31,28 @@ export class RegistrasiOnlineService {
     checkinStatus = new BehaviorSubject<boolean>(false);
     dataAntrian = new BehaviorSubject<any>('');
     registrasiAndroid = new BehaviorSubject<any>('');
+    sesi = new BehaviorSubject<any>('');
 
     constructor(
         private http: HttpClient,
         private errorMessageService: ErrorMessageService
     ) { }
+
+    getPasien(key: String): Observable<any>{
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/get_pasien/'+key))
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    subject.next(data.data)
+                }else{
+                    this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                }
+            })
+
+        return subject;
+
+    }
 
     getPesertaBpjs(key: string) {
         this.http.get<any>(config.api_simrs('online/get/pasienByBpjs?key=' + key))
@@ -87,6 +104,32 @@ export class RegistrasiOnlineService {
             })
     }
 
+    getListRujukan(noKartuBPJS: any, rujukanDari: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api_vclaim('rujukan/'+rujukanDari+'/nomorKartu/' + noKartuBPJS))
+            .subscribe(data => {
+                if (data.metaData.code == '200') {
+                    let dataRujukan: any = [];
+                    data.response.rujukan.forEach((element: any) => {
+                        element.asalFaskes = {
+                            kode: data.response.asalFaskes,
+                            nama: 'fktp',
+                            jenisKunjungan: 1
+                        }
+                        dataRujukan.push(element);
+                    });
+
+                    subject.next(dataRujukan);
+                }else{
+                    subject.next(false);
+                }
+            })
+
+        return subject;
+    }
+
+
     getDataRujukan(noKartuBPJS: string) {
         this.http.get<any>(config.api_vclaim('rujukan/faskes/nomorKartu/' + noKartuBPJS))
             .subscribe(data => {
@@ -118,10 +161,25 @@ export class RegistrasiOnlineService {
                         dataRujukan.push(element);
                     });
 
+                    console.log(dataRujukan);
+
                     this.dataRujukanRs.next(dataRujukan)
 
                 }
             })
+    }
+
+    getJumlahSepByRujukan(nomorRujukan: string, asalRujukan: any): Observable<any>{
+        let subject = new Subject;
+            this.http.get<any>(config.api_vclaim('rujukan/jumlahSep/nomorRujukan/' + nomorRujukan + '/jnsPelayanan/'+asalRujukan))
+                .subscribe(data => {
+                    if (data.metaData.code == '200') {
+                        subject.next(data.response.jumlahSEP);
+                    }else{
+                        subject.next(false);
+                    }
+                })
+        return subject;
     }
 
     getJumlahSepRujukan(nomorRujukan: string) {
@@ -173,6 +231,11 @@ export class RegistrasiOnlineService {
         this.pasien.next(JSON.parse(data));
     }
 
+    getSessionPeserta() {
+        let data: any = sessionStorage.getItem('peserta');
+        this.peserta.next(JSON.parse(data));
+    }
+
     getSessionRujukan() {
         let data: any = sessionStorage.getItem('rujukan');
         this.rujukan.next(JSON.parse(data));
@@ -186,6 +249,11 @@ export class RegistrasiOnlineService {
     getSessionJenisPembayaran() {
         let data: any = sessionStorage.getItem('jenisPembayaran');
         this.jenisPembayaran.next(data);
+    }
+
+    getSessionSesi() {
+        let data: any = sessionStorage.getItem('sesi');
+        this.sesi.next(JSON.parse(data));
     }
 
     getSessionBooking() {
@@ -210,6 +278,20 @@ export class RegistrasiOnlineService {
             })
     }
 
+    getListSuratKontrol(noKartuBPJS: string, tanggal: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>( config.api_vclaim('suratKontrol/byPeserta/nomorKartu/'+noKartuBPJS+'/bulan/'+tanggal+'/filter/'+2) )
+            .subscribe(data => {
+                if( data.metaData.code == '200' ){
+                    subject.next(data.response);
+                }else{
+                    subject.next(data.response);
+                }
+            })
+        return subject;
+    }
+
     createSuratKontrol(data: any) {
         this.http.post<any>(config.api_vclaim('suratKontrol/save'), data)
             .subscribe(data => {
@@ -225,6 +307,20 @@ export class RegistrasiOnlineService {
             })
     }
 
+    saveBooking(data: any): Observable<any>{
+        let subject = new Subject;
+        this.http.post<any>(config.api_vclaim('antrian/save'), data)
+            .subscribe(data => {
+                if (data.metadata.code == 200) {
+                    subject.next(data.response);
+                }else{
+                    this.errorMessageService.message(data.metadata.message);
+                    subject.next(false);
+                }
+            })
+        return subject;
+    }
+
     save(data: any) {
         this.http.post<any>(config.api_vclaim('antrian/save'), data)
             .subscribe(data => {
@@ -236,6 +332,17 @@ export class RegistrasiOnlineService {
                     this.saveStatus.next(false);
                 }
             })
+    }
+
+    saveRegistrasi(data: any): Observable<any>{
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_simrslama('ambilantriannonjkn.php'), data)
+            .subscribe(data => {
+                subject.next(data)
+            })
+
+        return subject
     }
 
     checkin(data: any){
@@ -279,16 +386,21 @@ export class RegistrasiOnlineService {
             })
     }
 
-    createSep(data: any) {
+    createSep(data: any): Observable<any>{
+        let subject = new Subject;
+
         this.http.post<any>(config.api_vclaim('sep/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
                     this.sep.next(data.response.sep);
+                    subject.next(data.response.sep);
                 }else{
                     this.errorMessageService.message(data.metaData.message);
                     this.sep.next('');
                 }
             })
+
+        return subject;
     }
 
     clearAllSession() {
@@ -323,4 +435,131 @@ export class RegistrasiOnlineService {
     trimRekmed(noRekmed: string){
         return noRekmed.substr(-6)
     }
+
+    saveToSimrs(data: any) : Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('online/save_to_simrs'), data)
+            .subscribe(res => {
+                if( res.code == 200 ){
+                    subject.next(res.data);
+                }else{
+                    let position = res.message.toUpperCase().search("SUDAH TERDAFTAR");
+                    if( position > 0 ){
+                        let html = '<hr/><div>Kode Booking</div><h4 class="text-black">'+res.data.data.token+'</h4><a href="./#/registrasi/view-booking/'+res.data.data.token+'" target="_blank" class="btn btn-primary">Lihat Data Booking <i class="bi bi-box-arrow-up-right"></i></a>';
+                        this.errorMessageService.message(res.message + html);
+                    }else{
+                        this.errorMessageService.message(res.message);
+                    }
+
+                    subject.next(false);
+
+                }
+            })
+
+        return subject;
+    }
+
+    saveAfterSep(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('online/save_after_sep'), data)
+            .subscribe(data => {
+                if( data.code == 200 ){
+                    subject.next(data);
+                }else{
+                    subject.next(false);
+                }
+            })
+
+        return subject;
+    }
+
+    getSuratKontrol(noSuratKontrol: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api_vclaim('suratKontrol/get/'+noSuratKontrol))
+            .subscribe(data => {
+                if( data.metaData.code == 200 ){
+                    subject.next(data.response);
+                }else{
+                    subject.next(false);
+                }
+            })
+
+        return subject;
+    }
+
+    getDataBooking(kode_booking: string): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/get_booking/'+kode_booking))
+            .subscribe(data => {
+                subject.next(data.data);
+            })
+
+        return subject;
+    }
+
+    updateSuratKontrol(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_vclaim('suratKontrol/update'), data)
+            .subscribe(res => {
+                if( res.metaData.code == '200' || res.metaData.code == '203'){
+                    subject.next(true);
+                }else{
+                    this.errorMessageService.message(res.metaData.message);
+                }
+            })
+
+        return subject;
+    }
+
+    validasiRegistrasi(id_pasien: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.get<any>(config.api('online/validasi_registrasi/'+id_pasien))
+            .subscribe(data => {
+                if( data.code == 200){
+                    subject.next(data.data);
+                }else{
+                    this.errorMessageService.message(data.message);
+                }
+            })
+
+        return subject;
+    }
+
+    batalkanKunjungan(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api('online/batal_kunjungan'), data)
+            .subscribe(data => {
+                if( data.code == 200){
+                    subject.next(data.data);
+                    this.errorMessageService.message(data.message);
+                }else{
+                    this.errorMessageService.message(data.message);
+                }
+            })
+
+        return subject;
+    }
+
+    updateSepRegistrasi(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_vclaim('antrian/update-sep-registrasi'), data)
+            .subscribe(data => {
+                subject.next(data);
+            });
+
+        return subject;
+    }
+
+    deleteSuratKontrol(noSuratKontrol: any) {
+        this.http.get<any>(config.api_vclaim('suratKontrol/delete/noSuratKontrol/'+noSuratKontrol)).subscribe();
+    }
+
 }
