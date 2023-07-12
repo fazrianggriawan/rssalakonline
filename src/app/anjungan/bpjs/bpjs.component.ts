@@ -89,12 +89,6 @@ export class BpjsComponent implements OnInit, OnDestroy {
 
             this.registrasiOnlineService.getPasien(value)
                 .subscribe(data => {
-                    data.norekmed = data.KODE;
-                    data.noaskes = data.NOASKES;
-                    data.nama = data.NAMA;
-                    data.kelamin = data.KELAMIN;
-                    data.alamat = data.ALAMAT1;
-                    data.tlp = data.TELP;
                     if( data.noaskes != null ){
                         this.registrasiOnlineService.dataPasien.next(data);
                     }else{

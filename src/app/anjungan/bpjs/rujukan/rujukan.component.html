@@ -1,12 +1,12 @@
-<div class="bg-white" style="position: fixed; height: 100%; width: 100%; overflow: hidden">
+<div class="bg-white">
     <div class="row justify-content-center p-3 bg-dark text-white">
         <div class="col-md-10">
             <div class="row">
-                <div class="col-sm-2 col-md-2 text-end d-none d-md-block">
+                <div class="col-auto text-end d-none d-md-block">
                     <img src="assets/logo.png" alt="Logo" style="height: 50px;">
                 </div>
-                <div class="col-sm-10 col-md-7 d-none d-md-block">
-                    <h1 class="fs-3 mb-0">RSPAD GATOT SOEBROTO</h1>
+                <div class="col d-none d-md-block">
+                    <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
                     <div>PELAYANAN ONLINE TERINTEGRASI</div>
                 </div>
                 <div class="col-md-2 d-none d-md-block">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="row justify-content-center mt-3">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="row border">
                 <div class="col-3 text-white p-4 bg-primary" style="position: relative;">
                     <div style="line-height: 2rem; font-size: 2rem; font-weight: 500; min-height: 200px;">
@@ -31,6 +31,7 @@
                 </div>
 
                 <div class="col p-3">
+                    <h5>PILIH SURAT RUJUKAN</h5>
                     <div class="row" *ngIf="totalRujukanAktif == 0 && !loading">
                         <div class="col p-2">
                             <div class="text-secondary text-center mt-4">
@@ -81,8 +82,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col" style="font-size: 14px;">
-                                        <div class="bg-white border rounded text-center mt-1">
-                                            <small>Berlaku Sampai: {{ registrasiOnlineService.dateHuman(registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).expired) }} ({{registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired}} Hari)</small>
+                                        <div class="bg-white border rounded text-center mt-1 p-1">
+                                            Berlaku Sampai: {{ registrasiOnlineService.dateHuman(registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).expired) }} ({{registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired}} Hari)
                                         </div>
                                     </div>
                                 </div>

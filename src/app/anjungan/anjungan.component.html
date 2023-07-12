@@ -1,47 +1,39 @@
 <div class="container-fluid panel-kiosk" style="background-color: white;">
-    <div class="row mb-4 header-kiosk pb-4">
-        <div class="d-block d-md-none">
-            <div class="col-sm-12 p-3 pb-0 mb-0">
-                <img src="assets/logo.png" alt="Logo" height="50px">
-            </div>
-            <div class="col-sm-12 p-3 pt-0 pb-0">
-                <h1 class="mb-0 pb-0 pt-2">RSPAD GATOT SOEBROTO</h1>
-                <h2 class="mt-0 pt-0 display-6">PELAYANAN ONLINE TERINTEGRASI</h2>
-            </div>
+    <div class="row justify-content-center p-3 header-kiosk text-gray-1000">
+        <div class="col-auto text-end d-none d-md-block">
+            <img src="assets/logo.png" alt="Logo" style="height: 50px;">
         </div>
-        <div class="col-sm-2 col-md-2 ps-5 pt-4 text-end d-none d-md-block">
-            <img src="assets/logo.png" alt="Logo" style="height: 80px;">
+        <div class="col d-none d-md-block">
+            <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
+            <div>PELAYANAN ONLINE TERINTEGRASI</div>
         </div>
-        <div class="col-sm-10 col-md-7 p-4 pb-0 d-none d-md-block">
-            <h1 class="mb-0 pb-0 pt-2">RSPAD GATOT SOEBROTO</h1>
-            <h2 class="mt-0 pt-0 fs-4">PELAYANAN ONLINE TERINTEGRASI</h2>
-        </div>
-        <div class="col-md-2 p-4 d-none d-md-block">
+        <div class="col-md-2 d-none d-md-block">
             <!-- <img src="assets/logo.png" alt="Logo" height="50px">
             <img src="assets/kodam.png" alt="Logo" height="50px"> -->
         </div>
     </div>
+
     <div class="row button-group justify-content-center p-3">
-        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-bpjs" (click)="router.navigateByUrl('anjungan/registrasi-online')" pRipple>
+        <!-- <div class="col-sm-5 col-lg-4 m-2 p-0 pb-3 clickable bg-white shadow border rounded btn-bpjs" (click)="router.navigateByUrl('anjungan/registrasi-online')" pRipple>
             <h1 class="p-4">REGISTRASI <br> ONLINE</h1>
             <p class="ps-4 pe-4 pt-1">Pasien yang telah registrasi online dan memiliki kode booking.</p>
-        </div>
+        </div> -->
         <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-tunai" (click)="router.navigateByUrl('anjungan/bpjs')" pRipple>
             <h1 class="p-4">PESERTA <br/>BPJS</h1>
             <p class="ps-4 pe-4 pt-1">Pasien BPJS yang telah memiliki nomor rekam medis.</p>
         </div>
-        <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-pasien-baru" (click)="router.navigateByUrl('anjungan/nomor-antrian')" pRipple>
+        <!-- <div class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-pasien-baru" (click)="router.navigateByUrl('anjungan/nomor-antrian')" pRipple>
             <h1 class="p-4">NOMOR <br>ANTRIAN</h1>
             <p class="ps-4 pe-4 pt-1">Mengambil Nomor Antrian Loket Pendaftaran.</p>
-        </div>
+        </div> -->
         <div hidden class="col-sm-5 col-lg-4 m-2 p-0 pb-2 clickable bg-white shadow border rounded btn-online" (click)="router.navigateByUrl('anjungan/esep')" pRipple>
             <h1 class="p-4">E-SEP <br>DEMO</h1>
             <p class="ps-4 pe-4 pt-1">Pembuatan E-SEP dengan fingerprint.</p>
         </div>
         <div class="col-sm-5 col-lg-4 m-2 text-center">
             <div>Link Registrasi Online</div>
-            <div><qr-code value="http://rspad.bertek.co.id" size="180" [margin]="2" errorCorrectionLevel="M"></qr-code></div>
-            <div>http://rspad.bertek.co.id</div>
+            <div><qr-code value="http://online.rumahsakitakgani.co.id/registrasi7" size="180" [margin]="2" errorCorrectionLevel="M"></qr-code></div>
+            <div>http://online.rumahsakitakgani.co.id/registrasi7</div>
         </div>
     </div>
 </div>

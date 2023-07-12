@@ -55,6 +55,8 @@ export class JadwalDokterComponent implements OnInit {
     selectJadwal(data: any) {
         this.selectedJadwalDokter = data.kodedokter;
         this.jadwalDokter = data;
+        console.log(data.kodedokter)
+        console.log(this.selectedJadwalDokter)
     }
 
     clearData() {

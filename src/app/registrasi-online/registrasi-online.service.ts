@@ -161,6 +161,8 @@ export class RegistrasiOnlineService {
                         dataRujukan.push(element);
                     });
 
+                    console.log(dataRujukan);
+
                     this.dataRujukanRs.next(dataRujukan)
 
                 }
@@ -332,6 +334,17 @@ export class RegistrasiOnlineService {
             })
     }
 
+    saveRegistrasi(data: any): Observable<any>{
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_simrslama('ambilantriannonjkn.php'), data)
+            .subscribe(data => {
+                subject.next(data)
+            })
+
+        return subject
+    }
+
     checkin(data: any){
         this.http.post<any>(config.api_vclaim('antrian/checkin'), data)
             .subscribe(data => {
@@ -373,16 +386,21 @@ export class RegistrasiOnlineService {
             })
     }
 
-    createSep(data: any) {
+    createSep(data: any): Observable<any>{
+        let subject = new Subject;
+
         this.http.post<any>(config.api_vclaim('sep/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
                     this.sep.next(data.response.sep);
+                    subject.next(data.response.sep);
                 }else{
                     this.errorMessageService.message(data.metaData.message);
                     this.sep.next('');
                 }
             })
+
+        return subject;
     }
 
     clearAllSession() {
@@ -525,6 +543,17 @@ export class RegistrasiOnlineService {
                     this.errorMessageService.message(data.message);
                 }
             })
+
+        return subject;
+    }
+
+    updateSepRegistrasi(data: any): Observable<any> {
+        let subject = new Subject;
+
+        this.http.post<any>(config.api_vclaim('antrian/update-sep-registrasi'), data)
+            .subscribe(data => {
+                subject.next(data);
+            });
 
         return subject;
     }

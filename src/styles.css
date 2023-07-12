@@ -2,12 +2,10 @@
 
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background-color: #1c7115;
 }
 
 .banner {
     background: url('assets/background_rs.png') no-repeat;
-    background-color: #1c7115;
     background-size: cover;
     /* max-height: 550px; */
 }
@@ -341,4 +339,9 @@ h4{
 
 .p-component-overlay{
     background-color: rgba(255, 255, 255, 0.9);
+}
+
+.selected-rujukan{
+    background-color: #fffd98 !important;
+    border-color: #ffd898 !important;
 }
