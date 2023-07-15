@@ -203,7 +203,9 @@ export class RegistrasiOnlineService {
             })
     }
 
-    getHistorySep(nomorKartu: string) {        ;
+    getHistorySep(nomorKartu: string): Observable<any> {
+        let subject = new Subject;
+
         let end = this.reformatDate(new Date());
         let to = new Date(end.toString());
         to = new Date(to.setDate(to.getDate() - 90));
@@ -213,8 +215,11 @@ export class RegistrasiOnlineService {
             .subscribe(data => {
                 if (data.metaData.code == '200') {
                     this.dataHistorySep.next(data.response.histori);
+                    subject.next(data.response.histori);
                 }
             })
+
+        return subject;
     }
 
     getBookingCode(bookingCode: string) {
@@ -292,19 +297,21 @@ export class RegistrasiOnlineService {
         return subject;
     }
 
-    createSuratKontrol(data: any) {
+    createSuratKontrol(data: any): Observable<any>{
+        let subject = new Subject;
         this.http.post<any>(config.api_vclaim('suratKontrol/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
-                    let suratKontrol = data.response;
-                    sessionStorage.setItem('suratKontrol', JSON.stringify(suratKontrol));
-                    this.suratKontrol.next(suratKontrol);
-                    this.createSuratKontrolStatus.next(true);
+                    sessionStorage.setItem('suratKontrol', JSON.stringify(data.response));
+                    // this.suratKontrol.next(suratKontrol);
+                    // this.createSuratKontrolStatus.next(true);
+                    subject.next(data.response);
                 } else {
                     this.errorMessageService.message(data.metaData.message);
                     this.suratKontrol.next('')
                 }
             })
+        return subject;
     }
 
     saveBooking(data: any): Observable<any>{
@@ -392,7 +399,7 @@ export class RegistrasiOnlineService {
         this.http.post<any>(config.api_vclaim('sep/save'), data)
             .subscribe(data => {
                 if (data.metaData.code == '200') {
-                    this.sep.next(data.response.sep);
+                    // this.sep.next(data.response.sep);
                     subject.next(data.response.sep);
                 }else{
                     this.errorMessageService.message(data.metaData.message);
