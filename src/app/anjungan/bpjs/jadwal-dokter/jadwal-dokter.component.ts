@@ -17,6 +17,7 @@ export class JadwalDokterComponent implements OnInit {
     jadwalDokter: any;
     namaPoliTujuan: string = '';
     loading: boolean = false;
+    kodeDokter: any;
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
@@ -50,6 +51,12 @@ export class JadwalDokterComponent implements OnInit {
         this.jadwalDokter = '';
         this.getJadwalDokter(data.kode);
         this.namaPoliTujuan = data.ket
+    }
+
+    onSelectedJadwal(item: any) {
+        this.jadwalDokter = item;
+        this.kodeDokter = item.kodedokter;
+        sessionStorage.setItem('jadwal_dokter', JSON.stringify(item))
     }
 
     selectJadwal(data: any) {

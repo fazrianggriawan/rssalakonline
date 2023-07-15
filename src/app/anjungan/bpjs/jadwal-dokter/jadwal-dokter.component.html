@@ -6,7 +6,7 @@
                     <img src="assets/logo.png" alt="Logo" style="height: 50px;">
                 </div>
                 <div class="col d-none d-md-block">
-                    <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
+                    <h1 class="fs-3 mb-0">RS TK.III SALAK BOGOR</h1>
                     <div>PELAYANAN ONLINE TERINTEGRASI</div>
                 </div>
                 <div class="col-md-2 d-none d-md-block">
@@ -55,8 +55,8 @@
                         <ng-container *ngFor="let item of dataJadwalDokter; let i = index" >
                             <div class="col-5 p-3 rounded border m-2 clickable"
                                 pRipple
-                                (click)="selectJadwal(item)"
-                                [ngClass]="{'selected-rujukan': item.kodedokter == selectedJadwalDokter}">
+                                (click)="onSelectedJadwal(item)"
+                                [ngClass]="{'selected-rujukan': item.kodedokter == kodeDokter}">
                                 <div class="row">
                                     <div class="col-12">
                                         <strong>{{item.namadokter | uppercase}}</strong>

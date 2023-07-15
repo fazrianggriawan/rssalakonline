@@ -152,7 +152,23 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     }
 
     daftar() {
-        this.save();
+        // Registrasi Antrian Online
+        let data = {
+            pasien: this.pasien,
+            rujukan: this.rujukan,
+            suratKontrol: this.suratKontrol,
+            jadwalDokter: this.jadwalDokter,
+            jenisPembayaran: 'bpjs',
+            jenisKunjungan: this.jenisKunjungan
+        }
+
+        console.log(data);
+        return;
+
+        this.registrasiOnlineService.saveBooking(data)
+            .subscribe(data => {
+
+            })
     }
 
     getAllSuratKontrol() {
@@ -160,17 +176,24 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
     }
 
     createSuratKontrol() {
-        let data = {
-            noSep: this.lastSep.noSep,
-            dokter: this.jadwalDokter.kodedokter,
-            poli: this.jadwalDokter.kodepoli,
-            tgl: this.jadwalDokter.tglKunjungan
-        }
+        if (this.rujukan.poliRujukan.kode == this.jadwalDokter.kodepoli) { // Kontrol Kembali
+            let data = {
+                noSep: this.lastSep.noSep,
+                dokter: this.jadwalDokter.kodedokter,
+                poli: this.jadwalDokter.kodepoli,
+                tgl: this.jadwalDokter.tglKunjungan
+            }
 
-        if( !this.suratKontrol ){
-            this.registrasiOnlineService.createSuratKontrol(data);
-        }else{
-            this.createSep();
+            console.log(data);
+            return;
+
+            this.registrasiOnlineService.createSuratKontrol(data)
+                .subscribe(data => {
+                    if(data){
+                        this.suratKontrol = data;
+                        this.createSep();
+                    }
+                })
         }
     }
 
@@ -226,7 +249,16 @@ export class KonfirmasiComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.registrasiOnlineService.createSep(data);
+        console.log(data)
+        return
+
+        this.registrasiOnlineService.createSep(data)
+            .subscribe(data => {
+                if( data ){
+                    this.sep = data;
+                    this.printAnjungan();
+                }
+            })
 
     }
 

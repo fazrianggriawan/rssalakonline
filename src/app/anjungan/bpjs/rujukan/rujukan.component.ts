@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { RujukanService } from './rujukan.service';
 
 @Component({
     selector: 'app-rujukan',
@@ -17,62 +18,83 @@ export class RujukanComponent implements OnInit {
     rujukan: any;
     loading: boolean = false;
     totalRujukanAktif: number = 0;
+    peserta: any;
+    sepRujukan: any[] = [];
+    noRujukan: any;
+    dataHistorySep: any[] = [];
+    dataSepRujukan: any[] = [];
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private router: Router,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
+        private rujukanService: RujukanService,
     ) { }
 
     ngOnInit(): void {
         this.loadingService.status.subscribe(data => this.loading = data)
-        this.registrasiOnlineService.dataRujukanFaskes.subscribe(data => this.handleDataRujukan(data));
-        this.registrasiOnlineService.dataRujukanRs.subscribe(data => this.handleDataRujukan(data));
-        this.registrasiOnlineService.jumlahSepRujukan.subscribe(data => this.handleJumlahSep(data))
-        this.getRujukan();
+        let peserta : any = sessionStorage.getItem('peserta');
+        this.peserta = JSON.parse(peserta);
+        this.getDataRujukan();
     }
 
-    handleJumlahSep(data: any) {
-        if( this.rujukan ){
-            this.rujukan.jumlahSep = data
-        }
+    getRiwayatSep(){
+        this.registrasiOnlineService.getHistorySep(this.peserta.noKartu)
+            .subscribe(data => {
+                this.dataHistorySep = data;
+            })
     }
 
-    getRujukan() {
+    getDataRujukan(){
         this.dataRujukan = [];
-        this.dataRujukanFaskes = '';
-        this.dataRujukanRs = '';
+        this.rujukanService.getRujukanRS(this.peserta.noKartu)
+            .subscribe(data => {
+                this.dataRujukan = data;
+                this.rujukanService.getRujukanFaskes(this.peserta.noKartu)
+                    .subscribe(data => {
+                        data.forEach((item: any) => {
+                            this.dataRujukan.push(item);
+                        });
+                        this.validasiMasaBerlaku(this.dataRujukan);
+                        this.getRiwayatSep();
+                    })
+            })
+    }
+
+    validasiMasaBerlaku(data: any[]){
         this.totalRujukanAktif = 0;
-        this.registrasiOnlineService.dataRujukanFaskes.next('');
-        this.registrasiOnlineService.dataRujukanRs.next('');
-        let pasien : any = sessionStorage.getItem('pasien');
-        this.registrasiOnlineService.getDataRujukan(JSON.parse(pasien).noaskes);
+        data.forEach((item: any) => {
+            if( this.registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0 ){
+                this.totalRujukanAktif++;
+            }
+        });
     }
 
-    handleDataRujukan(data: any){
-        if(data){
-            this.dataRujukanFaskes = data;
-            data.forEach((item:any) => {
-                this.dataRujukan.push(item);
-                if( this.registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0 ){
-                    this.totalRujukanAktif++;
-                }
-            });
+    onSelectedRujukan(item: any){
+        this.rujukan = item;
+        this.noRujukan = item.noKunjungan;
+        this.rujukan.expired = this.registrasiOnlineService.getExpiredRujukan(this.rujukan.tglKunjungan);
+        sessionStorage.setItem('rujukan', JSON.stringify(this.rujukan));
+        this.getJumlahSep(item.noKunjungan, 1);
+        this.getSepRujukan();
+    }
+
+    getSepRujukan() {
+        this.dataHistorySep.forEach((item: any) => {
+            if( item.noRujukan == this.noRujukan ){
+                this.dataSepRujukan.push(item)
+            }
+        });
+        if(this.dataSepRujukan){
+            sessionStorage.setItem('sep_rujukan', JSON.stringify(this.dataSepRujukan));
         }
-    }
-
-    selectRujukan(data: any){
-        this.selectedRujukan = data.noKunjungan;
-        this.rujukan = data;
-
-        this.getJumlahSep(data.noKunjungan, 1);
     }
 
     getJumlahSep(noKunjungan: any, asalRujukan: any) {
         this.registrasiOnlineService.getJumlahSepByRujukan(noKunjungan, asalRujukan)
             .subscribe(data => {
                 if( data ){
-                    this.registrasiOnlineService.jumlahSepRujukan.next(data)
+                    this.rujukan.jumlahSep = data
                 }else{
                     if( asalRujukan == 1 ){
                         this.getJumlahSep(noKunjungan, 2)
@@ -81,26 +103,13 @@ export class RujukanComponent implements OnInit {
             })
     }
 
-    clearData() {
-        this.registrasiOnlineService.dataRujukanFaskes.next('');
-        this.registrasiOnlineService.dataRujukanRs.next('');
-        this.registrasiOnlineService.jumlahSepRujukan.next('');
-        this.selectedRujukan = '';
-        this.rujukan = '';
-    }
-
     back() {
-        this.clearData();
         this.registrasiOnlineService.clearAllSession();
         this.router.navigateByUrl('anjungan/bpjs');
     }
 
 
     next() {
-        this.rujukan.expired = this.registrasiOnlineService.getExpiredRujukan(this.rujukan.tglKunjungan).expired;
-        this.rujukan.hariExpired = this.registrasiOnlineService.getExpiredRujukan(this.rujukan.tglKunjungan).hariExpired;
-        sessionStorage.setItem('rujukan', JSON.stringify(this.rujukan));
-        this.clearData();
         this.router.navigateByUrl('anjungan/bpjs/jadwalDokter');
     }
 
