@@ -81,7 +81,7 @@
                         <div class="col p-2">
                             <div class="mt-3">
                                 <div class="d-grid gap-2">
-                                    <button [disabled]="!selectedJadwalDokter || dataJadwalDokter.length == 0 " (click)="next()" class="btn fs-5 btn-success p-3" type="button">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
+                                    <button [disabled]="!jadwalDokter" (click)="next()" class="btn fs-5 btn-success p-3" type="button">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                             <div
                                 class="col-2 p-3 selected-item rounded border m-2 clickable"
                                 pRipple
-                                (click)="selectGantiPoli(item)">
+                                (click)="onSelectedGantiPoli(item)">
                                 <div class="row">
                                     <div class="col-12">
                                         <small>POLIKLINIK</small><br>
@@ -122,5 +122,6 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<app-error-handle></app-error-handle>

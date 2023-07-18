@@ -44,7 +44,7 @@
 
                     <div class="row">
                         <ng-container *ngFor="let item of dataRujukan; let i = index" >
-                            <div *ngIf="i <= 3 && registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0"
+                            <div *ngIf="registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0"
                                 class="col-5 p-3 bg-light rounded border m-2 clickable"
                                 pRipple
                                 (click)="onSelectedRujukan(item)"
@@ -93,5 +93,6 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<app-error-handle></app-error-handle>
