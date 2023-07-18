@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-online.service';
 import { ErrorMessageService } from 'src/app/services/error-message.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { JadwalDokterService } from './jadwal-dokter.service';
 
 @Component({
     selector: 'app-jadwal-dokter',
@@ -25,12 +26,14 @@ export class JadwalDokterComponent implements OnInit {
     sep_rujukan: any;
     pasien: any;
     dataSuratKontrol: any[] = [];
+    pelaksana: any;
 
     constructor(
         public registrasiOnlineService: RegistrasiOnlineService,
         private router: Router,
         private loadingService: LoadingService,
         private errorMessageService: ErrorMessageService,
+        private jadwalDokterService: JadwalDokterService,
     ) { }
 
     ngOnInit(): void {
@@ -42,6 +45,8 @@ export class JadwalDokterComponent implements OnInit {
     }
 
     initSessionStorage() {
+        let sep_rujukan : any = sessionStorage.getItem('sep_rujukan');
+        this.sep_rujukan = JSON.parse(sep_rujukan);
         let jns_kunjungan : any = sessionStorage.getItem('jns_kunjungan');
         let pasien : any = sessionStorage.getItem('pasien');
         this.pasien = JSON.parse(pasien);
@@ -90,6 +95,14 @@ export class JadwalDokterComponent implements OnInit {
         this.kodeDokter = item.kodedokter;
         sessionStorage.setItem('jadwal_dokter', JSON.stringify(item))
         this.checkJenisKunjungan()
+        this.getDefaultPelaksana();
+    }
+
+    getDefaultPelaksana() {
+        this.jadwalDokterService.getDefaultPelaksana(this.jadwalDokter)
+            .subscribe(data => {
+                this.pelaksana = data;
+            })
     }
 
     checkJenisKunjungan() {
@@ -108,11 +121,9 @@ export class JadwalDokterComponent implements OnInit {
     }
 
     createSuratKontrol() {
-        let sep_rujukan : any = sessionStorage.getItem('sep_rujukan');
-        this.sep_rujukan = JSON.parse(sep_rujukan);
 
         let data = {
-            noSep: this.sep_rujukan[0].noSep,
+            noSep: this.getSepRujukan(),
             dokter: this.jadwalDokter.kodedokter,
             poli: this.jadwalDokter.kodepoli,
             tgl: this.tanggal
@@ -135,7 +146,12 @@ export class JadwalDokterComponent implements OnInit {
                                             sessionStorage.setItem('surat_kontrol', JSON.stringify(obj));
                                             this.toKonfirmasi()
                                         }else{
-                                            this.updateSuratKontrol(obj);
+                                            this.registrasiOnlineService.deleteSuratKontrol(obj.noSuratKontrol)
+                                                .subscribe(data => {
+                                                    if( parseInt(data.metaData.code) == 200 ){
+                                                        this.createSuratKontrol()
+                                                    }
+                                                })
                                         }
                                     }
                                 }
@@ -149,6 +165,21 @@ export class JadwalDokterComponent implements OnInit {
                     }
                 }
             })
+    }
+
+    getSepRujukan() {
+        let data: any[] = [];
+
+        this.sep_rujukan.forEach((element: any) => {
+            if( element.poliTujSep == this.jadwalDokter.kodepoli ){
+                data.push(element)
+            }
+        });
+        if( data.length > 0 ){
+            return data[0].noSep
+        }else{
+            return '';
+        }
     }
 
     getDataSuratKontrol(noaskes: string, tanggal: string, repeat: number, msgError: string) {
