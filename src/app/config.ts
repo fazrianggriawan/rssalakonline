@@ -1,5 +1,5 @@
-let host = 'http://192.168.150.55/';
-// let host = 'http://localhost/';
+// let host = 'http://192.168.150.55/';
+let host = 'http://localhost/';
 let hostSimrs = host;
 let simrslama = 'http://192.168.150.204/jkn/';
 

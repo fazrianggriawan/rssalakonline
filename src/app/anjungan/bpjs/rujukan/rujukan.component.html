@@ -6,12 +6,8 @@
                     <img src="assets/logo.png" alt="Logo" style="height: 50px;">
                 </div>
                 <div class="col d-none d-md-block">
-                    <h1 class="fs-3 mb-0">RUMAH SAKIT dr. AK GANI PALEMBANG</h1>
+                    <h1 class="fs-3 mb-0">RS TK.III SALAK BOGOR</h1>
                     <div>PELAYANAN ONLINE TERINTEGRASI</div>
-                </div>
-                <div class="col-md-2 d-none d-md-block">
-                    <!-- <img src="assets/logo.png" alt="Logo" height="50px">
-                    <img src="assets/kodam.png" alt="Logo" height="50px"> -->
                 </div>
             </div>
         </div>
@@ -31,7 +27,7 @@
                 </div>
 
                 <div class="col p-3">
-                    <h5>PILIH SURAT RUJUKAN</h5>
+                    <h5>PILIH SURAT RUJUKAN :</h5>
                     <div class="row" *ngIf="totalRujukanAktif == 0 && !loading">
                         <div class="col p-2">
                             <div class="text-secondary text-center mt-4">
@@ -41,9 +37,6 @@
                                     <div *ngIf="totalRujukanAktif == 0">
                                         Anda tidak memiliki surat rujukan yang aktif.
                                     </div>
-                                    <div *ngIf="dataRujukanFaskes.length == 0 && dataRujukanRs.length == 0">
-                                        Anda tidak memiliki surat rujukan.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -51,22 +44,19 @@
 
                     <div class="row">
                         <ng-container *ngFor="let item of dataRujukan; let i = index" >
-                            <div *ngIf="i <= 3 && registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0"
+                            <div *ngIf="registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0"
                                 class="col-5 p-3 bg-light rounded border m-2 clickable"
                                 pRipple
-                                (click)="selectRujukan(item)"
-                                [ngClass]="{'selected-rujukan': item.noKunjungan == selectedRujukan}">
+                                (click)="onSelectedRujukan(item)"
+                                [ngClass]="{'selected-rujukan': item.noKunjungan == noRujukan}">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="badge bg-primary" style="font-weight: 500; position: absolute; top: 10px; right: 10px;" *ngIf="rujukan && rujukan.noKunjungan == item.noKunjungan">
-
                                             <ng-container *ngIf="rujukan.jumlahSep > 0"> Rencana <br>Kontrol</ng-container>
                                             <ng-container *ngIf="rujukan.jumlahSep < 1"> Rujukan <br>Baru</ng-container>
-
                                         </div>
                                         {{item.noKunjungan}}
                                         <div class="bold">{{item.poliRujukan.nama | uppercase}}</div>
-
                                     </div>
                                 </div>
                                 <hr class="mt-1 mb-1 p-0">
@@ -94,7 +84,7 @@
                         <div class="col p-2">
                             <div class="mt-3">
                                 <div class="d-grid gap-2">
-                                    <button [disabled]="!selectedRujukan" (click)="next()" class="btn fs-5 btn-success p-3" type="button">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
+                                    <button [disabled]="!rujukan" (click)="next()" class="btn fs-5 btn-success p-3" type="button">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -103,5 +93,6 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<app-error-handle></app-error-handle>
