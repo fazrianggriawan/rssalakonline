@@ -60,7 +60,7 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     daftar() {
-        let data = {
+        let dataAntrian : any = {
             pasien: this.pasien,
             peserta: this.peserta,
             rujukan: this.rujukan,
@@ -68,17 +68,43 @@ export class KonfirmasiComponent implements OnInit {
             jadwalDokter: this.jadwalDokter,
             jenisPembayaran: 'bpjs',
             jenisKunjungan: this.jenisKunjungan,
-            tanggal: this.appService.reformatDate(new Date())
+            tanggal: this.appService.reformatDate(new Date()),
+            ars: null
         }
 
-        this.registrasiOnlineService.saveBooking(data)
-            .subscribe(data => {
-                if( data ){
-                    this.dataBooking = data;
-                    sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
-                    this.createSep();
-                }
+        let registrasi = {
+            nomorkartu: this.peserta.noKartu, //0001798426113
+            nik: this.peserta.nik, //1671021503960006
+            nohp: this.peserta.mr.noTelepon, //087744558524
+            cara_bayar: 'BPJS', //BPJS
+            status_pendaftaran: 'LAMA', //LAMA
+            jenispasien: 'JKN', //NON JKN
+            kodepoli: this.jadwalDokter.kodepoli, //THT
+            norm: this.pasien.norekmed, //0213254
+            tanggalperiksa: this.appService.reformatDate(new Date()), //2023-07-11
+            kodedokter: this.jadwalDokter.kodedokter.toString(), //219194
+            namadokter: this.jadwalDokter.namadokter, //dr.ROPI AFFANDI, Sp.THT-KL
+            jampraktek: this.jadwalDokter.jadwal, //08:00-10:00
+            jeniskunjungan: '1', //1
+            nomorreferensi: this.rujukan.noKunjungan, //02132541689048022689
+        }
 
+        this.registrasiOnlineService.saveRegistrasi(registrasi)
+            .subscribe(data => {
+                if( data.metadata.code == 200 ){
+                    dataAntrian.ars = data.response;
+                    this.registrasiOnlineService.saveBooking(dataAntrian)
+                        .subscribe(data => {
+                            if( data ){
+                                this.dataBooking = data;
+                                sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
+                                this.createSep();
+                            }
+
+                        })
+                }else{
+                    this.errorMessageService.message(data.metadata.message);
+                }
             })
     }
 
