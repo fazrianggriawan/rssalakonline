@@ -5,6 +5,7 @@ import { RegistrasiOnlineService } from 'src/app/registrasi-online/registrasi-on
 import { ErrorMessageService } from 'src/app/services/error-message.service';
 import { AnjunganService } from '../anjungan.service';
 import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
+import { AppService } from 'src/app/services/app.service';
 
 @Component({
     selector: 'app-bpjs',
@@ -31,7 +32,8 @@ export class BpjsComponent implements OnInit, OnDestroy {
         private keyboardService: VirtualKeyboardService,
         private errorMessageService: ErrorMessageService,
         public registrasiOnlineService: RegistrasiOnlineService,
-        public anjunganService: AnjunganService
+        public anjunganService: AnjunganService,
+        private appService: AppService,
         ) { }
 
         ngOnInit(): void {
@@ -82,7 +84,8 @@ export class BpjsComponent implements OnInit, OnDestroy {
                             if( data.noaskes != null ){
                                 this.pasien = data;
                                 this.getPeserta(this.pasien.noaskes);
-                                this.getHistorySep(this.pasien.noaskes)
+                                this.getHistorySep(this.pasien.noaskes);
+                                this.registrasiOnlineService.getFingerPrint(this.pasien.noaskes, this.appService.reformatDate(new Date()))
                             }else{
                                 this.keyboardService.clearAction();
                                 this.errorMessageService.message('No.Kartu BPJS Tidak Ditemukan');

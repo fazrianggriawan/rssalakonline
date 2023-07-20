@@ -417,13 +417,12 @@ export class RegistrasiOnlineService {
         let subject = new Subject;
 
         this.http.post<any>(config.api_vclaim('sep/save'), data)
-            .subscribe(data => {
-                if (data.metaData.code == '200') {
-                    // this.sep.next(data.response.sep);
+            .subscribe(res => {
+                let data : any = res.json_response;
+                if (parseInt(data.metaData.code) == 200) {
                     subject.next(data.response.sep);
                 }else{
                     this.errorMessageService.message(data.metaData.message);
-                    this.sep.next('');
                 }
             })
 
@@ -603,6 +602,17 @@ export class RegistrasiOnlineService {
             .subscribe(data => {
                 subject.next(data);
             });
+        return subject;
+    }
+
+    getFingerPrint(noaskes: string, tanggal: string): Observable<any>{
+        let subject = new Subject;
+
+        this.http.get(config.api_vclaim('antrian/fingerprint/'+noaskes+'/'+tanggal))
+            .subscribe(data => {
+                subject.next(data)
+            })
+
         return subject;
     }
 

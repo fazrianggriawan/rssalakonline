@@ -75,7 +75,7 @@ export class KonfirmasiComponent implements OnInit {
             .subscribe(data => {
                 if( data ){
                     this.dataBooking = data;
-                    sessionStorage.setItem('data_booking', this.dataBooking);
+                    sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
                     this.createSep();
                 }
 
@@ -98,11 +98,9 @@ export class KonfirmasiComponent implements OnInit {
 
         this.registrasiOnlineService.createSep(data)
             .subscribe(data => {
-                if( data ){
-                    console.log(this.sep);
-                    // this.sep = data;
-                    // this.printAnjungan();
-                }
+                this.sep = data;
+                this.printAnjungan();
+                this.success = true;
             })
     }
 
@@ -111,8 +109,8 @@ export class KonfirmasiComponent implements OnInit {
     }
 
     printAnjungan() {
-        if( this.dataBooking.kodebooking && this.sep.noSep ){
-            (<HTMLIFrameElement>document.getElementById('iframePrintSepBpjs')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.kodebooking);
+        if( this.dataBooking.booking_code && this.sep.noSep ){
+            (<HTMLIFrameElement>document.getElementById('iframePrintSepBpjs')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.booking_code);
             // (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.kodebooking);
         }
     }
