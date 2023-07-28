@@ -79,7 +79,7 @@ export class KonfirmasiComponent implements OnInit {
             cara_bayar: 'BPJS', //BPJS
             status_pendaftaran: 'LAMA', //LAMA
             jenispasien: 'JKN', //NON JKN
-            kodepoli: this.jadwalDokter.kodepoli, //THT
+            kodepoli: this.jadwalDokter.kodesubspesialis, //THT
             norm: this.pasien.norekmed, //0213254
             tanggalperiksa: this.appService.reformatDate(new Date()), //2023-07-11
             kodedokter: this.jadwalDokter.kodedokter.toString(), //219194
@@ -89,23 +89,33 @@ export class KonfirmasiComponent implements OnInit {
             nomorreferensi: this.rujukan.noKunjungan, //02132541689048022689
         }
 
-        this.registrasiOnlineService.saveRegistrasi(registrasi)
+        this.registrasiOnlineService.getFingerPrint(this.peserta.noKartu, this.appService.reformatDate(new Date()))
             .subscribe(data => {
-                if( data.metadata.code == 200 ){
-                    dataAntrian.ars = data.response;
-                    this.registrasiOnlineService.saveBooking(dataAntrian)
-                        .subscribe(data => {
-                            if( data ){
-                                this.dataBooking = data;
-                                sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
-                                this.createSep();
-                            }
+                if( data ){
+                    if( parseInt(data.response.kode) == 0 ){
+                        this.errorMessageService.message(data.response.status);
+                    }else{
+                        this.registrasiOnlineService.saveRegistrasi(registrasi)
+                            .subscribe(data => {
+                                if( data.metadata.code == 200 ){
+                                    dataAntrian.ars = data.response;
+                                    this.registrasiOnlineService.saveBooking(dataAntrian)
+                                        .subscribe(data => {
+                                            if( data ){
+                                                this.dataBooking = data;
+                                                sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
+                                                this.createSep();
+                                            }
 
-                        })
-                }else{
-                    this.errorMessageService.message(data.metadata.message);
+                                        })
+                                }else{
+                                    this.errorMessageService.message(data.metadata.message);
+                                }
+                            })
+                    }
                 }
             })
+
     }
 
     createSep() {
@@ -134,10 +144,15 @@ export class KonfirmasiComponent implements OnInit {
         this.router.navigateByUrl('anjungan');
     }
 
+    printBarcode(){
+        if( this.dataBooking.booking_code && this.sep.noSep ){
+            (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.booking_code);
+        }
+    }
+
     printAnjungan() {
         if( this.dataBooking.booking_code && this.sep.noSep ){
             (<HTMLIFrameElement>document.getElementById('iframePrintSepBpjs')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.booking_code);
-            // (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.kodebooking);
         }
     }
 

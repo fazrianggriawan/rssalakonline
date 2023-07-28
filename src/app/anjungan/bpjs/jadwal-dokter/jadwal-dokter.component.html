@@ -52,12 +52,12 @@
                             <div class="col-5 p-3 rounded border m-2 clickable"
                                 pRipple
                                 (click)="onSelectedJadwal(item)"
-                                [ngClass]="{'selected-rujukan': item.kodedokter == kodeDokter}">
+                                [ngClass]="{'selected-rujukan': item.kodedokter+item.kodesubspesialis == idSelectedJadwal}">
                                 <div class="row">
                                     <div class="col-12">
                                         <strong>{{item.namadokter | uppercase}}</strong>
                                         <br>
-                                        <small>POLIKLINIK {{item.namapoli | uppercase}}</small>
+                                        <small>POLIKLINIK {{item.namasubspesialis | uppercase}}</small>
                                     </div>
                                 </div>
                                 <hr>

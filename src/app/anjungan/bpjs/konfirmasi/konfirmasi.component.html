@@ -119,7 +119,17 @@
                     <div class="row mt-3">
                         <div class="col">
                             <div class="d-grid gap-2">
-                                <button (click)="done()" class="btn fs-5 btn-primary p-3" type="button"><i class="bi bi-check-circle-fill"></i>&nbsp; SELESAI</button>
+                                <button (click)="printBarcode()" class="btn fs-5 btn-primary p-3" type="button"><i class="bi bi-printer"></i>&nbsp; BARCODE</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-grid gap-2">
+                                <button (click)="printAnjungan()" class="btn fs-5 btn-primary p-3" type="button"><i class="bi bi-printer"></i>&nbsp; SEP</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-grid gap-2">
+                                <button (click)="done()" class="btn fs-5 btn-success p-3" type="button"><i class="bi bi-check-circle-fill"></i>&nbsp; SELESAI</button>
                             </div>
                         </div>
                     </div>

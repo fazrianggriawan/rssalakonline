@@ -82,10 +82,18 @@ export class BpjsComponent implements OnInit, OnDestroy {
                     .subscribe(data => {
                         if( data ){
                             if( data.noaskes != null ){
-                                this.pasien = data;
-                                this.getPeserta(this.pasien.noaskes);
-                                this.getHistorySep(this.pasien.noaskes);
-                                this.registrasiOnlineService.getFingerPrint(this.pasien.noaskes, this.appService.reformatDate(new Date()))
+                                this.registrasiOnlineService.getFingerPrint(data.noaskes, this.appService.reformatDate(new Date()))
+                                    .subscribe(res => {
+                                        if( res ){
+                                            if( parseInt(res.response.kode) == 0 ){
+                                                this.errorMessageService.message(res.response.status);
+                                            }else{
+                                                this.pasien = data;
+                                                this.getPeserta(this.pasien.noaskes);
+                                                this.getHistorySep(this.pasien.noaskes);
+                                            }
+                                        }
+                                    })
                             }else{
                                 this.keyboardService.clearAction();
                                 this.errorMessageService.message('No.Kartu BPJS Tidak Ditemukan');

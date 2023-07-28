@@ -117,7 +117,6 @@ export class RujukanComponent implements OnInit {
         if( sep.length > 0 ){
             this.dataSepRujukan.push(sep[0])
         }
-
     }
 
     getSepRujukan() {

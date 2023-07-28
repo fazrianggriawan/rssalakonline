@@ -20,6 +20,7 @@ export class JadwalDokterComponent implements OnInit {
     namaPoliTujuan: string = '';
     loading: boolean = false;
     kodeDokter: any;
+    idSelectedJadwal: any;
     rujukan: any;
     jns_kunjungan: any;
     tanggal: any;
@@ -84,8 +85,9 @@ export class JadwalDokterComponent implements OnInit {
     onSelectedGantiPoli(data: any){
         this.selectedJadwalDokter = '';
         this.jadwalDokter = '';
+        this.idSelectedJadwal = '';
         this.namaPoliTujuan = data.ket;
-        this.jns_kunjungan.name = 'kontrol';
+        // this.jns_kunjungan.name = 'kontrol';
         this.getJadwalDokter(data.kode);
         this.gantiPoli = false;
     }
@@ -93,6 +95,7 @@ export class JadwalDokterComponent implements OnInit {
     onSelectedJadwal(item: any) {
         this.jadwalDokter = item;
         this.kodeDokter = item.kodedokter;
+        this.idSelectedJadwal = item.kodedokter+item.kodesubspesialis;
         sessionStorage.setItem('jadwal_dokter', JSON.stringify(item))
         this.checkJenisKunjungan()
         this.getDefaultPelaksana();
