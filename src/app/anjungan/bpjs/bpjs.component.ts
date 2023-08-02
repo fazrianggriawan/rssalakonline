@@ -6,6 +6,7 @@ import { ErrorMessageService } from 'src/app/services/error-message.service';
 import { AnjunganService } from '../anjungan.service';
 import { VirtualKeyboardService } from '../shared/components/virtual-keyboard/virtual-keyboard.service';
 import { AppService } from 'src/app/services/app.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-bpjs',
@@ -22,10 +23,15 @@ export class BpjsComponent implements OnInit, OnDestroy {
     rujukan: any;
     nomor: any;
     sep: any;
+    dialogApprovalSep: boolean = false;
+    validFingerPrint: boolean = true;
+
+    formApproval!: FormGroup;
 
     subDataPasien: any;
-    subPeserta: any;
+    subEnter: any;
     subKey: any;
+
 
     constructor(
         private router: Router,
@@ -34,15 +40,51 @@ export class BpjsComponent implements OnInit, OnDestroy {
         public registrasiOnlineService: RegistrasiOnlineService,
         public anjunganService: AnjunganService,
         private appService: AppService,
-        ) { }
+        private fb: FormBuilder
+    ) { }
 
-        ngOnInit(): void {
-            sessionStorage.clear();
-            this.onBlur();
-            this.registrasiOnlineService.refreshForm();
-            this.subKey = this.keyboardService.value.subscribe(data => this.nomor = data)
-            this.keyboardService.enterAction.subscribe(data => { if (data) this.getPasien(this.nomor) })
-            this.subPeserta = this.anjunganService.peserta.subscribe(data => this.peserta = data )
+    ngOnInit(): void {
+        this.initForm();
+        sessionStorage.clear();
+        this.onBlur();
+        this.registrasiOnlineService.refreshForm();
+        this.subKey = this.keyboardService.value.subscribe(data => this.nomor = data)
+        this.subEnter = this.keyboardService.enterAction.subscribe(data => { if (data) this.getPasien(this.nomor) })
+    }
+
+    initForm() {
+        this.formApproval = this.fb.group({
+            tglSep: [new Date(), [Validators.required]],
+            noKartu: [null, [Validators.required]],
+            nama: [null, [Validators.required]],
+            jnsPelayanan: ["2", [Validators.required]],
+            jnsPengajuan: ["2", [Validators.required]],
+            keterangan: ["SIDIK JARI TIDAK TERBACA", [Validators.required]],
+            nama_pelayanan: ["RAWAT JALAN"],
+            nama_pengajuan: ["PENGAJUAN FINGER PRINT"],
+        })
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.subKey.unsubscribe();
+        this.subEnter.unsubscribe();
+    }
+
+    getHistorySep(noKartu: string){
+        this.sep = '';
+        this.registrasiOnlineService.getHistorySep(noKartu)
+            .subscribe(data => {
+                if( data ){
+                    sessionStorage.setItem('history_sep', JSON.stringify(data));
+                    let today = this.registrasiOnlineService.reformatDate(new Date());
+                    data.forEach((item: any) => {
+                        if( item.tglSep == today ){
+                            this.sep = item;
+                        }
+                    });
+                }
         }
 
         ngOnDestroy(): void {
@@ -70,9 +112,31 @@ export class BpjsComponent implements OnInit, OnDestroy {
                 })
         }
 
-        listenKey(event: KeyboardEvent) {
-            if (event.key == 'Enter') {
-                this.getPasien(this.nomor);
+            })
+    }
+
+    listenKey(event: KeyboardEvent) {
+        if (event.key == 'Enter') {
+            this.getPasien(this.nomor);
+        }
+    }
+
+    getPasien(value: string) {
+        if (value) {
+            this.registrasiOnlineService.getPasien(value)
+                .subscribe(data => {
+                    if( data ){
+                        if( data.noaskes != null ){
+                            this.pasien = data;
+                            this.getPeserta(this.pasien.noaskes);
+                        }else{
+                            this.keyboardService.clearAction();
+                            this.errorMessageService.message('No.Kartu BPJS Tidak Ditemukan');
+                        }
+                    }else{
+                        this.errorMessageService.message('Data Pasien Tidak Ditemukan');
+                    }
+                })
             }
         }
 
@@ -147,3 +211,23 @@ export class BpjsComponent implements OnInit, OnDestroy {
 
 
     }
+            this.router.navigateByUrl('anjungan/bpjs/rujukan');
+        }
+    }
+
+    printSep(noSep: string){
+        this.appService.print(config.api_vclaim('sep/print/anjunganSepOnly/' + noSep ));
+    }
+
+    onShow(){
+        this.formApproval.patchValue({
+            noKartu: this.peserta.noKartu,
+            nama: this.peserta.nama
+        })
+    }
+
+    onHide(){
+        this.initForm();
+    }
+
+}

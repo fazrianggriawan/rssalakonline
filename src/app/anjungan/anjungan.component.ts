@@ -9,6 +9,8 @@ import { PrimeNGConfig } from 'primeng/api';
 })
 export class AnjunganComponent implements OnInit {
 
+    isFirefox: boolean = true;
+
     constructor(
         public router: Router,
         private primeConfig: PrimeNGConfig,
@@ -16,6 +18,7 @@ export class AnjunganComponent implements OnInit {
 
     ngOnInit(): void {
         this.primeConfig.ripple = true;
+        this.isFirefox = /firefox\//i.test(window.navigator.userAgent)
     }
 
 }

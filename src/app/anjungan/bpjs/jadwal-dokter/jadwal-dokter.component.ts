@@ -57,11 +57,12 @@ export class JadwalDokterComponent implements OnInit {
     getRujukan() {
         let rujukan : any = sessionStorage.getItem('rujukan');
         this.rujukan = JSON.parse(rujukan);
-        if( this.rujukan.asalFaskes.kode == 'ranap' ){
-            this.gantiPoli = true;
-        }else{
+
+        if(this.rujukan.poliRujukan.kode){
             this.namaPoliTujuan = this.rujukan.poliRujukan.nama;
             this.getJadwalDokter( this.rujukan.poliRujukan.kode )
+        }else{
+            this.gantiPoli = true;
         }
     }
 
@@ -87,7 +88,6 @@ export class JadwalDokterComponent implements OnInit {
         this.jadwalDokter = '';
         this.idSelectedJadwal = '';
         this.namaPoliTujuan = data.ket;
-        // this.jns_kunjungan.name = 'kontrol';
         this.getJadwalDokter(data.kode);
         this.gantiPoli = false;
     }
@@ -98,14 +98,6 @@ export class JadwalDokterComponent implements OnInit {
         this.idSelectedJadwal = item.kodedokter+item.kodesubspesialis;
         sessionStorage.setItem('jadwal_dokter', JSON.stringify(item))
         this.checkJenisKunjungan()
-        this.getDefaultPelaksana();
-    }
-
-    getDefaultPelaksana() {
-        this.jadwalDokterService.getDefaultPelaksana(this.jadwalDokter)
-            .subscribe(data => {
-                this.pelaksana = data;
-            })
     }
 
     checkJenisKunjungan() {
@@ -126,7 +118,7 @@ export class JadwalDokterComponent implements OnInit {
     createSuratKontrol() {
 
         let data = {
-            noSep: this.getSepRujukan(),
+            noSep: (this.rujukan.asalFaskes.kode == 'ranap') ? this.rujukan.noKunjungan : this.getSepRujukan(),
             dokter: this.jadwalDokter.kodedokter,
             poli: this.jadwalDokter.kodepoli,
             tgl: this.tanggal
@@ -238,6 +230,18 @@ export class JadwalDokterComponent implements OnInit {
                         this.toKonfirmasi();
                     })
             })
+    }
+
+    disabledGantiPoli(rujukan: any){
+        if( rujukan.asalFaskes ){
+            if( rujukan.asalFaskes.kode == 'ranap' || parseInt(rujukan.jumlahSep) == 0 ){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
     back() {

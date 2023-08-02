@@ -345,3 +345,7 @@ h4{
     background-color: #fffd98 !important;
     border-color: #ffd898 !important;
 }
+
+.p-blockui.p-component-overlay{
+    backdrop-filter: blur(5px);
+}

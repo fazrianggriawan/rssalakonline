@@ -385,23 +385,29 @@ export class RegistrasiOnlineService {
     }
 
     getExpiredRujukan(tanggalRujukan: string) {
-        let tujukan = {};
-        let tanggal : any = tanggalRujukan.split('-');
-        let tglRujukan = new Date(tanggal[0], tanggal[1]-1, tanggal[2]);
-        let expiredDate = new Date(tglRujukan.setDate(tglRujukan.getDate()+90));
 
-        let start =  new Date(this.reformatDate(new Date()));
-        let end = new Date(this.reformatDate(expiredDate));
+        if( tanggalRujukan ) {
+            let tanggal : any = tanggalRujukan.split('-');
+            let tglRujukan = new Date(tanggal[0], tanggal[1]-1, tanggal[2]);
+            let expiredDate = new Date(tglRujukan.setDate(tglRujukan.getDate()+90));
 
-        let Time = end.getTime() - start.getTime();
-        let Days = Time / (1000 * 3600 * 24); //Diference in Days
+            let start =  new Date(this.reformatDate(new Date()));
+            let end = new Date(this.reformatDate(expiredDate));
 
-        let rujukan = {
-            expired: this.reformatDate(expiredDate),
-            hariExpired: Days
+            let Time = end.getTime() - start.getTime();
+            let Days = Time / (1000 * 3600 * 24); //Diference in Days
+
+            let rujukan = {
+                expired: this.reformatDate(expiredDate),
+                hariExpired: Days
+            }
+
+            return rujukan;
+        }else{
+            return { expired: '', hariExpired: 0 }
         }
 
-        return rujukan;
+
     }
 
     getAntrianByJadwal(jamPraktek: string, kodePoli: string, tglKunjungan: string){

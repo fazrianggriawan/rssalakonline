@@ -46,8 +46,8 @@
                         DATA <br>
                         PASIEN
                     </div>
-                    <div class="d-grid gap-2" style="position: absolute; bottom: 27px; width: 80%;">
-                        <button class="btn p-3 btn-outline-light" (click)="reset()"><i class="bi bi-chevron-left"></i>&nbsp; KEMBALI</button>
+                    <div class="d-grid gap-2" style="position: absolute; bottom: 27px;">
+                        <button class="btn p-3 btn-outline-light" (click)="home()"><i class="bi bi-chevron-left"></i>&nbsp; KEMBALI</button>
                     </div>
                 </div>
                 <div class="col p-4">
@@ -83,7 +83,7 @@
                     <div class="row">
                         <div class="col">
                             <small class="text-muted">NO. TELEPON</small>
-                            <div class="w-100 p-1 bg-light rounded border">{{pasien.tlp | uppercase}}</div>
+                            <div class="w-100 p-1 bg-light rounded border">{{peserta.mr.noTelepon | uppercase}}</div>
                         </div>
                         <div class="col">
                             <small class="text-muted">ASAL FASKES</small>
@@ -114,7 +114,8 @@
                                     PESERTA TIDAK DAPAT DILAYANI : {{peserta.statusPeserta.keterangan | uppercase}}
                                 </p>
                                 <div class="d-grid gap-2">
-                                    <button (click)="next()" class="btn fs-5 btn-success p-3" type="button" [disabled]="peserta.statusPeserta.kode != '0'">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
+                                    <button class="btn fs-5 btn-primary p-3" *ngIf="!validFingerPrint" (click)="dialogApprovalSep=true"><i class="bi bi-fingerprint"></i> LAPOR KENDALA SIDIK JARI</button>
+                                    <button (click)="next()" class="btn fs-5 btn-success p-3" type="button" [disabled]="peserta.statusPeserta.kode != '0' || !validFingerPrint">LANJUTKAN <i class="bi bi-chevron-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -132,3 +133,51 @@
 <iframe src="" id="iframePrintSepOnly" frameborder="0" width="300px" height="300px;" hidden></iframe>
 
 <app-error-handle></app-error-handle>
+
+<p-dialog
+    header="Approval Pengajuan SEP"
+    appendTo="body"
+    position="top"
+    [(visible)]="dialogApprovalSep"
+    [modal]="true"
+    [style]="{width: '500px'}"
+    (onShow)="onShow()"
+    (onHide)="onHide()">
+    <div *ngIf="dialogApprovalSep">
+        <form [formGroup]="formApproval">
+            <div class="row mb-1">
+                <label class="col-4">No. Kartu BPJS</label>
+                <div class="col">
+                    <input type="text" class="form-control" formControlName="noKartu" readonly>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <label class="col-4">Nama</label>
+                <div class="col">
+                    <input type="text" class="form-control" formControlName="nama" readonly>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <label class="col-4">Jenis Pelayanan</label>
+                <div class="col">
+                    <input type="text" class="form-control" formControlName="nama_pelayanan" readonly>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <label class="col-4">Jenis Pengajuan</label>
+                <div class="col">
+                    <input type="text" class="form-control" formControlName="nama_pengajuan" readonly>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <label class="col-4">Keterangan</label>
+                <div class="col">
+                    <input type="text" class="form-control" formControlName="keterangan">
+                </div>
+            </div>
+        </form>
+    </div>
+    <p-footer>
+        <button class="btn btn-primary" (click)="simpanApproval()" [disabled]="formApproval.invalid"><i class="bi bi-check-lg"></i> Simpan</button>
+    </p-footer>
+</p-dialog>

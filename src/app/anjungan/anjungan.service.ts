@@ -123,7 +123,6 @@ export class AnjunganService {
         this.http.get<any>(config.api_vclaim('sep/fingerprint/'+no_kartu_bpjs+'/'+tanggal))
             .subscribe(data => {
                 if (data.metaData.code == '200') {
-                    console.log(data.response.status);
                     if( data.response.kode == "1" ){
                         subject.next(true)
                     }else{
@@ -132,6 +131,15 @@ export class AnjunganService {
                 } else {
                     subject.next(false)
                 }
+            })
+        return subject;
+    }
+
+    simpanApprovalSep(data: any): Observable<any> {
+        let subject = new Subject;
+        this.http.post<any>(config.api_vclaim('sep/pengajuan-approval'), data)
+            .subscribe(data => {
+                subject.next(data);
             })
         return subject;
     }

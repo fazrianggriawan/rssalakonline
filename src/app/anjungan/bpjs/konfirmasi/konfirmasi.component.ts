@@ -89,30 +89,21 @@ export class KonfirmasiComponent implements OnInit {
             nomorreferensi: this.rujukan.noKunjungan, //02132541689048022689
         }
 
-        this.registrasiOnlineService.getFingerPrint(this.peserta.noKartu, this.appService.reformatDate(new Date()))
+        this.registrasiOnlineService.saveRegistrasi(registrasi)
             .subscribe(data => {
-                if( data ){
-                    if( parseInt(data.response.kode) == 0 ){
-                        this.errorMessageService.message(data.response.status);
-                    }else{
-                        this.registrasiOnlineService.saveRegistrasi(registrasi)
-                            .subscribe(data => {
-                                if( data.metadata.code == 200 ){
-                                    dataAntrian.ars = data.response;
-                                    this.registrasiOnlineService.saveBooking(dataAntrian)
-                                        .subscribe(data => {
-                                            if( data ){
-                                                this.dataBooking = data;
-                                                sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
-                                                this.createSep();
-                                            }
+                if( data.metadata.code == 200 ){
+                    dataAntrian.ars = data.response;
+                    this.registrasiOnlineService.saveBooking(dataAntrian)
+                        .subscribe(data => {
+                            if( data ){
+                                this.dataBooking = data;
+                                sessionStorage.setItem('data_booking', JSON.stringify(this.dataBooking));
+                                this.createSep();
+                            }
 
-                                        })
-                                }else{
-                                    this.errorMessageService.message(data.metadata.message);
-                                }
-                            })
-                    }
+                        })
+                }else{
+                    this.errorMessageService.message(data.metadata.message);
                 }
             })
 
@@ -146,13 +137,13 @@ export class KonfirmasiComponent implements OnInit {
 
     printBarcode(){
         if( this.dataBooking.booking_code && this.sep.noSep ){
-            (<HTMLIFrameElement>document.getElementById('iframePrintBookingBpjs')).src = config.api_vclaim('sep/print/booking/' + this.dataBooking.booking_code);
+            this.appService.print(config.api_vclaim('sep/print/booking/' + this.dataBooking.booking_code));
         }
     }
 
     printAnjungan() {
         if( this.dataBooking.booking_code && this.sep.noSep ){
-            (<HTMLIFrameElement>document.getElementById('iframePrintSepBpjs')).src = config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.booking_code);
+            this.appService.print(config.api_vclaim('sep/print/anjungan/' + this.sep.noSep + '/' + this.dataBooking.booking_code))
         }
     }
 

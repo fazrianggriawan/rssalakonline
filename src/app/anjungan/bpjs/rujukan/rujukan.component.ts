@@ -45,6 +45,7 @@ export class RujukanComponent implements OnInit {
     }
 
     getRiwayatSep(){
+
         let history : any = sessionStorage.getItem('history_sep');
         this.dataHistorySep = JSON.parse(history);
 
@@ -53,10 +54,10 @@ export class RujukanComponent implements OnInit {
             sessionStorage.setItem('jns_kunjungan', JSON.stringify(this.jns_kunjungan));
             let sep : any = this.dataHistorySep[0];
             let diagnosa = sep.diagnosa.split(' - ');
-            this.dataRujukan.push({
+            this.dataRujukan.unshift({
                 noKunjungan: sep.noSep,
                 tglKunjungan: sep.tglSep,
-                poliRujukan: {  kode: '', nama: 'KONTROL RAWAT INAP' },
+                poliRujukan: {  kode: sep.poliTujSep, nama: (sep.poli) ? sep.poli+' - ' : 'KONTROL ' + 'PASCA RAWAT INAP' },
                 provPerujuk: { kode: 'ranap', nama: sep.ppkPelayanan },
                 diagnosa: { kode: diagnosa[0], nama: diagnosa[1] },
                 asalFaskes: {
@@ -65,7 +66,6 @@ export class RujukanComponent implements OnInit {
                     jenisKunjungan: 0
                 }
             })
-            console.log(this.dataRujukan);
             this.totalRujukanAktif++;
         }
     }

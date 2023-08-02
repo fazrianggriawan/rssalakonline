@@ -45,7 +45,7 @@
                     <div class="row">
                         <ng-container *ngFor="let item of dataRujukan; let i = index" >
                             <div *ngIf="registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired > 0"
-                                class="col-5 p-3 bg-light rounded border m-2 clickable"
+                                class="col-5 p-3 bg-light rounded border m-2 clickable shadow"
                                 pRipple
                                 (click)="onSelectedRujukan(item)"
                                 [ngClass]="{'selected-rujukan': item.noKunjungan == noRujukan}">
@@ -74,6 +74,14 @@
                                     <div class="col" style="font-size: 14px;">
                                         <div class="bg-white border rounded text-center mt-1 p-1">
                                             Berlaku Sampai: {{ registrasiOnlineService.dateHuman(registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).expired) }} ({{registrasiOnlineService.getExpiredRujukan(item.tglKunjungan).hariExpired}} Hari)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="font-size: 14px;">
+                                        <div class="text-white semibold border rounded text-center mt-1 p-1" [ngClass]="{'bg-primary': item.noKunjungan == noRujukan, 'bg-secondary': item.noKunjungan != noRujukan}">
+                                            <span *ngIf="item.noKunjungan == noRujukan"><i class="bi bi-check-circle-fill"></i> TERPILIH</span>
+                                            <span *ngIf="item.noKunjungan != noRujukan">PILIH</span>
                                         </div>
                                     </div>
                                 </div>

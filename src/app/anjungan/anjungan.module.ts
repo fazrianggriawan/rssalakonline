@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AnjunganRoutingModule } from './anjungan-routing.module';
 import { AnjunganComponent } from './anjungan.component';
 import { RegistrasiOnlineComponent } from './registrasi-online/registrasi-online.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BpjsComponent } from './bpjs/bpjs.component';
 import { RujukanComponent } from './bpjs/rujukan/rujukan.component';
 import { RippleModule } from 'primeng/ripple';
@@ -17,6 +17,9 @@ import { ErrorHandleComponent } from './shared/components/error-handle/error-han
 import { QrCodeModule } from 'ng-qrcode';
 import { NomorAntrianComponent } from './nomor-antrian/nomor-antrian.component';
 import { EsepComponent } from './esep/esep.component';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
+import { BlockUIModule } from 'primeng/blockui';
 
 
 @NgModule({
@@ -36,10 +39,14 @@ import { EsepComponent } from './esep/esep.component';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RippleModule,
     ToastModule,
     AnjunganRoutingModule,
-    QrCodeModule
+    QrCodeModule,
+    DialogModule,
+    CalendarModule,
+    BlockUIModule
   ],
   exports: [
     NumpadComponent
